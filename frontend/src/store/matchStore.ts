@@ -1,5 +1,61 @@
 import { create } from "zustand";
+
 import type { MatchState, Wind } from "@/types/match";
+
+const initialState: MatchState = {
+    roundWind: "東",
+
+    roundNumber: 1,
+
+    riichiSticks: 0,
+
+    honba: 0,
+
+    doraIndicators: [],
+
+    players: [
+        {
+            id: 0,
+            name: "Player 1",
+            wind: "東",
+            score: 25000,
+            hand: [],
+            discards: [],
+            melds: [],
+            isDealer: true,
+        },
+        {
+            id: 1,
+            name: "Player 2",
+            wind: "南",
+            score: 25000,
+            hand: [],
+            discards: [],
+            melds: [],
+            isDealer: false,
+        },
+        {
+            id: 2,
+            name: "Player 3",
+            wind: "西",
+            score: 25000,
+            hand: [],
+            discards: [],
+            melds: [],
+            isDealer: false,
+        },
+        {
+            id: 3,
+            name: "Player 4",
+            wind: "北",
+            score: 25000,
+            hand: [],
+            discards: [],
+            melds: [],
+            isDealer: false,
+        },
+    ],
+};
 
 interface MatchStore {
     state: MatchState;
@@ -12,26 +68,7 @@ interface MatchStore {
 }
 
 export const useMatchStore = create<MatchStore>((set) => ({
-    state: {
-        roundWind: "東",
-        roundNumber: 1,
-        dealer: "東",
-
-        scores: {
-            east: 25000,
-            south: 25000,
-            west: 25000,
-            north: 25000,
-        },
-
-        doraIndicators: [],
-
-        riichiSticks: 0,
-
-        honba: 0,
-
-        hand: [],
-    },
+    state: initialState,
 
     setRoundWind: (wind) =>
         set((store) => ({
@@ -53,7 +90,12 @@ export const useMatchStore = create<MatchStore>((set) => ({
         set((store) => ({
             state: {
                 ...store.state,
-                dealer,
+
+                players: store.state.players.map((player) => ({
+                    ...player,
+
+                    isDealer: player.wind === dealer,
+                })),
             },
         })),
 }));

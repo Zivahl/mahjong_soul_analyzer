@@ -3,6 +3,7 @@ import { SettingCard } from "@/components/common/SettingCard";
 import { useMatchStore } from "@/store/matchStore";
 
 const winds = ["東", "南", "西", "北"] as const;
+
 const rounds = [1, 2, 3, 4] as const;
 
 export const RoundSection = () => {
@@ -13,9 +14,11 @@ export const RoundSection = () => {
         setDealer,
     } = useMatchStore();
 
+    const dealer =
+        state.players.find((player) => player.isDealer)?.wind ?? "東";
+
     return (
         <SettingCard title="局情報">
-
             <ButtonGroup
                 label="場風"
                 options={winds}
@@ -33,10 +36,9 @@ export const RoundSection = () => {
             <ButtonGroup
                 label="親"
                 options={winds}
-                value={state.dealer}
+                value={dealer}
                 onChange={setDealer}
             />
-
         </SettingCard>
     );
 };
