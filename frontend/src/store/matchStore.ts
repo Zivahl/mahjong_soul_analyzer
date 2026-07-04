@@ -7,6 +7,8 @@ const initialState: MatchState = {
 
     roundNumber: 1,
 
+    dealer: "東",
+
     riichiSticks: 0,
 
     honba: 0,
@@ -16,43 +18,43 @@ const initialState: MatchState = {
     players: [
         {
             id: 0,
-            name: "Player 1",
+            seat: "self",
+            name: "",
             wind: "東",
             score: 25000,
             hand: [],
             discards: [],
             melds: [],
-            isDealer: true,
         },
         {
             id: 1,
-            name: "Player 2",
+            seat: "shimocha",
+            name: "",
             wind: "南",
             score: 25000,
             hand: [],
             discards: [],
             melds: [],
-            isDealer: false,
         },
         {
             id: 2,
-            name: "Player 3",
+            seat: "toimen",
+            name: "",
             wind: "西",
             score: 25000,
             hand: [],
             discards: [],
             melds: [],
-            isDealer: false,
         },
         {
             id: 3,
-            name: "Player 4",
+            seat: "kamicha",
+            name: "",
             wind: "北",
             score: 25000,
             hand: [],
             discards: [],
             melds: [],
-            isDealer: false,
         },
     ],
 };
@@ -65,6 +67,16 @@ interface MatchStore {
     setRoundNumber: (round: 1 | 2 | 3 | 4) => void;
 
     setDealer: (dealer: Wind) => void;
+
+    setPlayerName: (
+        playerId: number, 
+        name: string,
+    ) => void;
+
+    setPlayerScore: (
+        playerId: number,
+        score: number,
+    ) => void;
 }
 
 export const useMatchStore = create<MatchStore>((set) => ({
@@ -90,12 +102,37 @@ export const useMatchStore = create<MatchStore>((set) => ({
         set((store) => ({
             state: {
                 ...store.state,
+                dealer,
+            },
+        })),
 
-                players: store.state.players.map((player) => ({
-                    ...player,
-
-                    isDealer: player.wind === dealer,
-                })),
+    setPlayerName: (playerId, name) =>
+        set((store) => ({
+            state: {
+                ...store.state,
+                players: store.state.players.map((player) =>
+                    player.id === playerId
+                        ? {
+                              ...player,
+                              name,
+                          }
+                        : player,
+                ),
+            },
+        })),
+    
+    setPlayerScore: (playerId, score) =>
+        set((store) => ({
+            state: {
+                ...store.state,
+                players: store.state.players.map((player) =>
+                    player.id === playerId
+                        ? {
+                              ...player,
+                              score,
+                          }
+                        : player,
+                ),
             },
         })),
 }));

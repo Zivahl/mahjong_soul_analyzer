@@ -1,0 +1,31 @@
+.player-section {
+    display: flex;
+    flex-direction: column;
+
+    gap: 16px;
+}
+
+.player-card {
+    border: 1px solid #d7d7d7;
+
+    border-radius: 8px;
+
+    padding: 16px;
+}
+
+.player-title {
+    margin-bottom: 12px;
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.player-grid {
+    display: grid;
+
+    grid-template-columns: 100px 1fr;
+
+    gap: 12px;
+
+    align-items: center;
+}

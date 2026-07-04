@@ -14,9 +14,6 @@ export const RoundSection = () => {
         setDealer,
     } = useMatchStore();
 
-    const dealer =
-        state.players.find((player) => player.isDealer)?.wind ?? "東";
-
     return (
         <SettingCard title="局情報">
             <ButtonGroup
@@ -36,7 +33,7 @@ export const RoundSection = () => {
             <ButtonGroup
                 label="親"
                 options={winds}
-                value={dealer}
+                value={state.dealer}
                 onChange={setDealer}
             />
         </SettingCard>

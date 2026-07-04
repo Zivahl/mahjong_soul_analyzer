@@ -1,7 +1,15 @@
 import type { Wind } from "@/types/match";
 
+export type Seat =
+    | "self"
+    | "shimocha"
+    | "toimen"
+    | "kamicha";
+
 export interface PlayerState {
     id: number;
+
+    seat: Seat;
 
     name: string;
 
@@ -14,6 +22,4 @@ export interface PlayerState {
     discards: string[];
 
     melds: string[];
-
-    isDealer: boolean;
 }

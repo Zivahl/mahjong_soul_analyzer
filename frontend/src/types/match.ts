@@ -7,6 +7,8 @@ export interface MatchState {
 
     roundNumber: 1 | 2 | 3 | 4;
 
+    dealer: Wind;
+
     riichiSticks: number;
 
     honba: number;
