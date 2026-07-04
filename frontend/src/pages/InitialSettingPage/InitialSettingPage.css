@@ -1,0 +1,27 @@
+.initial-setting-page {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 24px;
+
+    padding: 24px;
+}
+
+.setting-placeholder {
+    flex: 1;
+
+    border: 1px dashed #b0b0b0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.initial-setting-page button {
+    align-self: center;
+
+    width: 220px;
+    height: 56px;
+}
