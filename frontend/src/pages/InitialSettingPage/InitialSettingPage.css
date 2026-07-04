@@ -9,19 +9,20 @@
     padding: 24px;
 }
 
-.setting-placeholder {
-    flex: 1;
+.initial-grid {
 
-    border: 1px dashed #b0b0b0;
+    display: grid;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 20px;
 }
 
-.initial-setting-page button {
+.complete-button {
+
     align-self: center;
 
     width: 220px;
+
     height: 56px;
 }
