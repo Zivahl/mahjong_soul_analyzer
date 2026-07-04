@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { MainLayout } from "./layouts/MainLayout/MainLayout";
-import { InitialSettingPage } from "./pages/InitialSettingPage/InitialSettingPage";
-import { StartPage } from "./pages/StartPage/StartPage";
+import { MainLayout } from "@/layouts/MainLayout/MainLayout";
+import { InitialSettingPage } from "@/pages/InitialSettingPage/InitialSettingPage";
+import { StartPage } from "@/pages/StartPage/StartPage";
 
 function App() {
   return (

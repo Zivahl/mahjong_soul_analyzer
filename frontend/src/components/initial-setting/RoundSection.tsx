@@ -1,6 +1,6 @@
-import { ButtonGroup } from "../common/ButtonGroup";
-import { SettingCard } from "../common/SettingCard";
-import { useMatchStore } from "../../store/matchStore";
+import { ButtonGroup } from "@/components/common/ButtonGroup";
+import { SettingCard } from "@/components/common/SettingCard";
+import { useMatchStore } from "@/store/matchStore";
 
 const winds = ["東", "南", "西", "北"] as const;
 const rounds = [1, 2, 3, 4] as const;

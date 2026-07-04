@@ -1,8 +1,8 @@
-import { DepositSection } from "../../components/initial-setting/DepositSection";
-import { DoraSection } from "../../components/initial-setting/DoraSection";
-import { HandSection } from "../../components/initial-setting/HandSection";
-import { RoundSection } from "../../components/initial-setting/RoundSection";
-import { ScoreSection } from "../../components/initial-setting/ScoreSection";
+import { DepositSection } from "@/components/initial-setting/DepositSection";
+import { DoraSection } from "@/components/initial-setting/DoraSection";
+import { HandSection } from "@/components/initial-setting/HandSection";
+import { RoundSection } from "@/components/initial-setting/RoundSection";
+import { ScoreSection } from "@/components/initial-setting/ScoreSection";
 import "./InitialSettingPage.css";
 
 export const InitialSettingPage = () => {
