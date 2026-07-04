@@ -1,0 +1,39 @@
+.button-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.button-group-label {
+    font-weight: 600;
+}
+
+.button-group-buttons {
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+}
+
+.button-group-button {
+    min-width: 48px;
+
+    height: 36px;
+
+    border: 1px solid #bdbdbd;
+
+    border-radius: 6px;
+
+    background: white;
+}
+
+.button-group-button:hover {
+    background: #f5f5f5;
+}
+
+.button-group-button.selected {
+    background: #0078d4;
+    color: white;
+}

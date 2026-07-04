@@ -1,0 +1,21 @@
+.setting-card {
+    border: 1px solid #d6d6d6;
+    border-radius: 8px;
+
+    padding: 16px;
+
+    background: #ffffff;
+}
+
+.setting-card-title {
+    margin: 0 0 16px;
+
+    font-size: 18px;
+}
+
+.setting-card-body {
+    display: flex;
+    flex-direction: column;
+
+    gap: 20px;
+}

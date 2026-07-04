@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { MatchState, Wind } from "../types/match";
+import type { MatchState, Wind } from "../types/match";
 
 interface MatchStore {
     state: MatchState;
