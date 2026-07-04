@@ -1,0 +1,15 @@
+.start-page {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.start-page button {
+    width: 220px;
+    height: 70px;
+
+    font-size: 22px;
+}
