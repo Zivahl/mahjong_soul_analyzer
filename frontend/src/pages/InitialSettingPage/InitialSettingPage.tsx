@@ -17,9 +17,9 @@ export const InitialSettingPage = () => {
                 <DoraSection />
 
                 <DepositSection />
-            </div>
 
-            <HandSection />
+                <HandSection />
+            </div>
 
             <button className="complete-button">
                 設定完了

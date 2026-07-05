@@ -1,8 +1,11 @@
 .tile {
+    width: 42px;
+    height: 56px;
 
     padding: 0;
 
     border: 2px solid transparent;
+    border-radius: 6px;
 
     background: transparent;
 
@@ -10,10 +13,12 @@
 }
 
 .tile img {
-
-    width: 42px;
+    width: 100%;
+    height: 100%;
 
     display: block;
+
+    object-fit: contain;
 }
 
 .tile.selected {

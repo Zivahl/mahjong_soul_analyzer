@@ -1,9 +1,28 @@
-import "./HandSection.css";
+import { SettingCard } from "@/components/common/SettingCard";
+import { TileListEditor } from "@/components/common/TileListEditor/TileListEditor";
+
+import { useMatchStore } from "@/store/matchStore";
 
 export const HandSection = () => {
-  return (
-    <section className="setting-card">
-      <h3>自家手牌</h3>
-    </section>
-  );
+    const {
+        state,
+        setHand,
+    } = useMatchStore();
+
+    const self =
+        state.players.find(
+            (player) => player.seat === "self",
+        )!;
+
+    return (
+        <SettingCard title="自家手牌">
+            <TileListEditor
+                tiles={self.hand}
+                maxTiles={14}
+                onChange={(tiles) =>
+                    setHand(self.id, tiles)
+                }
+            />
+        </SettingCard>
+    );
 };

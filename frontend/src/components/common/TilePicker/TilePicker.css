@@ -1,9 +1,7 @@
 .tile-picker {
-
     display: grid;
 
-    grid-template-columns:
-        repeat(10, auto);
+    grid-template-columns: repeat(10, auto);
 
-    gap: 6px;
+    gap: 0px;
 }

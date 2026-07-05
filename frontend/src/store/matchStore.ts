@@ -82,6 +82,11 @@ interface MatchStore {
     setDoraIndicators: (
         tiles: TileId[],
     ) => void;
+
+    setHand: (
+        playerId: number,
+        hand: TileId[],
+    ) => void;
 }
 
 export const useMatchStore = create<MatchStore>((set) => ({
@@ -147,5 +152,20 @@ export const useMatchStore = create<MatchStore>((set) => ({
                 ...store.state,
                 doraIndicators: tiles,
             },
+    })),
+
+    setHand: (playerId, hand) =>
+    set((store) => ({
+        state: {
+            ...store.state,
+            players: store.state.players.map((player) =>
+                player.id === playerId
+                    ? {
+                          ...player,
+                          hand,
+                      }
+                    : player,
+            ),
+        },
     })),
 }));
