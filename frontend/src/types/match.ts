@@ -1,4 +1,5 @@
 import type { PlayerState } from "@/types/player";
+import type { TileId } from "@/types/tile";
 
 export type Wind = "東" | "南" | "西" | "北";
 
@@ -13,7 +14,7 @@ export interface MatchState {
 
     honba: number;
 
-    doraIndicators: string[];
+    doraIndicators: TileId[];
 
     players: PlayerState[];
 }

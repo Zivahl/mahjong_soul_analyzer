@@ -1,4 +1,5 @@
 import type { Wind } from "@/types/match";
+import type { TileId } from "@/types/tile";
 
 export type Seat =
     | "self"
@@ -17,9 +18,9 @@ export interface PlayerState {
 
     score: number;
 
-    hand: string[];
+    hand: TileId[];
 
-    discards: string[];
+    discards: TileId[];
 
-    melds: string[];
+    melds: TileId[];
 }

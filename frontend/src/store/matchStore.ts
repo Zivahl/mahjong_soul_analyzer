@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import type { MatchState, Wind } from "@/types/match";
+import type { TileId } from "@/types/tile";
 
 const initialState: MatchState = {
     roundWind: "東",
@@ -77,6 +78,10 @@ interface MatchStore {
         playerId: number,
         score: number,
     ) => void;
+
+    setDoraIndicators: (
+        tiles: TileId[],
+    ) => void;
 }
 
 export const useMatchStore = create<MatchStore>((set) => ({
@@ -135,4 +140,12 @@ export const useMatchStore = create<MatchStore>((set) => ({
                 ),
             },
         })),
+
+    setDoraIndicators: (tiles: TileId[]) =>
+        set((store) => ({
+            state: {
+                ...store.state,
+                doraIndicators: tiles,
+            },
+    })),
 }));

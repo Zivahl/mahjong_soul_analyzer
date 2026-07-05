@@ -1,0 +1,24 @@
+.tile {
+
+    padding: 0;
+
+    border: 2px solid transparent;
+
+    background: transparent;
+
+    cursor: pointer;
+}
+
+.tile img {
+
+    width: 42px;
+
+    display: block;
+}
+
+.tile.selected {
+
+    border-color: #0078d4;
+
+    border-radius: 6px;
+}
