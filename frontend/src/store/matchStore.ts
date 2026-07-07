@@ -8,7 +8,7 @@ const initialState: MatchState = {
 
     roundNumber: 1,
 
-    dealer: "東",
+    dealerSeat: "self",
 
     riichiSticks: 0,
 
@@ -19,9 +19,8 @@ const initialState: MatchState = {
     players: [
         {
             id: 0,
-            seat: "self",
+            seat: "shimocha",
             name: "",
-            wind: "東",
             score: 25000,
             hand: [],
             discards: [],
@@ -29,9 +28,8 @@ const initialState: MatchState = {
         },
         {
             id: 1,
-            seat: "shimocha",
+            seat: "toimen",
             name: "",
-            wind: "南",
             score: 25000,
             hand: [],
             discards: [],
@@ -39,9 +37,8 @@ const initialState: MatchState = {
         },
         {
             id: 2,
-            seat: "toimen",
+            seat: "kamicha",
             name: "",
-            wind: "西",
             score: 25000,
             hand: [],
             discards: [],
@@ -49,9 +46,8 @@ const initialState: MatchState = {
         },
         {
             id: 3,
-            seat: "kamicha",
+            seat: "self",
             name: "",
-            wind: "北",
             score: 25000,
             hand: [],
             discards: [],
@@ -155,17 +151,17 @@ export const useMatchStore = create<MatchStore>((set) => ({
     })),
 
     setHand: (playerId, hand) =>
-    set((store) => ({
-        state: {
-            ...store.state,
-            players: store.state.players.map((player) =>
-                player.id === playerId
-                    ? {
-                          ...player,
-                          hand,
-                      }
-                    : player,
-            ),
-        },
+        set((store) => ({
+            state: {
+                ...store.state,
+                players: store.state.players.map((player) =>
+                    player.id === playerId
+                        ? {
+                              ...player,
+                              hand,
+                          }
+                        : player,
+                ),
+            },
     })),
 }));

@@ -2,6 +2,7 @@ import { NumberField } from "@/components/common/NumberField/NumberField";
 import { SettingCard } from "@/components/common/SettingCard";
 import { TextField } from "@/components/common/TextField/TextField";
 import { useMatchStore } from "@/store/matchStore";
+import { getPlayerWind } from "@/utils/mahjong";
 
 import "./PlayerSection.css";
 
@@ -12,17 +13,25 @@ export const PlayerSection = () => {
         setPlayerScore,
     } = useMatchStore();
 
+    const players = state.players.map((player) => ({
+        ...player,
+        wind: getPlayerWind(
+            state.dealerSeat,
+            player.seat,
+        ),
+    }));
+
     return (
         <SettingCard title="プレイヤー設定">
             <div className="player-section">
-                {state.players.map((player) => (
+                {players.map((player) => (
                     <fieldset
                         key={player.id}
                         className="player-card"
                     >
                         <legend className="player-title">
                             <span className="player-wind">
-                                {player.wind}家
+                                {player.wind}
                             </span>
 
                             <label>名前</label>

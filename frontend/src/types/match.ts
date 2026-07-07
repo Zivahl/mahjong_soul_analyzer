@@ -1,4 +1,5 @@
 import type { PlayerState } from "@/types/player";
+import type { Seat } from "@/types/player";
 import type { TileId } from "@/types/tile";
 
 export type Wind = "東" | "南" | "西" | "北";
@@ -8,7 +9,7 @@ export interface MatchState {
 
     roundNumber: 1 | 2 | 3 | 4;
 
-    dealer: Wind;
+    dealerSeat: Seat;
 
     riichiSticks: number;
 
