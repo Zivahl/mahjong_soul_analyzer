@@ -1,29 +1,24 @@
 .tile {
-    width: 42px;
-    height: 56px;
-
     padding: 0;
 
     border: 2px solid transparent;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
 
     background: transparent;
 
     cursor: pointer;
 }
 
-.tile img {
-    width: 100%;
-    height: 100%;
-
-    display: block;
-
-    object-fit: contain;
+.tile:hover {
+    border-color: #b5b5b5;
 }
 
 .tile.selected {
-
     border-color: #0078d4;
+}
 
-    border-radius: 6px;
+.tile img {
+    display: block;
+
+    width: 28px;
 }

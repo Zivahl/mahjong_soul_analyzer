@@ -16,15 +16,15 @@ export const PlayerSection = () => {
         <SettingCard title="プレイヤー設定">
             <div className="player-section">
                 {state.players.map((player) => (
-                    <div
+                    <fieldset
                         key={player.id}
                         className="player-card"
                     >
-                        <div className="player-title">
-                            {player.wind}家
-                        </div>
+                        <legend className="player-title">
+                            <span className="player-wind">
+                                {player.wind}家
+                            </span>
 
-                        <div className="player-grid">
                             <label>名前</label>
 
                             <TextField
@@ -49,8 +49,8 @@ export const PlayerSection = () => {
                                     )
                                 }
                             />
-                        </div>
-                    </div>
+                        </legend>
+                    </fieldset>
                 ))}
             </div>
         </SettingCard>

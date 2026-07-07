@@ -1,9 +1,8 @@
-import type { ReactNode } from "react";
 import "./SettingCard.css";
 
 interface SettingCardProps {
     title: string;
-    children: ReactNode;
+    children: React.ReactNode;
 }
 
 export const SettingCard = ({
@@ -11,14 +10,14 @@ export const SettingCard = ({
     children,
 }: SettingCardProps) => {
     return (
-        <section className="setting-card">
-            <h3 className="setting-card-title">
+        <fieldset className="setting-card">
+            <legend className="setting-card-title">
                 {title}
-            </h3>
+            </legend>
 
-            <div className="setting-card-body">
+            <div className="setting-card-content">
                 {children}
             </div>
-        </section>
+        </fieldset>
     );
 };

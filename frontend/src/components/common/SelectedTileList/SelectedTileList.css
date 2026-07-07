@@ -1,18 +1,13 @@
 .selected-tile-list {
-
     display: flex;
-
     flex-wrap: wrap;
+    gap: var(--space-sm);
 
-    gap: 6px;
+    min-height: 68px;
+    padding: var(--space-sm);
 
-    min-height: 52px;
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--radius-md);
 
-    padding: 8px;
-
-    border: 1px solid #d8d8d8;
-
-    border-radius: 8px;
-
-    background: #fafafa;
+    background: var(--background-light);
 }

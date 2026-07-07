@@ -1,31 +1,41 @@
+:root {
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+
+    --radius-sm: 6px;
+    --radius-md: 8px;
+
+    --border-color: #bdbdbd;
+    --border-color-light: #d7d7d7;
+
+    --background-light: #fafafa;
+
+    --font-size-sm: 13px;
+    --font-size-md: 14px;
+
+    --control-height: 32px;
+
+    --color-primary: #0078d4;
+    --color-primary-hover: #0069bb;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 html,
 body,
 #root {
     width: 100%;
     height: 100%;
-    margin: 0;
-    padding: 0;
-}
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
+    margin: 0;
 }
 
 body {
     font-family:
-        Inter,
-        "Noto Sans JP",
+        "Segoe UI",
         sans-serif;
-
-    overflow: hidden;
-
-    background: #ffffff;
-    color: #222222;
-}
-
-button {
-    font: inherit;
-    cursor: pointer;
 }

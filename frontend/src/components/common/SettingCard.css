@@ -1,21 +1,20 @@
 .setting-card {
-    border: 1px solid #d6d6d6;
-    border-radius: 8px;
+    margin: 0;
+    padding: var(--space-md);
 
-    padding: 16px;
-
-    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
 }
 
 .setting-card-title {
-    margin: 0 0 16px;
+    padding: 0 var(--space-sm);
 
-    font-size: 18px;
+    font-size: var(--font-size-md);
+    font-weight: 600;
 }
 
-.setting-card-body {
+.setting-card-content {
     display: flex;
     flex-direction: column;
-
-    gap: 20px;
+    gap: var(--space-sm);
 }
