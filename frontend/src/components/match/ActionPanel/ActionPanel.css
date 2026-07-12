@@ -1,0 +1,45 @@
+.action-panel {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: var(--space-xs);
+
+    width: 100%;
+}
+
+
+.action-row {
+    display: flex;
+
+    justify-content: center;
+
+    gap: var(--space-xs);
+}
+
+
+.action-row button {
+    height: var(--control-height);
+
+    padding: 0 var(--space-md);
+
+    border:
+        1px solid var(--border-color);
+
+    border-radius:
+        var(--radius-sm);
+
+    background: white;
+
+    cursor: pointer;
+}
+
+
+.action-row button:hover {
+    background: #f5f5f5;
+}
+
+
+.action-row-bottom button {
+    width: 80px;
+}

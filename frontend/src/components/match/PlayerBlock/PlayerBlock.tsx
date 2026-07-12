@@ -2,6 +2,7 @@ import { useMatchStore } from "@/store/matchStore";
 import { getPlayerWind } from "@/utils/mahjong";
 import { SEAT_LABEL } from "@/constants/seats";
 import type { Seat } from "@/types/player";
+import { ActionPanel } from "@/components/match/ActionPanel/ActionPanel";
 
 import "./PlayerBlock.css";
 
@@ -70,7 +71,7 @@ export const PlayerBlock = ({
 
 
             <div className="player-block-body">
-                手牌
+                <ActionPanel />
             </div>
 
         </fieldset>
