@@ -1,16 +1,24 @@
-import { useNavigate } from "react-router-dom";
+import { useAppStore } from "@/store/appStore";
 import "./StartPage.css";
 
 export const StartPage = () => {
-  const navigate = useNavigate();
+
+  const setCurrentPage = useAppStore(
+      (state) => state.setCurrentPage,
+  );
 
   return (
     <div className="start-page">
-      <button
-        onClick={() => navigate("/initial-setting")}
-      >
-        開始
-      </button>
+        <button
+            className="start-button"
+            onClick={() =>
+                setCurrentPage(
+                    "initialSetting",
+                )
+            }
+        >
+            開始
+        </button>
     </div>
   );
 };

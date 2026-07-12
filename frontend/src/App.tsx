@@ -1,23 +1,33 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { MainLayout } from "@/layouts/MainLayout/MainLayout";
+
 import { InitialSettingPage } from "@/pages/InitialSettingPage/InitialSettingPage";
+import { MatchPage } from "@/pages/MatchPage/MatchPage";
 import { StartPage } from "@/pages/StartPage/StartPage";
 
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Navigate replace to="/start" />} />
-          <Route path="/start" element={<StartPage />} />
-          <Route
-            path="/initial-setting"
-            element={<InitialSettingPage />}
-          />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  );
-}
+import { useAppStore } from "@/store/appStore";
 
-export default App;
+import "./App.css";
+
+export const App = () => {
+    const currentPage =
+        useAppStore(
+            (state) => state.currentPage,
+        );
+
+    return (
+        <MainLayout>
+            {currentPage === "start" && (
+                <StartPage />
+            )}
+
+            {currentPage ===
+                "initialSetting" && (
+                <InitialSettingPage />
+            )}
+
+            {currentPage === "match" && (
+                <MatchPage />
+            )}
+        </MainLayout>
+    );
+};
