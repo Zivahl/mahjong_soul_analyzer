@@ -1,5 +1,5 @@
-import type { PlayerState } from "@/types/player";
-import type { Seat } from "@/types/player";
+import type { PlayerActionState } from "@/types/analysis";
+import type { PlayerState, Seat } from "@/types/player";
 import type { TileId } from "@/types/tile";
 
 export type Wind = "東" | "南" | "西" | "北";
@@ -20,4 +20,9 @@ export interface MatchState {
     doraIndicators: TileId[];
 
     players: PlayerState[];
+
+    playerActions: Record<
+        Seat,
+        PlayerActionState
+    >;
 }

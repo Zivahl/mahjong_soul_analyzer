@@ -1,8 +1,17 @@
 import { create } from "zustand";
 
 import type { MatchState, Wind } from "@/types/match";
+import type { PlayerActionState } from "@/types/analysis";
 import type { Seat } from "@/types/player";
 import type { TileId } from "@/types/tile";
+
+const INITIAL_PLAYER_ACTION: PlayerActionState = {
+    pon: false,
+    chi: false,
+    kan: false,
+    ron: false,
+    tsumo: false,
+};
 
 const initialState: MatchState = {
     roundWind: "東",
@@ -57,6 +66,24 @@ const initialState: MatchState = {
             melds: [],
         },
     ],
+
+    playerActions: {
+        self: {
+            ...INITIAL_PLAYER_ACTION,
+        },
+    
+        shimocha: {
+            ...INITIAL_PLAYER_ACTION,
+        },
+    
+        toimen: {
+            ...INITIAL_PLAYER_ACTION,
+        },
+    
+        kamicha: {
+            ...INITIAL_PLAYER_ACTION,
+        },
+    },
 };
 
 interface MatchStore {

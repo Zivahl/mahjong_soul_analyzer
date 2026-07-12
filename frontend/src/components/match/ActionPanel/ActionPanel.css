@@ -21,7 +21,8 @@
 .action-row button {
     height: var(--control-height);
 
-    padding: 0 var(--space-md);
+    padding:
+        0 var(--space-md);
 
     border:
         1px solid var(--border-color);
@@ -35,8 +36,15 @@
 }
 
 
-.action-row button:hover {
+.action-row button:hover:not(:disabled) {
     background: #f5f5f5;
+}
+
+
+.action-row button:disabled {
+    opacity: 0.4;
+
+    cursor: default;
 }
 
 

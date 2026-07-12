@@ -1,10 +1,15 @@
-import { useMatchStore } from "@/store/matchStore";
-import { getPlayerWind } from "@/utils/mahjong";
-import { SEAT_LABEL } from "@/constants/seats";
-import type { Seat } from "@/types/player";
 import { ActionPanel } from "@/components/match/ActionPanel/ActionPanel";
 
+import { useMatchStore } from "@/store/matchStore";
+
+import { getPlayerWind } from "@/utils/mahjong";
+
+import { SEAT_LABEL } from "@/constants/seats";
+
+import type { Seat } from "@/types/player";
+
 import "./PlayerBlock.css";
+
 
 interface Props {
     seat: Seat;
@@ -13,6 +18,7 @@ interface Props {
 export const PlayerBlock = ({
     seat,
 }: Props) => {
+
     const {
         state,
     } = useMatchStore();
@@ -30,10 +36,11 @@ export const PlayerBlock = ({
     }
 
 
-    const wind = getPlayerWind(
-        state.dealerSeat,
-        player.seat,
-    );
+    const wind =
+        getPlayerWind(
+            state.dealerSeat,
+            player.seat,
+        );
 
 
     const isDealer =
@@ -69,9 +76,14 @@ export const PlayerBlock = ({
 
             </legend>
 
-
             <div className="player-block-body">
-                <ActionPanel />
+
+                <ActionPanel
+                    actions={
+                        state.playerActions[seat]
+                    }
+                />
+
             </div>
 
         </fieldset>
