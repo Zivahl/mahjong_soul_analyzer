@@ -10,20 +10,25 @@ export const InitialSettingPage = () => {
     return (
         <div className="initial-setting-page">
             <div className="initial-grid">
-                <div className="left-column">
+                <div className="column">
                     <RoundSection />
+
+                    <div className="column-spacer" />
+
                     <PlayerSection />
                 </div>
-            
-                <div className="right-column">
+
+                <div className="column">
                     <DoraSection />
+
+                    <div className="column-spacer" />
+
                     <DepositSection />
                 </div>
-            
-            </div>
 
-            <div className="hand-section">
-                <HandSection />
+                <div className="hand-section">
+                    <HandSection />
+                </div>
             </div>
 
             <button className="complete-button">
