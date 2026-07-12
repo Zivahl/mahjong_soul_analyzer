@@ -80,6 +80,14 @@ interface MatchStore {
         tiles: TileId[],
     ) => void;
 
+    setRiichiSticks: (
+        value: number,
+    ) => void;
+
+setHonba: (
+        value: number,
+    ) => void;
+
     setHand: (
         playerId: number,
         hand: TileId[],
@@ -149,7 +157,23 @@ export const useMatchStore = create<MatchStore>((set) => ({
                 ...store.state,
                 doraIndicators: tiles,
             },
-    })),
+        })),
+
+    setRiichiSticks: (value) =>
+        set((store) => ({
+            state: {
+                ...store.state,
+                riichiSticks: value,
+            },
+        })),
+
+    setHonba: (value) =>
+        set((store) => ({
+            state: {
+                ...store.state,
+                honba: value,
+            },
+        })),
 
     setHand: (playerId, hand) =>
         set((store) => ({
@@ -164,5 +188,5 @@ export const useMatchStore = create<MatchStore>((set) => ({
                         : player,
                 ),
             },
-    })),
+        })),
 }));

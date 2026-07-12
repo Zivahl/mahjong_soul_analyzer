@@ -1,9 +1,33 @@
+import { NumberField } from "@/components/common/NumberField/NumberField";
+import { SettingCard } from "@/components/common/SettingCard/SettingCard";
+import { useMatchStore } from "@/store/matchStore";
+
 import "./DepositSection.css";
 
 export const DepositSection = () => {
-  return (
-    <section className="setting-card">
-      <h3>供託</h3>
-    </section>
-  );
+    const {
+        state,
+        setRiichiSticks,
+        setHonba,
+    } = useMatchStore();
+
+    return (
+        <SettingCard title="供託">
+            <div className="deposit-section">
+                <label>リーチ棒</label>
+
+                <NumberField
+                    value={state.riichiSticks}
+                    onChange={setRiichiSticks}
+                />
+
+                <label>本場</label>
+
+                <NumberField
+                    value={state.honba}
+                    onChange={setHonba}
+                />
+            </div>
+        </SettingCard>
+    );
 };

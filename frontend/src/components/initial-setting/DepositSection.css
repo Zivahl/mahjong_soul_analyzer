@@ -1,12 +1,14 @@
-.setting-card {
+.deposit-section {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
 
-    border: 1px solid #cfcfcf;
+.deposit-section label {
+    font-weight: 400;
+    white-space: nowrap;
+}
 
-    border-radius: 8px;
-
-    padding: 12px;
-
-    min-height: 150px;
-
-    background: white;
+.deposit-section .number-field {
+    width: 72px;
 }
