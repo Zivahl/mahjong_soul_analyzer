@@ -11,6 +11,8 @@ const initialState: MatchState = {
 
     dealerSeat: "self",
 
+    remainingTiles: 70,
+
     riichiSticks: 0,
 
     honba: 0,
@@ -84,7 +86,7 @@ interface MatchStore {
         value: number,
     ) => void;
 
-setHonba: (
+    setHonba: (
         value: number,
     ) => void;
 

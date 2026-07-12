@@ -11,6 +11,8 @@ export interface MatchState {
 
     dealerSeat: Seat;
 
+    remainingTiles: number;
+
     riichiSticks: number;
 
     honba: number;

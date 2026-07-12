@@ -1,15 +1,43 @@
 .center-area {
     display: flex;
 
+    flex-direction: column;
+
     justify-content: center;
     align-items: center;
 
     width: var(--center-area-width);
 
-    min-height: 180px;
+    min-height: 120px;
 
-    border: 1px dashed var(--border-color);
+    border: 1px solid var(--border-color);
+
     border-radius: var(--radius-md);
 
-    color: #888;
+    background: white;
+}
+
+
+.center-round {
+    font-size: var(--font-size-md);
+
+    font-weight: 600;
+
+    text-align: center;
+}
+
+
+.center-divider {
+    width: 80%;
+
+    margin: var(--space-sm) 0;
+
+    border-top: 1px solid var(--border-color);
+}
+
+
+.center-remaining {
+    font-size: var(--font-size-md);
+
+    font-weight: 600;
 }
