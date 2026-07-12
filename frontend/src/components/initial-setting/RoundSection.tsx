@@ -1,31 +1,9 @@
 import { SettingCard } from "@/components/common/SettingCard/SettingCard";
 import { SelectField } from "@/components/common/SelectField/SelectField";
 import { useMatchStore } from "@/store/matchStore";
-import type { Seat } from "@/types/player";
+import { SEAT_OPTIONS } from "@/constants/seats";
 
 import "./RoundSection.css";
-
-const DEALER_OPTIONS = [
-    {
-        value: "self",
-        label: "自家",
-    },
-    {
-        value: "shimocha",
-        label: "下家",
-    },
-    {
-        value: "toimen",
-        label: "対面",
-    },
-    {
-        value: "kamicha",
-        label: "上家",
-    },
-] as const satisfies readonly {
-    value: Seat;
-    label: string;
-}[];
 
 export const RoundSection = () => {
     const {
@@ -49,7 +27,7 @@ export const RoundSection = () => {
                 <SelectField 
                     id="dealer-seat"
                     value={state.dealerSeat}
-                    options={DEALER_OPTIONS}
+                    options={SEAT_OPTIONS}
                     onChange={setDealerSeat}
                 />
             </div>

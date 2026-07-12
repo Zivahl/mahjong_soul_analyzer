@@ -1,5 +1,6 @@
 import { useMatchStore } from "@/store/matchStore";
 import { getPlayerWind } from "@/utils/mahjong";
+import { SEAT_LABEL } from "@/constants/seats";
 import type { Seat } from "@/types/player";
 
 import "./PlayerBlock.css";
@@ -7,14 +8,6 @@ import "./PlayerBlock.css";
 interface Props {
     seat: Seat;
 }
-
-const SEAT_LABEL = {
-    self: "自家",
-    shimocha: "下家",
-    toimen: "対面",
-    kamicha: "上家",
-} as const;
-
 
 export const PlayerBlock = ({
     seat,

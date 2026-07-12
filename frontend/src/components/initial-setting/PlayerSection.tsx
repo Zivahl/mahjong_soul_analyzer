@@ -3,6 +3,7 @@ import { SettingCard } from "@/components/common/SettingCard/SettingCard";
 import { TextField } from "@/components/common/TextField/TextField";
 import { useMatchStore } from "@/store/matchStore";
 import { getPlayerWind } from "@/utils/mahjong";
+import { SEAT_LABEL } from "@/constants/seats";
 
 import "./PlayerSection.css";
 
@@ -32,13 +33,7 @@ export const PlayerSection = () => {
                         >
                             <legend className="player-title">
                                 <span className="player-seat">
-                                    {player.seat === "shimocha"
-                                        ? "下家"
-                                        : player.seat === "toimen"
-                                          ? "対面"
-                                          : player.seat === "kamicha"
-                                            ? "上家"
-                                            : "自家"}
+                                    {SEAT_LABEL[player.seat]}
                                 </span>
 
                                 <span
