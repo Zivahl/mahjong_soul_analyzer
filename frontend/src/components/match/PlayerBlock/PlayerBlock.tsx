@@ -6,6 +6,7 @@ import { getPlayerWind } from "@/utils/mahjong";
 
 import { SEAT_LABEL } from "@/constants/seats";
 
+import type { ActionType } from "@/types/analysis";
 import type { Seat } from "@/types/player";
 
 import "./PlayerBlock.css";
@@ -15,12 +16,14 @@ interface Props {
     seat: Seat;
 }
 
+
 export const PlayerBlock = ({
     seat,
 }: Props) => {
 
     const {
         state,
+        setPendingAction,
     } = useMatchStore();
 
 
@@ -45,6 +48,16 @@ export const PlayerBlock = ({
 
     const isDealer =
         player.seat === state.dealerSeat;
+
+
+    const handleRequestAction = (
+        action: ActionType,
+    ) => {
+        setPendingAction({
+            seat,
+            action,
+        });
+    };
 
 
     return (
@@ -81,6 +94,10 @@ export const PlayerBlock = ({
                 <ActionPanel
                     actions={
                         state.playerActions[seat]
+                    }
+
+                    onRequestAction={
+                        handleRequestAction
                     }
                 />
 

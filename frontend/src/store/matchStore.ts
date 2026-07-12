@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 import type { MatchState, Wind } from "@/types/match";
-import type { PlayerActionState } from "@/types/analysis";
+import type { PlayerActionState, PlayerActionRequest } from "@/types/analysis";
 import type { Seat } from "@/types/player";
 import type { TileId } from "@/types/tile";
 
@@ -84,6 +84,8 @@ const initialState: MatchState = {
             ...INITIAL_PLAYER_ACTION,
         },
     },
+
+    pendingAction: null,
 };
 
 interface MatchStore {
@@ -120,6 +122,10 @@ interface MatchStore {
     setHand: (
         playerId: number,
         hand: TileId[],
+    ) => void;
+
+    setPendingAction: (
+        action: PlayerActionRequest | null,
     ) => void;
 }
 
@@ -216,6 +222,14 @@ export const useMatchStore = create<MatchStore>((set) => ({
                           }
                         : player,
                 ),
+            },
+        })),
+
+    setPendingAction: (action) =>
+        set((store) => ({
+            state: {
+                ...store.state,
+                pendingAction: action,
             },
         })),
 }));
