@@ -1,0 +1,15 @@
+.center-area {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    width: var(--center-area-width);
+
+    min-height: 180px;
+
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-md);
+
+    color: #888;
+}

@@ -1,11 +1,14 @@
+import { AnalysisSection } from "@/components/match/AnalysisSection/AnalysisSection";
+import { TableSection } from "@/components/match/TableSection/TableSection";
+
 import "./MatchPage.css";
 
 export const MatchPage = () => {
     return (
         <div className="match-page">
-            <h2>対局画面</h2>
+            <TableSection />
 
-            <p>T.B.D.</p>
+            <AnalysisSection />
         </div>
     );
 };

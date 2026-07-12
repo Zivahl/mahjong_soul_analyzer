@@ -1,0 +1,100 @@
+.table-section {
+    display: flex;
+    flex-direction: column;
+
+    padding: var(--space-md);
+
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+
+.table-title {
+    margin-bottom: var(--space-md);
+
+    font-weight: 600;
+}
+
+
+.table-content {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        var(--center-area-width)
+        1fr;
+
+    grid-template-rows:
+        auto
+        auto
+        auto;
+
+    gap: var(--space-md);
+
+    align-items: center;
+}
+
+
+/* ===================
+   上段
+=================== */
+
+.table-top {
+    grid-column: 1 / 4;
+
+    display: flex;
+
+    justify-content: center;
+}
+
+
+.table-top .player-block {
+    width: calc(
+        (100% - var(--center-area-width)
+        - var(--space-md) * 2) / 2
+    );
+}
+
+
+
+/* ===================
+   中段
+=================== */
+
+.table-middle {
+    grid-column: 1 / 4;
+
+    display: grid;
+
+    grid-template-columns:
+        subgrid;
+
+    align-items: center;
+}
+
+
+.table-middle .center-area {
+    grid-column: 2;
+}
+
+
+
+/* ===================
+   下段
+=================== */
+
+.table-bottom {
+    grid-column: 1 / 4;
+
+    display: flex;
+
+    justify-content: center;
+}
+
+
+.table-bottom .player-block {
+    width: calc(
+        (100% - var(--center-area-width)
+        - var(--space-md) * 2) / 2
+    );
+}

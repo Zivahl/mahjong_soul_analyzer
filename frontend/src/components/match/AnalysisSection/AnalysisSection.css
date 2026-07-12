@@ -1,0 +1,43 @@
+.analysis-section {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-md);
+
+    padding: var(--space-md);
+
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+.analysis-title {
+    font-weight: 600;
+}
+
+.analysis-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+
+    min-height: 120px;
+}
+
+.analysis-button {
+    align-self: flex-end;
+
+    height: var(--control-height);
+    padding: 0 20px;
+
+    border: none;
+    border-radius: var(--radius-md);
+
+    background: var(--color-primary);
+
+    color: white;
+
+    cursor: pointer;
+}
+
+.analysis-button:hover {
+    background: var(--color-primary-hover);
+}

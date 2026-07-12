@@ -19,6 +19,9 @@
 
     --color-primary: #0078d4;
     --color-primary-hover: #0069bb;
+
+ 
+    --center-area-width: 180px;
 }
 
 * {
