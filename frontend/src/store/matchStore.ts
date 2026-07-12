@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import type { MatchState, Wind } from "@/types/match";
+import type { Seat } from "@/types/player";
 import type { TileId } from "@/types/tile";
 
 const initialState: MatchState = {
@@ -63,7 +64,7 @@ interface MatchStore {
 
     setRoundNumber: (round: 1 | 2 | 3 | 4) => void;
 
-    setDealer: (dealer: Wind) => void;
+    setDealerSeat: (seat: Seat) => void;
 
     setPlayerName: (
         playerId: number, 
@@ -104,11 +105,11 @@ export const useMatchStore = create<MatchStore>((set) => ({
             },
         })),
 
-    setDealer: (dealer) =>
-        set((store) => ({
+    setDealerSeat: (seat) =>
+        set((state) => ({
             state: {
-                ...store.state,
-                dealer,
+                ...state.state,
+                dealerSeat: seat,
             },
         })),
 

@@ -13,22 +13,38 @@
 }
 
 .player-title {
-    display: flex;
+    display: grid;
+
+    grid-template-columns:
+        48px
+        28px
+        auto
+        140px
+        auto
+        100px;
+
     align-items: center;
-    gap: var(--space-sm);
 
-    padding: 0 var(--space-sm);
+    column-gap: var(--space-sm);
+}
 
-    font-size: var(--font-size-md);
+.player-seat {
     font-weight: 600;
 }
 
 .player-wind {
-    min-width: 2.8rem;
+    text-align: center;
+
+    font-weight: 600;
+}
+
+.player-wind.dealer {
+    color: #d32f2f;
 }
 
 .player-title label {
     font-weight: 400;
+    white-space: nowrap;
 }
 
 .player-title .text-field {

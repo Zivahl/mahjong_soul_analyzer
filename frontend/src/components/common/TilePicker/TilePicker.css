@@ -4,5 +4,5 @@
     grid-template-columns: repeat(10, auto);
     gap: var(--space-xs);
 
-    justify-content: start;
+    justify-content: center;
 }

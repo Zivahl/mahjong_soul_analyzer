@@ -9,8 +9,22 @@
 .initial-grid {
     display: grid;
 
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-md);
+
+    align-items: stretch;
+}
+
+.left-column,
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    height: 100%;
+}
+
+.hand-section {
+    grid-column: 1 / -1;
 }
 
 .complete-button {

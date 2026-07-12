@@ -1,41 +1,58 @@
-import { ButtonGroup } from "@/components/common/ButtonGroup";
-import { SettingCard } from "@/components/common/SettingCard";
+import { SettingCard } from "@/components/common/SettingCard/SettingCard";
+import { SelectField } from "@/components/common/SelectField/SelectField";
 import { useMatchStore } from "@/store/matchStore";
+import type { Seat } from "@/types/player";
 
-const winds = ["東", "南", "西", "北"] as const;
+import "./RoundSection.css";
 
-const rounds = [1, 2, 3, 4] as const;
+const DEALER_OPTIONS = [
+    {
+        value: "self",
+        label: "自家",
+    },
+    {
+        value: "shimocha",
+        label: "下家",
+    },
+    {
+        value: "toimen",
+        label: "対面",
+    },
+    {
+        value: "kamicha",
+        label: "上家",
+    },
+] as const satisfies readonly {
+    value: Seat;
+    label: string;
+}[];
 
 export const RoundSection = () => {
     const {
         state,
-        setRoundWind,
-        setRoundNumber,
-        setDealer,
+        setDealerSeat,
     } = useMatchStore();
 
     return (
         <SettingCard title="局情報">
-            <ButtonGroup
-                label="場風"
-                options={winds}
-                value={state.roundWind}
-                onChange={setRoundWind}
-            />
+            <div className="round-row">
+                <span className="round-display">
+                    {state.roundWind}
+                    {state.roundNumber}
+                    局
+                </span>
 
-            <ButtonGroup
-                label="局"
-                options={rounds}
-                value={state.roundNumber}
-                onChange={setRoundNumber}
-            />
+                <label htmlFor="dealer-seat">
+                    起家
+                </label>
 
-            <ButtonGroup
-                label="親"
-                options={winds}
-                value={state.dealer}
-                onChange={setDealer}
-            />
+                <SelectField 
+                    id="dealer-seat"
+                    value={state.dealerSeat}
+                    options={DEALER_OPTIONS}
+                    onChange={setDealerSeat}
+                />
+            </div>
         </SettingCard>
     );
 };

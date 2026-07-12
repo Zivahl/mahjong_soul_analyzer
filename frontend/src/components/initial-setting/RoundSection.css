@@ -1,12 +1,12 @@
-.setting-card {
+.round-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
 
-    border: 1px solid #cfcfcf;
+.round-display {
+    min-width: 48px;
 
-    border-radius: 8px;
-
-    padding: 12px;
-
-    min-height: 150px;
-
-    background: white;
+    font-size: var(--font-size-md);
+    font-weight: 600;
 }

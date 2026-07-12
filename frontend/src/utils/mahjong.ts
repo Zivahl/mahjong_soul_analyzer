@@ -1,17 +1,19 @@
+import type { Seat } from "@/types/player";
+
 export type Wind =
     | "東"
     | "南"
     | "西"
     | "北";
 
-const WINDS: Wind[] = [
+export const WINDS: readonly Wind[] = [
     "東",
     "南",
     "西",
     "北",
 ];
 
-const SEAT_INDEX: Record<Seat, number> = {
+export const SEAT_INDEX: Record<Seat, number> = {
     self: 0,
     shimocha: 1,
     toimen: 2,

@@ -38,4 +38,5 @@ body {
     font-family:
         "Segoe UI",
         sans-serif;
+    font-size: var(--font-size-md);
 }

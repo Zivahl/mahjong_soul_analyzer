@@ -1,4 +1,4 @@
-import { SettingCard } from "@/components/common/SettingCard";
+import { SettingCard } from "@/components/common/SettingCard/SettingCard";
 import { TileListEditor } from "@/components/common/TileListEditor/TileListEditor";
 
 import { useMatchStore } from "@/store/matchStore";
