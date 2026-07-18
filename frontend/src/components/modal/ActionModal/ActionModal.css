@@ -1,0 +1,67 @@
+.action-modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background: rgba(0,0,0,0.3);
+
+    z-index: 1000;
+}
+
+
+.action-modal {
+    width: 360px;
+
+    padding: var(--space-lg);
+
+    border-radius: var(--radius-md);
+
+    background: white;
+
+    box-shadow:
+        0 4px 20px rgba(0,0,0,0.2);
+}
+
+
+.action-modal h2 {
+    margin-top: 0;
+
+    text-align: center;
+}
+
+
+.action-modal-content {
+    min-height: 120px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    margin:
+        var(--space-md) 0;
+}
+
+
+.action-modal button {
+    width: 100%;
+
+    height: var(--control-height);
+
+    border: none;
+
+    border-radius: var(--radius-sm);
+
+    background: var(--color-primary);
+
+    color: white;
+
+    cursor: pointer;
+}

@@ -1,4 +1,5 @@
 import type { Seat } from "@/types/player";
+import type { TileId } from "@/types/tile";
 
 export type ActionType =
     | "pon"
@@ -29,4 +30,15 @@ export interface PlayerActionEvent {
     seat: Seat;
 
     action: ActionType;
+}
+
+export interface MeldChoicePattern {
+    id: string;
+
+    tiles: TileId[];
+
+    sidewaysTileIndex:
+        | 0
+        | 1
+        | 2;
 }

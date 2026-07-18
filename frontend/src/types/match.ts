@@ -1,8 +1,12 @@
-import type { PlayerActionState, PlayerActionRequest } from "@/types/analysis";
+import type { PlayerActionState } from "@/types/analysis";
 import type { PlayerState, Seat } from "@/types/player";
 import type { TileId } from "@/types/tile";
 
-export type Wind = "東" | "南" | "西" | "北";
+export type Wind =
+    | "東"
+    | "南"
+    | "西"
+    | "北";
 
 export interface MatchState {
     roundWind: Wind;
@@ -25,7 +29,4 @@ export interface MatchState {
         Seat,
         PlayerActionState
     >;
-
-    pendingAction:
-        PlayerActionRequest | null;
 }

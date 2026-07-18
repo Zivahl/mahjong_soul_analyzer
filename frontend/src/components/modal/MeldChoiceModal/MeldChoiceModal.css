@@ -1,0 +1,84 @@
+.meld-modal-overlay {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0, 0, 0, 0.35);
+
+    z-index: 1000;
+}
+
+.meld-modal {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-lg);
+
+    width: 520px;
+
+    padding: var(--space-lg);
+
+    border-radius: var(--radius-md);
+
+    background: white;
+
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.meld-modal-title {
+    margin: 0;
+
+    text-align: center;
+}
+
+.meld-modal-body {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-sm);
+}
+
+.meld-pattern {
+    display: flex;
+    align-items: center;
+
+    gap: var(--space-md);
+
+    width: 100%;
+
+    padding: var(--space-md);
+
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+
+    background: white;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s,
+        border-color 0.15s;
+}
+
+.meld-pattern:hover {
+    background: #f7f7f7;
+}
+
+.meld-pattern.selected {
+    border-color: var(--primary-color);
+}
+
+.meld-radio {
+    display: flex;
+    align-items: center;
+}
+
+.meld-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: var(--space-sm);
+}

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 import type { MatchState, Wind } from "@/types/match";
-import type { PlayerActionState, PlayerActionRequest } from "@/types/analysis";
+import type { PlayerActionState } from "@/types/analysis";
 import type { Seat } from "@/types/player";
 import type { TileId } from "@/types/tile";
 
@@ -71,21 +71,19 @@ const initialState: MatchState = {
         self: {
             ...INITIAL_PLAYER_ACTION,
         },
-    
+
         shimocha: {
             ...INITIAL_PLAYER_ACTION,
         },
-    
+
         toimen: {
             ...INITIAL_PLAYER_ACTION,
         },
-    
+
         kamicha: {
             ...INITIAL_PLAYER_ACTION,
         },
     },
-
-    pendingAction: null,
 };
 
 interface MatchStore {
@@ -98,7 +96,7 @@ interface MatchStore {
     setDealerSeat: (seat: Seat) => void;
 
     setPlayerName: (
-        playerId: number, 
+        playerId: number,
         name: string,
     ) => void;
 
@@ -123,10 +121,6 @@ interface MatchStore {
         playerId: number,
         hand: TileId[],
     ) => void;
-
-    setPendingAction: (
-        action: PlayerActionRequest | null,
-    ) => void;
 }
 
 export const useMatchStore = create<MatchStore>((set) => ({
@@ -149,9 +143,9 @@ export const useMatchStore = create<MatchStore>((set) => ({
         })),
 
     setDealerSeat: (seat) =>
-        set((state) => ({
+        set((store) => ({
             state: {
-                ...state.state,
+                ...store.state,
                 dealerSeat: seat,
             },
         })),
@@ -170,7 +164,7 @@ export const useMatchStore = create<MatchStore>((set) => ({
                 ),
             },
         })),
-    
+
     setPlayerScore: (playerId, score) =>
         set((store) => ({
             state: {
@@ -186,7 +180,7 @@ export const useMatchStore = create<MatchStore>((set) => ({
             },
         })),
 
-    setDoraIndicators: (tiles: TileId[]) =>
+    setDoraIndicators: (tiles) =>
         set((store) => ({
             state: {
                 ...store.state,
@@ -222,14 +216,6 @@ export const useMatchStore = create<MatchStore>((set) => ({
                           }
                         : player,
                 ),
-            },
-        })),
-
-    setPendingAction: (action) =>
-        set((store) => ({
-            state: {
-                ...store.state,
-                pendingAction: action,
             },
         })),
 }));

@@ -1,4 +1,8 @@
 .tile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     padding: 0;
 
     border: 2px solid transparent;
@@ -6,10 +10,14 @@
 
     background: transparent;
 
+    box-sizing: border-box;
+}
+
+button.tile {
     cursor: pointer;
 }
 
-.tile:hover {
+button.tile:hover {
     border-color: #b5b5b5;
 }
 
@@ -17,8 +25,17 @@
     border-color: #0078d4;
 }
 
-.tile img {
+.tile-image {
     display: block;
 
+    user-select: none;
+    pointer-events: none;
+}
+
+.tile:not(.sideways) .tile-image {
     width: 28px;
+}
+
+.tile.sideways .tile-image {
+    width: 42px;
 }

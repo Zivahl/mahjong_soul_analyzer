@@ -1,6 +1,7 @@
 import { ActionPanel } from "@/components/match/ActionPanel/ActionPanel";
 
 import { useMatchStore } from "@/store/matchStore";
+import { useActionModalStore } from "@/store/actionModalStore";
 
 import { getPlayerWind } from "@/utils/mahjong";
 
@@ -11,21 +12,21 @@ import type { Seat } from "@/types/player";
 
 import "./PlayerBlock.css";
 
-
 interface Props {
     seat: Seat;
 }
 
-
 export const PlayerBlock = ({
     seat,
 }: Props) => {
-
     const {
         state,
-        setPendingAction,
     } = useMatchStore();
 
+    const open =
+        useActionModalStore(
+            (state) => state.open,
+        );
 
     const player =
         state.players.find(
@@ -33,38 +34,30 @@ export const PlayerBlock = ({
                 player.seat === seat,
         );
 
-
     if (!player) {
         return null;
     }
 
-
-    const wind =
-        getPlayerWind(
-            state.dealerSeat,
-            player.seat,
-        );
-
+    const wind = getPlayerWind(
+        state.dealerSeat,
+        player.seat,
+    );
 
     const isDealer =
         player.seat === state.dealerSeat;
 
-
     const handleRequestAction = (
         action: ActionType,
     ) => {
-        setPendingAction({
+        open({
             seat,
             action,
         });
     };
 
-
     return (
         <fieldset className="player-block">
-
             <legend className="player-block-title">
-
                 <span className="player-seat">
                     {SEAT_LABEL[seat]}
                 </span>
@@ -86,23 +79,18 @@ export const PlayerBlock = ({
                 <span className="player-score">
                     {player.score}
                 </span>
-
             </legend>
 
             <div className="player-block-body">
-
                 <ActionPanel
                     actions={
                         state.playerActions[seat]
                     }
-
                     onRequestAction={
                         handleRequestAction
                     }
                 />
-
             </div>
-
         </fieldset>
     );
 };
