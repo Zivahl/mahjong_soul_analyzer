@@ -15,7 +15,7 @@ export interface PlayerState {
 
     score: number;
 
-    hand: TileId[];
+    hand?: TileId[];
 
     discards: TileId[];
 

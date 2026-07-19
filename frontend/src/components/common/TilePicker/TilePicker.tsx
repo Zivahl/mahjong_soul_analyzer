@@ -1,17 +1,21 @@
 import { Tile } from "@/components/common/Tile/Tile";
 
-import { TILES } from "@/constants/tiles";
+import { TILE_IDS } from "@/constants/tiles";
 
-import type { TileId, TileSelectionMode, } from "@/types/tile";
+import type { TileId, TileSelectionMode, TilePickerSource, } from "@/types/tile";
 
 import "./TilePicker.css";
 
 interface TilePickerProps {
     selectionMode?: TileSelectionMode;
 
+    source?: TilePickerSource;
+
+    tiles?: readonly TileId[];
+
     selectedTile?: TileId | null;
 
-    selectedTiles?: TileId[];
+    selectedTiles?: readonly TileId[];
 
     onTileClick?: (
         tile: TileId,
@@ -20,14 +24,24 @@ interface TilePickerProps {
 
 export const TilePicker = ({
     selectionMode = "multiple",
+    source = "all",
+    tiles = [],
     selectedTile = null,
     selectedTiles = [],
     onTileClick,
 }: TilePickerProps) => {
 
+    const getDisplayTiles = (): readonly TileId[] => {
+        if (source === "all") {
+            return TILE_IDS;
+        }
+    
+        return tiles;
+    };
+    
     const isSelected = (
         tile: TileId,
-    ) => {
+    ): boolean => {
         if (
             selectionMode === "single"
         ) {
@@ -35,19 +49,25 @@ export const TilePicker = ({
                 selectedTile === tile
             );
         }
-
+    
         return selectedTiles.includes(
             tile,
         );
     };
 
     return (
-        <div className="tile-picker">
-            {TILES.map((tile) => (
+        <div
+            className={
+                source === "all"
+                    ? "tile-picker tile-picker-all"
+                    : "tile-picker tile-picker-hand"
+            }
+        >
+            {getDisplayTiles().map((tile, index) => (
                 <Tile
-                    key={tile.id}
-                    tile={tile.id}
-                    selected={isSelected(tile.id)}
+                    key={`${tile}-${index}`}
+                    tile={tile}
+                    selected={isSelected(tile)}
                     onClick={onTileClick}
                 />
             ))}

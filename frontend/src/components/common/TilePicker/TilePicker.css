@@ -1,8 +1,20 @@
 .tile-picker {
+    gap: var(--space-xs);
+}
+
+.tile-picker-all {
     display: grid;
 
     grid-template-columns: repeat(10, auto);
-    gap: var(--space-xs);
 
     justify-content: center;
+}
+
+.tile-picker-hand {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    flex-wrap: nowrap;
 }

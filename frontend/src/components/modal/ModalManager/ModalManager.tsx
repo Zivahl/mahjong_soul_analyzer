@@ -6,8 +6,10 @@ import { ActionModal } from "@/components/modal/ActionModal/ActionModal";
 import { TsumoModal } from "@/components/modal/TsumoModal/TsumoModal";
 import { PonModal } from "@/components/modal/PonModal/PonModal";
 import { ChiModal } from "@/components/modal/ChiModal/ChiModal";
+import { DiscardModal } from "@/components/modal/DiscardModal/DiscardModal";
 
 import { useActionModalStore } from "@/store/actionModalStore";
+import { useMatchStore } from "@/store/matchStore";
 
 import type { MeldChoicePattern } from "@/types/analysis";
 
@@ -124,6 +126,10 @@ export const ModalManager = () => {
         );
 
 
+    const {
+        state,
+    } = useMatchStore();
+
     const close =
         useActionModalStore(
             (state) => state.close,
@@ -140,14 +146,33 @@ export const ModalManager = () => {
     ] = useState<TileId | null>(null);
 
 
+    const [
+        selectedDiscardTile,
+        setSelectedDiscardTile,
+    ] = useState<TileId | null>(null);
+
+
     useEffect(() => {
         if (!request) {
             setSelectedPatternId("normal");
             setSelectedTsumoTile(null);
+            setSelectedDiscardTile(null);
         }
     }, [request]);
 
     if (!request) {
+        return null;
+    }
+
+
+    const player =
+    state.players.find(
+        (player) =>
+            player.seat ===
+            request.seat,
+    );
+
+    if (!player) {
         return null;
     }
 
@@ -164,7 +189,9 @@ export const ModalManager = () => {
                     }       
                     onSelect={
                         setSelectedTsumoTile
-                    }        
+                    }
+                    // TODO:
+                    // ツモ牌を保持し、そのまま打牌モーダルへ遷移
                     onConfirm={() => {
                         console.log(
                             selectedTsumoTile,
@@ -225,6 +252,47 @@ export const ModalManager = () => {
                         close();
                     }}
                     onCancel={close}
+                />
+            );
+
+        case "discard":
+            return (
+                <DiscardModal
+                    title="打牌設定"
+        
+                    placement={
+                        request.placement
+                    }
+        
+                    hand={
+                        player.hand
+                    }
+        
+                    tsumoTile={
+                        undefined
+                    }
+        
+                    selectedTile={
+                        selectedDiscardTile
+                    }
+        
+                    onSelect={
+                        setSelectedDiscardTile
+                    }
+                    // TODO:
+                    // 選択した打牌を確定して解析結果へ反映
+                    onConfirm={() => {
+        
+                        console.log(
+                            selectedDiscardTile,
+                        );
+        
+                        close();
+                    }}
+        
+                    onCancel={
+                        close
+                    }
                 />
             );
 

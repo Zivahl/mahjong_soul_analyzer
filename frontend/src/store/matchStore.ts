@@ -10,7 +10,7 @@ const INITIAL_PLAYER_ACTION: PlayerActionState = {
     chi: false,
     kan: false,
     ron: false,
-    tsumo: true,
+    tsumo: false,
 };
 
 const initialState: MatchState = {
@@ -34,7 +34,7 @@ const initialState: MatchState = {
             seat: "shimocha",
             name: "",
             score: 25000,
-            hand: [],
+            hand: undefined,
             discards: [],
             melds: [],
         },
@@ -43,7 +43,7 @@ const initialState: MatchState = {
             seat: "toimen",
             name: "",
             score: 25000,
-            hand: [],
+            hand: undefined,
             discards: [],
             melds: [],
         },
@@ -52,7 +52,7 @@ const initialState: MatchState = {
             seat: "kamicha",
             name: "",
             score: 25000,
-            hand: [],
+            hand: undefined,
             discards: [],
             melds: [],
         },

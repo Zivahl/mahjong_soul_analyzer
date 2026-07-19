@@ -6,6 +6,7 @@ export type ActionType =
     | "pon"
     | "chi"
     | "kan"
+    | "discard"
     | "ron";
 
 export interface PlayerActionState {
