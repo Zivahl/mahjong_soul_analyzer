@@ -1,0 +1,75 @@
+.tsumo-modal-overlay {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.35);
+
+    z-index: 1000;
+
+    pointer-events: none;
+}
+
+.tsumo-modal {
+    position: absolute;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-lg);
+
+    padding: var(--space-lg);
+
+    border-radius: var(--radius-md);
+
+    background: white;
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.25);
+
+    transform:
+        translate(-50%, -50%);
+
+    pointer-events: auto;
+}
+
+.tsumo-modal-title {
+    margin: 0;
+
+    font-size: var(--font-size-md);
+
+    text-align: center;
+}
+
+.tsumo-modal-body {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-lg);
+}
+
+.selected-tsumo {
+    display: flex;
+
+    justify-content: center;
+
+    min-height: 48px;
+}
+
+.tsumo-placeholder {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 60px;
+
+    color: #888;
+}
+
+.tsumo-modal-footer {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: var(--space-sm);
+}

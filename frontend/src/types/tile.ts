@@ -50,3 +50,7 @@ export interface Tile {
 
     imagePath: string;
 }
+
+export type TileSelectionMode =
+    | "single"
+    | "multiple";

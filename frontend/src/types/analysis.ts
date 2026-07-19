@@ -2,11 +2,11 @@ import type { Seat } from "@/types/player";
 import type { TileId } from "@/types/tile";
 
 export type ActionType =
+    | "tsumo"
     | "pon"
     | "chi"
     | "kan"
-    | "ron"
-    | "tsumo";
+    | "ron";
 
 export interface PlayerActionState {
     pon: boolean;

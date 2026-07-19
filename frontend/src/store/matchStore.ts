@@ -10,7 +10,7 @@ const INITIAL_PLAYER_ACTION: PlayerActionState = {
     chi: false,
     kan: false,
     ron: false,
-    tsumo: false,
+    tsumo: true,
 };
 
 const initialState: MatchState = {

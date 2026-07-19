@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import type { TileId } from "@/types/tile";
 
 import { ActionModal } from "@/components/modal/ActionModal/ActionModal";
+import { TsumoModal } from "@/components/modal/TsumoModal/TsumoModal";
 import { PonModal } from "@/components/modal/PonModal/PonModal";
 import { ChiModal } from "@/components/modal/ChiModal/ChiModal";
 
@@ -131,12 +134,47 @@ export const ModalManager = () => {
         useState("normal");
 
 
+    const [
+        selectedTsumoTile,
+        setSelectedTsumoTile,
+    ] = useState<TileId | null>(null);
+
+
+    useEffect(() => {
+        if (!request) {
+            setSelectedPatternId("normal");
+            setSelectedTsumoTile(null);
+        }
+    }, [request]);
+
     if (!request) {
         return null;
     }
 
 
     switch (request.action) {
+        case "tsumo":
+            return (
+                <TsumoModal
+                    placement={
+                        request.placement
+                    }       
+                    selectedTile={
+                        selectedTsumoTile
+                    }       
+                    onSelect={
+                        setSelectedTsumoTile
+                    }        
+                    onConfirm={() => {
+                        console.log(
+                            selectedTsumoTile,
+                        );
+        
+                        close();
+                    }}       
+                    onCancel={close}
+                />
+            );
 
         case "pon":
             return (
@@ -164,7 +202,6 @@ export const ModalManager = () => {
                 />
             );
 
-
         case "chi":
             return (
                 <ChiModal
@@ -191,17 +228,14 @@ export const ModalManager = () => {
                 />
             );
 
-
         case "kan":
         case "ron":
-        case "tsumo":
             return (
                 <ActionModal
                     action={request.action}
                     onClose={close}
                 />
             );
-
 
         default:
             return null;

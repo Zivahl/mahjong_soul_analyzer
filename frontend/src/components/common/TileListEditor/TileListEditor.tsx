@@ -40,6 +40,7 @@ export const TileListEditor = ({
             />
 
             <TilePicker
+                selectionMode="multiple"
                 onTileClick={addTile}
             />
         </div>
