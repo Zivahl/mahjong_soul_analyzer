@@ -20,10 +20,21 @@ export interface PlayerActionState {
     tsumo: boolean;
 }
 
+export interface ModalPlacement {
+    x: number;
+
+    y: number;
+
+    width: number;
+}
+
+
 export interface PlayerActionRequest {
     seat: Seat;
 
     action: ActionType;
+
+    placement: ModalPlacement;
 }
 
 export interface PlayerActionEvent {

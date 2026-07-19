@@ -1,3 +1,5 @@
+import { useRef } from "react";
+
 import { ActionPanel } from "@/components/match/ActionPanel/ActionPanel";
 
 import { useMatchStore } from "@/store/matchStore";
@@ -19,6 +21,11 @@ interface Props {
 export const PlayerBlock = ({
     seat,
 }: Props) => {
+
+    const blockRef =
+        useRef<HTMLFieldSetElement>(null);
+
+
     const {
         state,
     } = useMatchStore();
@@ -38,10 +45,11 @@ export const PlayerBlock = ({
         return null;
     }
 
-    const wind = getPlayerWind(
-        state.dealerSeat,
-        player.seat,
-    );
+    const wind =
+        getPlayerWind(
+            state.dealerSeat,
+            player.seat,
+        );
 
     const isDealer =
         player.seat === state.dealerSeat;
@@ -49,14 +57,39 @@ export const PlayerBlock = ({
     const handleRequestAction = (
         action: ActionType,
     ) => {
+        const rect =
+            blockRef.current
+                ?.getBoundingClientRect();
+
+
+        if (!rect) {
+            return;
+        }
+
         open({
             seat,
+
             action,
+
+            placement: {
+                x:
+                    rect.left +
+                    rect.width / 2,
+
+                y:
+                    rect.top +
+                    rect.height / 2,
+                width:
+                    rect.width,
+            },
         });
     };
 
     return (
-        <fieldset className="player-block">
+        <fieldset
+            ref={blockRef}
+            className="player-block"
+        >
             <legend className="player-block-title">
                 <span className="player-seat">
                     {SEAT_LABEL[seat]}

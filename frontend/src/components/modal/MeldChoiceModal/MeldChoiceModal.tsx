@@ -1,6 +1,6 @@
 import { TileRow } from "@/components/common/TileRow/TileRow";
 
-import type { MeldChoicePattern } from "@/types/analysis";
+import type { MeldChoicePattern, ModalPlacement, } from "@/types/analysis";
 
 import "./MeldChoiceModal.css";
 
@@ -10,6 +10,8 @@ interface Props {
     patterns: MeldChoicePattern[];
 
     selectedPatternId: string;
+
+    placement: ModalPlacement;
 
     onSelect: (
         patternId: string,
@@ -24,14 +26,23 @@ export const MeldChoiceModal = ({
     title,
     patterns,
     selectedPatternId,
+    placement,
     onSelect,
     onConfirm,
     onCancel,
 }: Props) => {
+
     return (
         <div className="meld-modal-overlay">
 
-            <div className="meld-modal">
+            <div
+                className="meld-modal"
+                style={{
+                    left: placement.x,
+                    top: placement.y,
+                    width: placement.width,
+                }}
+            >
 
                 <h2 className="meld-modal-title">
                     {title}

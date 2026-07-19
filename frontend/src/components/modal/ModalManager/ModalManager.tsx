@@ -147,6 +147,9 @@ export const ModalManager = () => {
                     selectedPatternId={
                         selectedPatternId
                     }
+                    placement={
+                        request.placement
+                    }
                     onSelect={
                         setSelectedPatternId
                     }
@@ -170,6 +173,9 @@ export const ModalManager = () => {
                     }
                     selectedPatternId={
                         selectedPatternId
+                    }
+                    placement={
+                        request.placement
                     }
                     onSelect={
                         setSelectedPatternId
