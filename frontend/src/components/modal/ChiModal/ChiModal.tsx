@@ -16,7 +16,7 @@ interface Props {
     onCancel: () => void;
 }
 
-export const PonModal = ({
+export const ChiModal = ({
     patterns,
     selectedPatternId,
     onSelect,
@@ -25,7 +25,7 @@ export const PonModal = ({
 }: Props) => {
     return (
         <MeldChoiceModal
-            title="ポン設定"
+            title="チー設定"
             patterns={patterns}
             selectedPatternId={selectedPatternId}
             onSelect={onSelect}

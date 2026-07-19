@@ -39,49 +39,45 @@ export const MeldChoiceModal = ({
 
                 <div className="meld-modal-body">
 
-                    {patterns.map((pattern) => (
-                        <button
-                            key={pattern.id}
-                            type="button"
-                            className={
-                                pattern.id ===
-                                selectedPatternId
-                                    ? "meld-pattern selected"
-                                    : "meld-pattern"
-                            }
-                            onClick={() =>
-                                onSelect(pattern.id)
-                            }
-                        >
-                            <div className="meld-radio">
+                    {patterns.map(
+                        (pattern) => (
+                            <button
+                                key={pattern.id}
+                                type="button"
+                                className={
+                                    pattern.id ===
+                                    selectedPatternId
+                                        ? "meld-pattern selected"
+                                        : "meld-pattern"
+                                }
+                                onClick={() =>
+                                    onSelect(
+                                        pattern.id,
+                                    )
+                                }
+                            >
+                                <div className="meld-radio">
 
-                                <input
-                                    type="radio"
-                                    checked={
-                                        pattern.id ===
-                                        selectedPatternId
+                                    <input
+                                        type="radio"
+                                        checked={
+                                            pattern.id ===
+                                            selectedPatternId
+                                        }
+                                        readOnly
+                                    />
+
+                                </div>
+
+                                <TileRow
+                                    tiles={
+                                        pattern.tiles
                                     }
-                                    readOnly
                                 />
 
-                            </div>
-
-                            <TileRow
-                                tiles={pattern.tiles.map(
-                                    (
-                                        tile,
-                                        index,
-                                    ) => ({
-                                        tile,
-                                        sideways:
-                                            index ===
-                                            pattern.sidewaysTileIndex,
-                                    }),
-                                )}
-                            />
-
-                        </button>
-                    ))}
+                            </button>
+                        ),
+                    )}
 
                 </div>
 

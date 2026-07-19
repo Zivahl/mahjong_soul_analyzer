@@ -32,13 +32,16 @@ export interface PlayerActionEvent {
     action: ActionType;
 }
 
+export interface MeldTile {
+    tile: TileId;
+
+    sideways?: boolean;
+}
+
 export interface MeldChoicePattern {
     id: string;
 
-    tiles: TileId[];
+    tiles: MeldTile[];
 
-    sidewaysTileIndex:
-        | 0
-        | 1
-        | 2;
+    from: Seat;
 }
