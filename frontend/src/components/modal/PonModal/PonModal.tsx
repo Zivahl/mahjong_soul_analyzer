@@ -28,7 +28,7 @@ export const PonModal = ({
 }: Props) => {
     return (
         <MeldChoiceModal
-            title="ポン設定"
+            title="ポン牌設定"
             patterns={patterns}
             selectedPatternId={selectedPatternId}
             placement={placement}

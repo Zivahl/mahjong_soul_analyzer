@@ -2,12 +2,28 @@ import type { Seat } from "@/types/player";
 import type { TileId } from "@/types/tile";
 
 export type ActionType =
-    | "tsumo"
     | "pon"
     | "chi"
     | "kan"
+    | "tsumo"
     | "discard"
     | "ron";
+
+export interface ModalPlacement {
+    x: number;
+
+    y: number;
+
+    width: number;
+}
+
+export interface PlayerActionRequest {
+    seat: Seat;
+
+    action: ActionType;
+
+    placement: ModalPlacement;
+}
 
 export interface PlayerActionState {
     pon: boolean;
@@ -19,23 +35,6 @@ export interface PlayerActionState {
     ron: boolean;
 
     tsumo: boolean;
-}
-
-export interface ModalPlacement {
-    x: number;
-
-    y: number;
-
-    width: number;
-}
-
-
-export interface PlayerActionRequest {
-    seat: Seat;
-
-    action: ActionType;
-
-    placement: ModalPlacement;
 }
 
 export interface PlayerActionEvent {

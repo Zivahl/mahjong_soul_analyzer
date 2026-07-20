@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 import type { MatchState, Wind } from "@/types/match";
-import type { PlayerActionState } from "@/types/analysis";
+import type { PlayerActionRequest, PlayerActionState } from "@/types/analysis";
 import type { Seat } from "@/types/player";
 import type { TileId } from "@/types/tile";
 
@@ -10,7 +10,7 @@ const INITIAL_PLAYER_ACTION: PlayerActionState = {
     chi: false,
     kan: false,
     ron: false,
-    tsumo: false,
+    tsumo: true,
 };
 
 const initialState: MatchState = {
@@ -19,6 +19,10 @@ const initialState: MatchState = {
     roundNumber: 1,
 
     dealerSeat: "self",
+
+    currentTsumo: undefined,
+    
+    pendingAction: undefined,
 
     remainingTiles: 70,
 
@@ -95,6 +99,16 @@ interface MatchStore {
 
     setDealerSeat: (seat: Seat) => void;
 
+    setCurrentTsumo: (
+        tile?: TileId,
+    ) => void;
+
+    openAction: (
+        request: PlayerActionRequest,
+    ) => void;
+
+    closeAction: () => void;
+
     setPlayerName: (
         playerId: number,
         name: string,
@@ -149,6 +163,33 @@ export const useMatchStore = create<MatchStore>((set) => ({
                 dealerSeat: seat,
             },
         })),
+
+    setCurrentTsumo: (tile) =>
+        set((state) => ({
+            state: {
+                ...state.state,
+    
+                currentTsumo: tile,
+            },
+        })),
+
+    openAction: (request) =>
+        set((store) => ({
+            state: {
+                ...store.state,
+    
+                pendingAction: request,
+        },
+    })),
+
+    closeAction: () =>
+        set((store) => ({
+            state: {
+                ...store.state,
+    
+                pendingAction: undefined,
+            },
+    })),
 
     setPlayerName: (playerId, name) =>
         set((store) => ({

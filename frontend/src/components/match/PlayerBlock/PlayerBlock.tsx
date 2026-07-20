@@ -3,7 +3,6 @@ import { useRef } from "react";
 import { ActionPanel } from "@/components/match/ActionPanel/ActionPanel";
 
 import { useMatchStore } from "@/store/matchStore";
-import { useActionModalStore } from "@/store/actionModalStore";
 
 import { getPlayerWind } from "@/utils/mahjong";
 
@@ -30,9 +29,10 @@ export const PlayerBlock = ({
         state,
     } = useMatchStore();
 
-    const open =
-        useActionModalStore(
-            (state) => state.open,
+
+    const openAction =
+        useMatchStore(
+            (store) => store.openAction,
         );
 
     const player =
@@ -66,7 +66,7 @@ export const PlayerBlock = ({
             return;
         }
 
-        open({
+        openAction({
             seat,
 
             action,

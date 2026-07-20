@@ -8,7 +8,6 @@ import { PonModal } from "@/components/modal/PonModal/PonModal";
 import { ChiModal } from "@/components/modal/ChiModal/ChiModal";
 import { DiscardModal } from "@/components/modal/DiscardModal/DiscardModal";
 
-import { useActionModalStore } from "@/store/actionModalStore";
 import { useMatchStore } from "@/store/matchStore";
 
 import type { MeldChoicePattern } from "@/types/analysis";
@@ -120,20 +119,15 @@ const DUMMY_CHI_PATTERNS: MeldChoicePattern[] = [
 
 export const ModalManager = () => {
 
-    const request =
-        useActionModalStore(
-            (state) => state.request,
-        );
-
-
     const {
         state,
+        closeAction,
+        setCurrentTsumo,
     } = useMatchStore();
 
-    const close =
-        useActionModalStore(
-            (state) => state.close,
-        );
+
+    const request =
+        state.pendingAction;
 
 
     const [selectedPatternId, setSelectedPatternId] =
@@ -178,30 +172,6 @@ export const ModalManager = () => {
 
 
     switch (request.action) {
-        case "tsumo":
-            return (
-                <TsumoModal
-                    placement={
-                        request.placement
-                    }       
-                    selectedTile={
-                        selectedTsumoTile
-                    }       
-                    onSelect={
-                        setSelectedTsumoTile
-                    }
-                    // TODO:
-                    // ツモ牌を保持し、そのまま打牌モーダルへ遷移
-                    onConfirm={() => {
-                        console.log(
-                            selectedTsumoTile,
-                        );
-        
-                        close();
-                    }}       
-                    onCancel={close}
-                />
-            );
 
         case "pon":
             return (
@@ -223,9 +193,9 @@ export const ModalManager = () => {
                             selectedPatternId,
                         );
 
-                        close();
+                        closeAction();
                     }}
-                    onCancel={close}
+                    onCancel={closeAction}
                 />
             );
 
@@ -249,9 +219,36 @@ export const ModalManager = () => {
                             selectedPatternId,
                         );
 
-                        close();
+                        closeAction();
                     }}
-                    onCancel={close}
+                    onCancel={closeAction}
+                />
+            );
+
+        case "tsumo":
+            return (
+                <TsumoModal
+                    placement={
+                        request.placement
+                    }       
+                    selectedTile={
+                        selectedTsumoTile
+                    }       
+                    onSelect={
+                        setSelectedTsumoTile
+                    }
+                    onConfirm={() => {
+                        if (
+                            selectedTsumoTile
+                        ) {
+                            setCurrentTsumo(
+                                selectedTsumoTile,
+                            );
+                        }
+        
+                        closeAction();
+                    }}       
+                    onCancel={closeAction}
                 />
             );
 
@@ -287,12 +284,10 @@ export const ModalManager = () => {
                             selectedDiscardTile,
                         );
         
-                        close();
+                        closeAction();
                     }}
         
-                    onCancel={
-                        close
-                    }
+                    onCancel={closeAction}
                 />
             );
 
@@ -301,7 +296,7 @@ export const ModalManager = () => {
             return (
                 <ActionModal
                     action={request.action}
-                    onClose={close}
+                    onClose={closeAction}
                 />
             );
 

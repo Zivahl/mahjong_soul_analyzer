@@ -1,4 +1,4 @@
-import type { PlayerActionState } from "@/types/analysis";
+import type { PlayerActionRequest, PlayerActionState } from "@/types/analysis";
 import type { PlayerState, Seat } from "@/types/player";
 import type { TileId } from "@/types/tile";
 
@@ -14,6 +14,10 @@ export interface MatchState {
     roundNumber: 1 | 2 | 3 | 4;
 
     dealerSeat: Seat;
+
+    currentTsumo?: TileId;
+    
+    pendingAction?: PlayerActionRequest;
 
     remainingTiles: number;
 
