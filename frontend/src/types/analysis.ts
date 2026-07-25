@@ -25,6 +25,10 @@ export interface PlayerActionRequest {
     placement: ModalPlacement;
 }
 
+export type DiscardType =
+    | "tedashi"
+    | "tsumogiri";
+
 export interface PlayerActionState {
     pon: boolean;
 

@@ -123,6 +123,8 @@ export const ModalManager = () => {
         state,
         closeAction,
         setCurrentTsumo,
+        discardTile,
+        openAction,
     } = useMatchStore();
 
 
@@ -246,7 +248,12 @@ export const ModalManager = () => {
                             );
                         }
         
-                        closeAction();
+                        openAction({
+                            seat: request.seat,
+                            action: "discard",
+                            placement:
+                                request.placement,
+                        });
                     }}       
                     onCancel={closeAction}
                 />
@@ -276,14 +283,22 @@ export const ModalManager = () => {
                     onSelect={
                         setSelectedDiscardTile
                     }
-                    // TODO:
-                    // 選択した打牌を確定して解析結果へ反映
-                    onConfirm={() => {
-        
-                        console.log(
+
+                    onConfirm={(
+                        discardType,
+                    ) => {
+                        if (
+                            !selectedDiscardTile
+                        ) {
+                            return;
+                        }
+                    
+                        discardTile(
+                            request.seat,
                             selectedDiscardTile,
+                            discardType,
                         );
-        
+                    
                         closeAction();
                     }}
         

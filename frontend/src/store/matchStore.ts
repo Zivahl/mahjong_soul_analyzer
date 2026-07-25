@@ -1,15 +1,15 @@
 import { create } from "zustand";
 
 import type { MatchState, Wind } from "@/types/match";
-import type { PlayerActionRequest, PlayerActionState } from "@/types/analysis";
+import type { DiscardType, PlayerActionRequest, PlayerActionState } from "@/types/analysis";
 import type { Seat } from "@/types/player";
 import type { TileId } from "@/types/tile";
 
 const INITIAL_PLAYER_ACTION: PlayerActionState = {
-    pon: false,
-    chi: false,
-    kan: false,
-    ron: false,
+    pon: true,
+    chi: true,
+    kan: true,
+    ron: true,
     tsumo: true,
 };
 
@@ -107,6 +107,12 @@ interface MatchStore {
         request: PlayerActionRequest,
     ) => void;
 
+    discardTile: (
+        seat: Seat,
+        tile: TileId,
+        discardType: DiscardType,
+    ) => void;
+
     closeAction: () => void;
 
     setPlayerName: (
@@ -190,6 +196,80 @@ export const useMatchStore = create<MatchStore>((set) => ({
                 pendingAction: undefined,
             },
     })),
+
+    discardTile: (
+        seat,
+        tile,
+        discardType,
+    ) =>
+        set((store) => {
+            const player =
+                store.state.players.find(
+                    (player) =>
+                        player.seat === seat,
+                );
+    
+            if (!player) {
+                return store;
+            }
+    
+            let hand = player.hand;
+            
+            if (
+                discardType === "tedashi" &&
+                hand !== undefined
+            ) {
+                hand = [...hand];
+            
+                const removeIndex =
+                    hand.findIndex(
+                        (candidate) =>
+                            candidate === tile,
+                    );
+            
+                if (removeIndex >= 0) {
+                    hand.splice(removeIndex, 1);
+                }
+            
+                if (
+                    store.state.currentTsumo
+                ) {
+                    hand.push(
+                        store.state.currentTsumo,
+                    );
+                }
+            }
+  
+            return {
+                state: {
+                    ...store.state,
+    
+                    currentTsumo:
+                        undefined,
+    
+                    players:
+                        store.state.players.map(
+                            (
+                                candidate,
+                            ) =>
+                                candidate.seat ===
+                                seat
+                                    ? {
+                                          ...candidate,
+    
+                                          hand,
+    
+                                          discards:
+                                              [
+                                                  ...candidate.discards,
+                                                  tile,
+                                              ],
+                                      }
+                                    : candidate,
+                        ),
+                },
+            };
+        }),
 
     setPlayerName: (playerId, name) =>
         set((store) => ({

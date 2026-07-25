@@ -1,7 +1,7 @@
 import { Tile } from "@/components/common/Tile/Tile";
 import { TilePicker } from "@/components/common/TilePicker/TilePicker";
 
-import type { ModalPlacement } from "@/types/analysis";
+import type { ModalPlacement, DiscardType, } from "@/types/analysis";
 import type { TileId } from "@/types/tile";
 
 import "./DiscardModal.css";
@@ -21,7 +21,9 @@ interface Props {
         tile: TileId,
     ) => void;
 
-    onConfirm: () => void;
+    onConfirm: (
+        discardType: DiscardType,
+    ) => void;
 
     onCancel: () => void;
 }
@@ -110,14 +112,23 @@ export const DiscardModal = ({
                     >
                         キャンセル
                     </button>
-
+                    
                     <button
-                        disabled={
-                            !selectedTile
+                        disabled={!selectedTile}
+                        onClick={() =>
+                            onConfirm("tedashi")
                         }
-                        onClick={onConfirm}
                     >
-                        確定
+                        手出し
+                    </button>
+                    
+                    <button
+                        disabled={!selectedTile}
+                        onClick={() =>
+                            onConfirm("tsumogiri")
+                        }
+                    >
+                        ツモ切り
                     </button>
 
                 </div>
