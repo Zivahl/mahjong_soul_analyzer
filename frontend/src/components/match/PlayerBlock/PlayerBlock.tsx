@@ -71,7 +71,7 @@ export const PlayerBlock = ({
 
             action,
 
-            placement: {
+            anchor: {
                 x:
                     rect.left +
                     rect.width / 2,
@@ -79,8 +79,6 @@ export const PlayerBlock = ({
                 y:
                     rect.top +
                     rect.height / 2,
-                width:
-                    rect.width,
             },
         });
     };

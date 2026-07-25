@@ -1,13 +1,13 @@
 import { MeldChoiceModal } from "@/components/modal/MeldChoiceModal/MeldChoiceModal";
 
-import type { MeldChoicePattern, ModalPlacement } from "@/types/analysis";
+import type { MeldChoicePattern, ModalAnchor } from "@/types/analysis";
 
 interface Props {
     patterns: MeldChoicePattern[];
 
     selectedPatternId: string;
 
-    placement: ModalPlacement;
+    anchor: ModalAnchor;
 
     onSelect: (
         patternId: string,
@@ -21,7 +21,7 @@ interface Props {
 export const ChiModal = ({
     patterns,
     selectedPatternId,
-    placement,
+    anchor,
     onSelect,
     onConfirm,
     onCancel,
@@ -31,7 +31,7 @@ export const ChiModal = ({
             title="チー牌設定"
             patterns={patterns}
             selectedPatternId={selectedPatternId}
-            placement={placement}
+            anchor={anchor}
             onSelect={onSelect}
             onConfirm={onConfirm}
             onCancel={onCancel}

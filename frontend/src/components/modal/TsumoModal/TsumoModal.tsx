@@ -2,7 +2,7 @@ import { Tile } from "@/components/common/Tile/Tile";
 import { TilePicker } from "@/components/common/TilePicker/TilePicker";
 
 import type {
-    ModalPlacement,
+    ModalAnchor,
 } from "@/types/analysis";
 import type {
     TileId,
@@ -12,7 +12,7 @@ import "./TsumoModal.css";
 
 
 interface Props {
-    placement: ModalPlacement;
+    anchor: ModalAnchor;
 
     selectedTile: TileId | null;
 
@@ -27,7 +27,7 @@ interface Props {
 
 
 export const TsumoModal = ({
-    placement,
+    anchor,
     selectedTile,
     onSelect,
     onConfirm,
@@ -39,9 +39,8 @@ export const TsumoModal = ({
             <div
                 className="tsumo-modal"
                 style={{
-                    left: placement.x,
-                    top: placement.y,
-                    width: placement.width,
+                    left: anchor.x,
+                    top: anchor.y,
                 }}
             >
 

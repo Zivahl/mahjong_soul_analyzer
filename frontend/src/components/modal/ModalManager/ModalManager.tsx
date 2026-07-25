@@ -184,8 +184,8 @@ export const ModalManager = () => {
                     selectedPatternId={
                         selectedPatternId
                     }
-                    placement={
-                        request.placement
+                    anchor={
+                        request.anchor
                     }
                     onSelect={
                         setSelectedPatternId
@@ -210,8 +210,8 @@ export const ModalManager = () => {
                     selectedPatternId={
                         selectedPatternId
                     }
-                    placement={
-                        request.placement
+                    anchor={
+                        request.anchor
                     }
                     onSelect={
                         setSelectedPatternId
@@ -230,8 +230,8 @@ export const ModalManager = () => {
         case "tsumo":
             return (
                 <TsumoModal
-                    placement={
-                        request.placement
+                    anchor={
+                        request.anchor
                     }       
                     selectedTile={
                         selectedTsumoTile
@@ -251,8 +251,8 @@ export const ModalManager = () => {
                         openAction({
                             seat: request.seat,
                             action: "discard",
-                            placement:
-                                request.placement,
+                            anchor:
+                                request.anchor,
                         });
                     }}       
                     onCancel={closeAction}
@@ -264,8 +264,8 @@ export const ModalManager = () => {
                 <DiscardModal
                     title="打牌設定"
         
-                    placement={
-                        request.placement
+                    anchor={
+                        request.anchor
                     }
         
                     hand={

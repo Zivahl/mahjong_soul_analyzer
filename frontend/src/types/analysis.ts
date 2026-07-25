@@ -9,12 +9,10 @@ export type ActionType =
     | "discard"
     | "ron";
 
-export interface ModalPlacement {
+export interface ModalAnchor {
     x: number;
 
     y: number;
-
-    width: number;
 }
 
 export interface PlayerActionRequest {
@@ -22,7 +20,7 @@ export interface PlayerActionRequest {
 
     action: ActionType;
 
-    placement: ModalPlacement;
+    anchor: ModalAnchor;
 }
 
 export type DiscardType =
