@@ -42,6 +42,12 @@ export const DiscardModal = ({
     onConfirm,
     onCancel,
 }: Props) => {
+
+    const handWithoutTsumo =
+        tsumoTile !== undefined
+            ? hand.slice(0, -1)
+            : hand;
+
     return (
         <div className="discard-modal-overlay">
 
@@ -79,7 +85,7 @@ export const DiscardModal = ({
                             <TilePicker
                                 source="hand"
                                 selectionMode="single"
-                                tiles={hand}
+                                tiles={handWithoutTsumo}
                                 selectedTile={selectedTile}
                                 onTileClick={onSelect}
                             />

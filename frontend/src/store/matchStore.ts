@@ -99,8 +99,9 @@ interface MatchStore {
 
     setDealerSeat: (seat: Seat) => void;
 
-    setCurrentTsumo: (
-        tile?: TileId,
+    tsumoTile: (
+        seat: Seat,
+        tile: TileId,
     ) => void;
 
     openAction: (
@@ -170,12 +171,38 @@ export const useMatchStore = create<MatchStore>((set) => ({
             },
         })),
 
-    setCurrentTsumo: (tile) =>
-        set((state) => ({
+    tsumoTile: (
+        seat,
+        tile,
+    ) =>
+        set((store) => ({
             state: {
-                ...state.state,
+                ...store.state,
     
                 currentTsumo: tile,
+    
+                players:
+                    store.state.players.map(
+                        (player) => {
+    
+                            if (
+                                player.seat !== seat
+                            ) {
+                                return player;
+                            }
+    
+                            return {
+                                ...player,
+    
+                                hand: [
+                                    ...player.hand,
+                                    seat === "self"
+                                        ? tile
+                                        : "?",
+                                ],
+                            };
+                        },
+                    ),
             },
         })),
 
@@ -220,33 +247,29 @@ export const useMatchStore = create<MatchStore>((set) => ({
                 switch (discardType) {
     
                     case "tedashi": {
-    
+                    
                         const removeIndex =
                             hand.findIndex(
                                 (candidate) =>
                                     candidate === tile,
                             );
-    
-                        if (removeIndex >= 0) {
+                    
+                        if (
+                            removeIndex >= 0
+                        ) {
                             hand.splice(
                                 removeIndex,
                                 1,
                             );
                         }
-    
-                        if (
-                            store.state.currentTsumo
-                        ) {
-                            hand.push(
-                                store.state.currentTsumo,
-                            );
-                        }
-    
+                                       
                         break;
                     }
     
                     case "tsumogiri":
-                        // 手牌は変更しない
+                    
+                        hand.pop();
+                    
                         break;
                 }
     
@@ -255,27 +278,29 @@ export const useMatchStore = create<MatchStore>((set) => ({
                 switch (discardType) {
     
                     case "tedashi": {
-    
+                    
                         const unknownIndex =
                             hand.findIndex(
                                 (candidate) =>
                                     candidate === "?",
                             );
-    
-                        if (unknownIndex >= 0) {
+                    
+                        if (
+                            unknownIndex >= 0
+                        ) {
                             hand.splice(
                                 unknownIndex,
                                 1,
                             );
                         }
-    
-                        hand.push("?");
-    
+                                       
                         break;
                     }
     
                     case "tsumogiri":
-                        // 手牌は変更しない
+
+                        hand.pop();
+                    
                         break;
                 }
             }

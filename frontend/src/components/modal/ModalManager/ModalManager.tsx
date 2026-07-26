@@ -122,7 +122,7 @@ export const ModalManager = () => {
     const {
         state,
         closeAction,
-        setCurrentTsumo,
+        tsumoTile,
         discardTile,
         openAction,
     } = useMatchStore();
@@ -243,7 +243,8 @@ export const ModalManager = () => {
                         if (
                             selectedTsumoTile
                         ) {
-                            setCurrentTsumo(
+                            tsumoTile(
+                                request.seat,
                                 selectedTsumoTile,
                             );
                         }
