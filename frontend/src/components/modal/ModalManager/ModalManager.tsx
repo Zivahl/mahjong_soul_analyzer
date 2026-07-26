@@ -263,9 +263,13 @@ export const ModalManager = () => {
             return (
                 <DiscardModal
                     title="打牌設定"
-        
+      
                     anchor={
                         request.anchor
+                    }
+
+                    seat={
+                        request.seat
                     }
         
                     hand={

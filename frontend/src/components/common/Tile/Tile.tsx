@@ -33,10 +33,15 @@ export const Tile = ({
         ? "sideways"
         : "normal";
 
+    const imageFileName =
+        tile === "?"
+            ? "back"
+            : tile;
+
     const image = (
         <img
             className="tile-image"
-            src={`/tiles/${imageDir}/${tile}.png`}
+            src={`/tiles/${imageDir}/${imageFileName}.png`}
             alt={tile}
         />
     );

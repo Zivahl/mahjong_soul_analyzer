@@ -2,6 +2,7 @@ import { Tile } from "@/components/common/Tile/Tile";
 import { TilePicker } from "@/components/common/TilePicker/TilePicker";
 
 import type { ModalAnchor, DiscardType, } from "@/types/analysis";
+import type { Seat } from "@/types/player";
 import type { TileId } from "@/types/tile";
 
 import "./DiscardModal.css";
@@ -9,9 +10,11 @@ import "./DiscardModal.css";
 interface Props {
     title: string;
 
+    seat: Seat;
+
     anchor: ModalAnchor;
 
-    hand?: readonly TileId[];
+    hand: readonly TileId[];
 
     tsumoTile?: TileId;
 
@@ -30,6 +33,7 @@ interface Props {
 
 export const DiscardModal = ({
     title,
+    seat,
     anchor,
     hand,
     tsumoTile,
@@ -69,7 +73,7 @@ export const DiscardModal = ({
 
                     </div>
 
-                    {hand ? (
+                    {seat === "self" ? (
                         <div className="discard-picker">
                     
                             <TilePicker

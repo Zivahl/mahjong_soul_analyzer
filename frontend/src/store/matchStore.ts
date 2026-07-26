@@ -38,7 +38,7 @@ const initialState: MatchState = {
             seat: "shimocha",
             name: "",
             score: 25000,
-            hand: undefined,
+            hand: Array(13).fill("?"),
             discards: [],
             melds: [],
         },
@@ -47,7 +47,7 @@ const initialState: MatchState = {
             seat: "toimen",
             name: "",
             score: 25000,
-            hand: undefined,
+            hand: Array(13).fill("?"),
             discards: [],
             melds: [],
         },
@@ -56,7 +56,7 @@ const initialState: MatchState = {
             seat: "kamicha",
             name: "",
             score: 25000,
-            hand: undefined,
+            hand: Array(13).fill("?"),
             discards: [],
             melds: [],
         },
@@ -213,33 +213,73 @@ export const useMatchStore = create<MatchStore>((set) => ({
                 return store;
             }
     
-            let hand = player.hand;
-            
-            if (
-                discardType === "tedashi" &&
-                hand !== undefined
-            ) {
-                hand = [...hand];
-            
-                const removeIndex =
-                    hand.findIndex(
-                        (candidate) =>
-                            candidate === tile,
-                    );
-            
-                if (removeIndex >= 0) {
-                    hand.splice(removeIndex, 1);
+            let hand = [...player.hand];
+    
+            if (seat === "self") {
+    
+                switch (discardType) {
+    
+                    case "tedashi": {
+    
+                        const removeIndex =
+                            hand.findIndex(
+                                (candidate) =>
+                                    candidate === tile,
+                            );
+    
+                        if (removeIndex >= 0) {
+                            hand.splice(
+                                removeIndex,
+                                1,
+                            );
+                        }
+    
+                        if (
+                            store.state.currentTsumo
+                        ) {
+                            hand.push(
+                                store.state.currentTsumo,
+                            );
+                        }
+    
+                        break;
+                    }
+    
+                    case "tsumogiri":
+                        // 手牌は変更しない
+                        break;
                 }
-            
-                if (
-                    store.state.currentTsumo
-                ) {
-                    hand.push(
-                        store.state.currentTsumo,
-                    );
+    
+            } else {
+    
+                switch (discardType) {
+    
+                    case "tedashi": {
+    
+                        const unknownIndex =
+                            hand.findIndex(
+                                (candidate) =>
+                                    candidate === "?",
+                            );
+    
+                        if (unknownIndex >= 0) {
+                            hand.splice(
+                                unknownIndex,
+                                1,
+                            );
+                        }
+    
+                        hand.push("?");
+    
+                        break;
+                    }
+    
+                    case "tsumogiri":
+                        // 手牌は変更しない
+                        break;
                 }
             }
-  
+    
             return {
                 state: {
                     ...store.state,
@@ -249,9 +289,7 @@ export const useMatchStore = create<MatchStore>((set) => ({
     
                     players:
                         store.state.players.map(
-                            (
-                                candidate,
-                            ) =>
+                            (candidate) =>
                                 candidate.seat ===
                                 seat
                                     ? {
@@ -259,11 +297,10 @@ export const useMatchStore = create<MatchStore>((set) => ({
     
                                           hand,
     
-                                          discards:
-                                              [
-                                                  ...candidate.discards,
-                                                  tile,
-                                              ],
+                                          discards: [
+                                              ...candidate.discards,
+                                              tile,
+                                          ],
                                       }
                                     : candidate,
                         ),

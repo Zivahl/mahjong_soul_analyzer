@@ -17,7 +17,7 @@ export const HandSection = () => {
     return (
         <SettingCard title="自家手牌">
             <TileListEditor
-                tiles={self.hand ?? []}
+                tiles={self.hand}
                 maxTiles={14}
                 onChange={(tiles) =>
                     setHand(self.id, tiles)
