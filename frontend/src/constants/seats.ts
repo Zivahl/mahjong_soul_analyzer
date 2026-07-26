@@ -1,5 +1,12 @@
 import type { Seat } from "@/types/player";
 
+export const SEAT_ORDER = [
+    "self",
+    "shimocha",
+    "toimen",
+    "kamicha",
+] as const satisfies readonly Seat[];
+
 export const SEAT_LABEL = {
     self: "自家",
     shimocha: "下家",

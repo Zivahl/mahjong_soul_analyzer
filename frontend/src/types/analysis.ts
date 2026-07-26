@@ -20,6 +20,10 @@ export interface PlayerActionRequest {
 
     action: ActionType;
 
+    from?: Seat;
+
+    tile?: TileId;
+
     anchor: ModalAnchor;
 }
 

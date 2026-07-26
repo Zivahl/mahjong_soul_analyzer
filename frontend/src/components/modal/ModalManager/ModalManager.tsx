@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import type { TileId } from "@/types/tile";
+import type { Meld } from "@/types/player";
 
 import { ActionModal } from "@/components/modal/ActionModal/ActionModal";
 import { TsumoModal } from "@/components/modal/TsumoModal/TsumoModal";
@@ -10,111 +11,7 @@ import { DiscardModal } from "@/components/modal/DiscardModal/DiscardModal";
 
 import { useMatchStore } from "@/store/matchStore";
 
-import type { MeldChoicePattern } from "@/types/analysis";
-
-
-const DUMMY_PON_PATTERNS: MeldChoicePattern[] = [
-    {
-        id: "normal",
-        tiles: [
-            {
-                tile: "5m",
-            },
-            {
-                tile: "5m",
-            },
-            {
-                tile: "5m",
-                sideways: true,
-            },
-        ],
-        from: "kamicha",
-    },
-    {
-        id: "red",
-        tiles: [
-            {
-                tile: "5m",
-            },
-            {
-                tile: "5m",
-            },
-            {
-                tile: "5mr",
-                sideways: true,
-            },
-        ],
-        from: "shimocha",
-    },
-];
-
-
-const DUMMY_CHI_PATTERNS: MeldChoicePattern[] = [
-    {
-        id: "normal_35",
-        tiles: [
-            {
-                tile: "4m",
-                sideways: true,
-            },
-            {
-                tile: "3m",
-            },
-            {
-                tile: "5m",
-            },
-        ],
-        from: "kamicha",
-    },
-    {
-        id: "red_35",
-        tiles: [
-            {
-                tile: "4m",
-                sideways: true,
-            },
-            {
-                tile: "3m",
-            },
-            {
-                tile: "5mr",
-            },
-        ],
-        from: "kamicha",
-    },
-    {
-        id: "normal_56",
-        tiles: [
-            {
-                tile: "4m",
-                sideways: true,
-            },
-            {
-                tile: "5m",
-            },
-            {
-                tile: "6m",
-            },
-        ],
-        from: "kamicha",
-    },
-    {
-        id: "red_56",
-        tiles: [
-            {
-                tile: "4m",
-                sideways: true,
-            },
-            {
-                tile: "5mr",
-            },
-            {
-                tile: "6m",
-            },
-        ],
-        from: "kamicha",
-    },
-];
+import { getPonPatterns, getChiPatterns } from "@/utils/mahjong";
 
 
 export const ModalManager = () => {
@@ -125,6 +22,7 @@ export const ModalManager = () => {
         tsumoTile,
         discardTile,
         openAction,
+        callMeld,
     } = useMatchStore();
 
 
@@ -172,6 +70,21 @@ export const ModalManager = () => {
         return null;
     }
 
+    const meldPatterns =
+        request.action === "pon"
+            ? getPonPatterns(
+                  player.hand,
+                  player.seat,
+                  request.from!,
+                  request.tile!,
+              )
+            : request.action === "chi"
+            ? getChiPatterns(
+                  player.hand,
+                  request.from!,
+                  request.tile!,
+              )
+            : [];
 
     switch (request.action) {
 
@@ -179,7 +92,7 @@ export const ModalManager = () => {
             return (
                 <PonModal
                     patterns={
-                        DUMMY_PON_PATTERNS
+                        meldPatterns
                     }
                     selectedPatternId={
                         selectedPatternId
@@ -191,10 +104,35 @@ export const ModalManager = () => {
                         setSelectedPatternId
                     }
                     onConfirm={() => {
-                        console.log(
-                            selectedPatternId,
+                        const pattern =
+                            meldPatterns.find(
+                                (pattern) =>
+                                    pattern.id ===
+                                    selectedPatternId,
+                            );
+                    
+                        if (!pattern) {
+                            return;
+                        }
+                    
+                        const meld: Meld = {
+                            type: "pon",
+                    
+                            tiles:
+                                pattern.tiles.map(
+                                    (tile) =>
+                                        tile.tile,
+                                ),
+                    
+                            from:
+                                pattern.from,
+                        };
+                                  
+                        callMeld(
+                            request.seat,
+                            meld,
                         );
-
+                                     
                         closeAction();
                     }}
                     onCancel={closeAction}
@@ -205,7 +143,7 @@ export const ModalManager = () => {
             return (
                 <ChiModal
                     patterns={
-                        DUMMY_CHI_PATTERNS
+                        meldPatterns
                     }
                     selectedPatternId={
                         selectedPatternId
@@ -217,10 +155,35 @@ export const ModalManager = () => {
                         setSelectedPatternId
                     }
                     onConfirm={() => {
-                        console.log(
-                            selectedPatternId,
+                        const pattern =
+                            meldPatterns.find(
+                                (pattern) =>
+                                    pattern.id ===
+                                    selectedPatternId,
+                            );
+                    
+                        if (!pattern) {
+                            return;
+                        }
+                    
+                        const meld: Meld = {
+                            type: "chi",
+                    
+                            tiles:
+                                pattern.tiles.map(
+                                    (tile) =>
+                                        tile.tile,
+                                ),
+                    
+                            from:
+                                pattern.from,
+                        };
+                                  
+                        callMeld(
+                            request.seat,
+                            meld,
                         );
-
+                                     
                         closeAction();
                     }}
                     onCancel={closeAction}

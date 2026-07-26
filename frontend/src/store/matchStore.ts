@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 import type { MatchState, Wind } from "@/types/match";
 import type { DiscardType, PlayerActionRequest, PlayerActionState } from "@/types/analysis";
-import type { Seat } from "@/types/player";
+import type { Seat, Meld } from "@/types/player";
 import type { TileId } from "@/types/tile";
 
 const INITIAL_PLAYER_ACTION: PlayerActionState = {
@@ -141,6 +141,11 @@ interface MatchStore {
     setHand: (
         playerId: number,
         hand: TileId[],
+    ) => void;
+
+    callMeld: (
+        caller: Seat,
+        meld: Meld,
     ) => void;
 }
 
@@ -324,7 +329,10 @@ export const useMatchStore = create<MatchStore>((set) => ({
     
                                           discards: [
                                               ...candidate.discards,
-                                              tile,
+                                              {
+                                                  tile,
+                                                  type: discardType,
+                                              },
                                           ],
                                       }
                                     : candidate,
@@ -401,4 +409,104 @@ export const useMatchStore = create<MatchStore>((set) => ({
                 ),
             },
         })),
+
+    callMeld: (caller, meld) =>
+        set((store) => {
+    
+            const fromPlayer = 
+                store.state.players.find(
+                    (player) =>
+                        player.seat === meld.from,
+                );
+    
+            const callerPlayer =
+                store.state.players.find(
+                    (player) =>
+                        player.seat === caller,
+                );
+    
+            if (
+                !fromPlayer ||
+                !callerPlayer
+            ) {
+                return store;
+            }
+      
+            const calledTile =
+                fromPlayer.discards.at(-1)?.tile;
+    
+    
+            if (!calledTile) {
+                return store;
+            }
+    
+            const newHand =
+                [...callerPlayer.hand];
+       
+            meld.tiles
+                .filter(
+                    (tile) =>
+                        tile !== calledTile,
+                )
+                .forEach(
+                    (tile) => {
+                        const index =
+                            newHand.findIndex(
+                                (candidate) =>
+                                    candidate === tile,
+                            );
+    
+                        if (index >= 0) {
+                            newHand.splice(
+                                index,
+                                1,
+                            );
+                        }
+                    },
+                );
+    
+            return {
+                state: {
+                    ...store.state,
+    
+                    players:
+                        store.state.players.map(
+                            (player) => {
+    
+                                if (
+                                    player.seat === meld.from
+                                ) {
+                                    return {
+                                        ...player,
+    
+                                        discards:
+                                            player.discards.slice(
+                                                0,
+                                                -1,
+                                            ),
+                                    };
+                                }
+    
+                                if (
+                                    player.seat === caller
+                                ) {
+                                    return {
+                                        ...player,
+    
+                                        hand:
+                                            newHand,
+    
+                                        melds:[
+                                            ...player.melds,
+                                            meld,
+                                        ],
+                                    };
+                                }
+    
+                                return player;
+                            },
+                        ),
+                },
+            };
+        }),
 }));

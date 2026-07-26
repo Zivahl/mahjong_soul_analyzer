@@ -42,3 +42,9 @@ export const TILE_IDS = [
 
     "?",
 ] as const;
+
+export const SUITS = [
+    "m",
+    "p",
+    "s",
+] as const;

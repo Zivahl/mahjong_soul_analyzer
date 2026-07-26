@@ -71,6 +71,10 @@ export const PlayerBlock = ({
 
             action,
 
+            from: "kamicha",
+
+            tile: "4m",
+
             anchor: {
                 x:
                     rect.left +
