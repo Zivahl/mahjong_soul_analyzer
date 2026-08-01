@@ -4,6 +4,8 @@ import type { MatchState, Wind } from "@/types/match";
 import type { DiscardType, PlayerActionRequest, PlayerActionState } from "@/types/analysis";
 import type { Seat, Meld } from "@/types/player";
 import type { TileId } from "@/types/tile";
+import type { TsumoEvent, DiscardEvent, MeldEvent, MatchEvent } from "@/types/event";
+import { applyEvent } from "@/utils/applyEvent";
 
 const INITIAL_PLAYER_ACTION: PlayerActionState = {
     pon: true,
@@ -93,28 +95,13 @@ const initialState: MatchState = {
 interface MatchStore {
     state: MatchState;
 
+    events: MatchEvent[];
+
     setRoundWind: (wind: Wind) => void;
 
     setRoundNumber: (round: 1 | 2 | 3 | 4) => void;
 
     setDealerSeat: (seat: Seat) => void;
-
-    tsumoTile: (
-        seat: Seat,
-        tile: TileId,
-    ) => void;
-
-    openAction: (
-        request: PlayerActionRequest,
-    ) => void;
-
-    discardTile: (
-        seat: Seat,
-        tile: TileId,
-        discardType: DiscardType,
-    ) => void;
-
-    closeAction: () => void;
 
     setPlayerName: (
         playerId: number,
@@ -143,6 +130,23 @@ interface MatchStore {
         hand: TileId[],
     ) => void;
 
+    openAction: (
+        request: PlayerActionRequest,
+    ) => void;
+
+    closeAction: () => void;
+
+    tsumoTile: (
+        seat: Seat,
+        tile: TileId,
+    ) => void;
+
+    discardTile: (
+        seat: Seat,
+        tile: TileId,
+        discardType: DiscardType,
+    ) => void;
+
     callMeld: (
         caller: Seat,
         meld: Meld,
@@ -151,6 +155,8 @@ interface MatchStore {
 
 export const useMatchStore = create<MatchStore>((set) => ({
     state: initialState,
+
+    events:[],
 
     setRoundWind: (wind) =>
         set((store) => ({
@@ -175,171 +181,6 @@ export const useMatchStore = create<MatchStore>((set) => ({
                 dealerSeat: seat,
             },
         })),
-
-    tsumoTile: (
-        seat,
-        tile,
-    ) =>
-        set((store) => ({
-            state: {
-                ...store.state,
-    
-                currentTsumo: tile,
-    
-                players:
-                    store.state.players.map(
-                        (player) => {
-    
-                            if (
-                                player.seat !== seat
-                            ) {
-                                return player;
-                            }
-    
-                            return {
-                                ...player,
-    
-                                hand: [
-                                    ...player.hand,
-                                    seat === "self"
-                                        ? tile
-                                        : "?",
-                                ],
-                            };
-                        },
-                    ),
-            },
-        })),
-
-    openAction: (request) =>
-        set((store) => ({
-            state: {
-                ...store.state,
-    
-                pendingAction: request,
-        },
-    })),
-
-    closeAction: () =>
-        set((store) => ({
-            state: {
-                ...store.state,
-    
-                pendingAction: undefined,
-            },
-    })),
-
-    discardTile: (
-        seat,
-        tile,
-        discardType,
-    ) =>
-        set((store) => {
-            const player =
-                store.state.players.find(
-                    (player) =>
-                        player.seat === seat,
-                );
-    
-            if (!player) {
-                return store;
-            }
-    
-            let hand = [...player.hand];
-    
-            if (seat === "self") {
-    
-                switch (discardType) {
-    
-                    case "tedashi": {
-                    
-                        const removeIndex =
-                            hand.findIndex(
-                                (candidate) =>
-                                    candidate === tile,
-                            );
-                    
-                        if (
-                            removeIndex >= 0
-                        ) {
-                            hand.splice(
-                                removeIndex,
-                                1,
-                            );
-                        }
-                                       
-                        break;
-                    }
-    
-                    case "tsumogiri":
-                    
-                        hand.pop();
-                    
-                        break;
-                }
-    
-            } else {
-    
-                switch (discardType) {
-    
-                    case "tedashi": {
-                    
-                        const unknownIndex =
-                            hand.findIndex(
-                                (candidate) =>
-                                    candidate === "?",
-                            );
-                    
-                        if (
-                            unknownIndex >= 0
-                        ) {
-                            hand.splice(
-                                unknownIndex,
-                                1,
-                            );
-                        }
-                                       
-                        break;
-                    }
-    
-                    case "tsumogiri":
-
-                        hand.pop();
-                    
-                        break;
-                }
-            }
-    
-            return {
-                state: {
-                    ...store.state,
-    
-                    currentTsumo:
-                        undefined,
-    
-                    players:
-                        store.state.players.map(
-                            (candidate) =>
-                                candidate.seat ===
-                                seat
-                                    ? {
-                                          ...candidate,
-    
-                                          hand,
-    
-                                          discards: [
-                                              ...candidate.discards,
-                                              {
-                                                  tile,
-                                                  type: discardType,
-                                              },
-                                          ],
-                                      }
-                                    : candidate,
-                        ),
-                },
-            };
-        }),
 
     setPlayerName: (playerId, name) =>
         set((store) => ({
@@ -410,103 +251,111 @@ export const useMatchStore = create<MatchStore>((set) => ({
             },
         })),
 
-    callMeld: (caller, meld) =>
+    openAction: (request) =>
+        set((store) => ({
+            state: {
+                ...store.state,
+    
+                pendingAction: request,
+        },
+    })),
+
+    closeAction: () =>
+        set((store) => ({
+            state: {
+                ...store.state,
+    
+                pendingAction: undefined,
+            },
+    })),
+
+    tsumoTile: (
+        seat,
+        tile,
+    ) =>
         set((store) => {
     
-            const fromPlayer = 
-                store.state.players.find(
-                    (player) =>
-                        player.seat === meld.from,
-                );
+            const event: TsumoEvent = {
+                type: "tsumo",
     
-            const callerPlayer =
-                store.state.players.find(
-                    (player) =>
-                        player.seat === caller,
-                );
+                seat,
     
-            if (
-                !fromPlayer ||
-                !callerPlayer
-            ) {
-                return store;
-            }
-      
-            const calledTile =
-                fromPlayer.discards.at(-1)?.tile;
-    
-    
-            if (!calledTile) {
-                return store;
-            }
-    
-            const newHand =
-                [...callerPlayer.hand];
-       
-            meld.tiles
-                .filter(
-                    (tile) =>
-                        tile !== calledTile,
-                )
-                .forEach(
-                    (tile) => {
-                        const index =
-                            newHand.findIndex(
-                                (candidate) =>
-                                    candidate === tile,
-                            );
-    
-                        if (index >= 0) {
-                            newHand.splice(
-                                index,
-                                1,
-                            );
-                        }
-                    },
-                );
+                tile,
+            };
     
             return {
-                state: {
-                    ...store.state,
+
+                state:
+                    applyEvent(
+                        store.state,
+                        event,
+                    ),
     
-                    players:
-                        store.state.players.map(
-                            (player) => {
+                events: [
+                    ...store.events,
+                    event,
+                ],
+            };
+        }),
+
+    discardTile: (
+        seat,
+        tile,
+        discardType,
+    ) =>
+        set((store) => {
     
-                                if (
-                                    player.seat === meld.from
-                                ) {
-                                    return {
-                                        ...player,
+            const event: DiscardEvent = {
+                type: "discard",
     
-                                        discards:
-                                            player.discards.slice(
-                                                0,
-                                                -1,
-                                            ),
-                                    };
-                                }
+                seat,
     
-                                if (
-                                    player.seat === caller
-                                ) {
-                                    return {
-                                        ...player,
+                tile,
     
-                                        hand:
-                                            newHand,
+                discardType,
+            };
     
-                                        melds:[
-                                            ...player.melds,
-                                            meld,
-                                        ],
-                                    };
-                                }
+            return {
     
-                                return player;
-                            },
-                        ),
-                },
+                state:
+                    applyEvent(
+                        store.state,
+                        event,
+                    ),
+    
+                events: [
+                    ...store.events,
+                    event,
+                ],
+            };
+        }),
+
+    callMeld: (
+        caller,
+        meld,
+    ) =>
+        set((store) => {
+    
+            const event: MeldEvent = {
+                type: "meld",
+    
+                seat: caller,
+    
+                meld,
+            };
+
+            return {
+    
+                state:
+                    applyEvent(
+                        store.state,
+                        event,
+                    ),
+    
+                events: [
+                    ...store.events,
+                    event,
+                ],
             };
         }),
 }));
