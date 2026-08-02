@@ -1,13 +1,12 @@
 import { SettingCard } from "@/components/common/SettingCard/SettingCard";
 import { TileListEditor } from "@/components/common/TileListEditor/TileListEditor";
-
-import { useMatchStore } from "@/store/matchStore";
+import { useInitialSettingStore } from "@/store/initialSettingStore";
 
 export const DoraSection = () => {
     const {
         state,
         setDoraIndicators,
-    } = useMatchStore();
+    } = useInitialSettingStore();
 
     return (
         <SettingCard title="ドラ表示牌">

@@ -1,4 +1,7 @@
 import { useAppStore } from "@/store/appStore";
+import { useInitialSettingStore } from "@/store/initialSettingStore";
+import { useMatchStore } from "@/store/matchStore";
+import { createInitializeRoundEvent } from "@/utils/createInitializeRoundEvent";
 import { DepositSection } from "@/components/initial-setting/DepositSection";
 import { DoraSection } from "@/components/initial-setting/DoraSection";
 import { HandSection } from "@/components/initial-setting/HandSection";
@@ -9,9 +12,20 @@ import "./InitialSettingPage.css";
 
 export const InitialSettingPage = () => {
     
-    const setCurrentPage = useAppStore(
-        (state) => state.setCurrentPage,
-    );
+    const setCurrentPage = 
+        useAppStore(
+            (state) => state.setCurrentPage,
+        );
+
+    const initialSettingState =
+        useInitialSettingStore(
+            (state) => state.state,
+        );
+
+    const initializeRound =
+        useMatchStore(
+            (state) => state.initializeRound,
+        );
 
     return (
         <div className="initial-setting-page">
@@ -39,9 +53,21 @@ export const InitialSettingPage = () => {
 
             <button
                 className="complete-button"
-                onClick={() =>
-                    setCurrentPage("match")
-                }
+                onClick={() => {
+            
+                    const event =
+                        createInitializeRoundEvent(
+                            initialSettingState,
+                        );
+           
+                    initializeRound(
+                        event,
+                    );
+            
+                    setCurrentPage(
+                        "match",
+                    );
+                }}
             >
                 設定完了
             </button>

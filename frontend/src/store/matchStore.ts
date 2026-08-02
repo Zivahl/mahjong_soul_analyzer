@@ -1,96 +1,12 @@
 import { create } from "zustand";
 
+import { initialMatchState } from "@/store/initialMatchState";
 import type { MatchState, Wind } from "@/types/match";
-import type { DiscardType, PlayerActionRequest, PlayerActionState } from "@/types/analysis";
+import type { DiscardType, PlayerActionRequest } from "@/types/analysis";
 import type { Seat, Meld } from "@/types/player";
 import type { TileId } from "@/types/tile";
-import type { TsumoEvent, DiscardEvent, MeldEvent, MatchEvent } from "@/types/event";
+import type { TsumoEvent, InitializeRoundEvent, DiscardEvent, MeldEvent, MatchEvent } from "@/types/event";
 import { applyEvent } from "@/utils/applyEvent";
-
-const INITIAL_PLAYER_ACTION: PlayerActionState = {
-    pon: true,
-    chi: true,
-    kan: true,
-    ron: true,
-    tsumo: true,
-};
-
-const initialState: MatchState = {
-    roundWind: "東",
-
-    roundNumber: 1,
-
-    dealerSeat: "self",
-
-    currentTsumo: undefined,
-    
-    pendingAction: undefined,
-
-    remainingTiles: 70,
-
-    riichiSticks: 0,
-
-    honba: 0,
-
-    doraIndicators: [],
-
-    players: [
-        {
-            id: 0,
-            seat: "shimocha",
-            name: "",
-            score: 25000,
-            hand: Array(13).fill("?"),
-            discards: [],
-            melds: [],
-        },
-        {
-            id: 1,
-            seat: "toimen",
-            name: "",
-            score: 25000,
-            hand: Array(13).fill("?"),
-            discards: [],
-            melds: [],
-        },
-        {
-            id: 2,
-            seat: "kamicha",
-            name: "",
-            score: 25000,
-            hand: Array(13).fill("?"),
-            discards: [],
-            melds: [],
-        },
-        {
-            id: 3,
-            seat: "self",
-            name: "",
-            score: 25000,
-            hand: [],
-            discards: [],
-            melds: [],
-        },
-    ],
-
-    playerActions: {
-        self: {
-            ...INITIAL_PLAYER_ACTION,
-        },
-
-        shimocha: {
-            ...INITIAL_PLAYER_ACTION,
-        },
-
-        toimen: {
-            ...INITIAL_PLAYER_ACTION,
-        },
-
-        kamicha: {
-            ...INITIAL_PLAYER_ACTION,
-        },
-    },
-};
 
 interface MatchStore {
     state: MatchState;
@@ -136,6 +52,10 @@ interface MatchStore {
 
     closeAction: () => void;
 
+    initializeRound: (
+        event: InitializeRoundEvent,
+    ) => void;
+
     tsumoTile: (
         seat: Seat,
         tile: TileId,
@@ -154,7 +74,7 @@ interface MatchStore {
 }
 
 export const useMatchStore = create<MatchStore>((set) => ({
-    state: initialState,
+    state: initialMatchState,
 
     events:[],
 
@@ -269,6 +189,23 @@ export const useMatchStore = create<MatchStore>((set) => ({
             },
     })),
 
+    initializeRound: (
+        event,
+    ) =>
+        set((store) => ({
+  
+            state:
+                applyEvent(
+                    store.state,
+                    event,
+                ),
+    
+            events: [
+                ...store.events,
+                event,
+            ],
+        })),
+
     tsumoTile: (
         seat,
         tile,
@@ -282,7 +219,7 @@ export const useMatchStore = create<MatchStore>((set) => ({
     
                 tile,
             };
-    
+  
             return {
 
                 state:
@@ -314,7 +251,7 @@ export const useMatchStore = create<MatchStore>((set) => ({
     
                 discardType,
             };
-    
+
             return {
     
                 state:

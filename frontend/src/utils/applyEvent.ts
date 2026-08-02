@@ -1,6 +1,6 @@
 import type { MatchState } from "@/types/match";
 
-import type { MatchEvent, TsumoEvent, DiscardEvent, MeldEvent } from "@/types/event";
+import type { MatchEvent, InitializeRoundEvent, TsumoEvent, DiscardEvent, MeldEvent } from "@/types/event";
 
 export const applyEvent = (
     state: MatchState,
@@ -8,6 +8,13 @@ export const applyEvent = (
 ): MatchState => {
 
     switch (event.type) {
+
+        case "initializeRound":
+        
+            return applyInitializeRound(
+                state,
+                event,
+            );
 
         case "tsumo":
             return applyTsumo(
@@ -30,6 +37,72 @@ export const applyEvent = (
         default:
             return state;
     }
+};
+
+const applyInitializeRound = (
+    state: MatchState,
+    event: InitializeRoundEvent,
+): MatchState => {
+
+    return {
+
+        ...state,
+
+        roundWind:
+            event.roundWind,
+
+        roundNumber:
+            event.roundNumber,
+
+        dealerSeat:
+            event.dealerSeat,
+
+        remainingTiles:
+            event.remainingTiles,
+
+        honba:
+            event.honba,
+
+        riichiSticks:
+            event.riichiSticks,
+
+        doraIndicators:
+            [...event.doraIndicators],
+
+        players:
+            state.players.map(
+                (player) => {
+
+                    const initialized =
+                        event.players.find(
+                            (candidate) =>
+                                candidate.seat === player.seat,
+                        );
+
+                    if (!initialized) {
+                        return player;
+                    }
+
+                    return {
+
+                        ...player,
+
+                        name:
+                            initialized.name,
+
+                        score:
+                            initialized.score,
+
+                        hand:
+                            [...initialized.hand],
+
+                        discards: [],
+
+                        melds: [],
+                    };
+                },
+            ),
+    };
 };
 
 const applyTsumo = (

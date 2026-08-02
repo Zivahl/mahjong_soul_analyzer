@@ -1,9 +1,9 @@
+import { SEAT_LABEL } from "@/constants/seats";
 import { NumberField } from "@/components/common/NumberField/NumberField";
 import { SettingCard } from "@/components/common/SettingCard/SettingCard";
 import { TextField } from "@/components/common/TextField/TextField";
-import { useMatchStore } from "@/store/matchStore";
+import { useInitialSettingStore } from "@/store/initialSettingStore";
 import { getPlayerWind } from "@/utils/mahjong";
-import { SEAT_LABEL } from "@/constants/seats";
 
 import "./PlayerSection.css";
 
@@ -12,7 +12,7 @@ export const PlayerSection = () => {
         state,
         setPlayerName,
         setPlayerScore,
-    } = useMatchStore();
+    } = useInitialSettingStore();
 
     return (
         <SettingCard title="プレイヤー設定">

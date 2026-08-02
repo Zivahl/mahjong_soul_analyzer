@@ -1,13 +1,12 @@
 import { SettingCard } from "@/components/common/SettingCard/SettingCard";
 import { TileListEditor } from "@/components/common/TileListEditor/TileListEditor";
-
-import { useMatchStore } from "@/store/matchStore";
+import { useInitialSettingStore } from "@/store/initialSettingStore";
 
 export const HandSection = () => {
     const {
         state,
         setHand,
-    } = useMatchStore();
+    } = useInitialSettingStore();
 
     const self =
         state.players.find(
