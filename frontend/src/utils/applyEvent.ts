@@ -2,6 +2,7 @@ import type { MatchState } from "@/types/match";
 
 import type { MatchEvent, InitializeRoundEvent, TsumoEvent, DiscardEvent, MeldEvent } from "@/types/event";
 
+
 export const applyEvent = (
     state: MatchState,
     event: MatchEvent,
@@ -113,8 +114,14 @@ const applyTsumo = (
     return {
         ...state,
 
+        currentTurn:
+            event.seat,
+
         currentTsumo:
             event.tile,
+        
+        remainingTiles:
+            state.remainingTiles - 1,
 
         players:
             state.players.map(
@@ -333,6 +340,9 @@ const applyMeld = (
 
     return {
         ...state,
+
+        currentTurn:
+            event.seat,
 
         players:
             state.players.map(

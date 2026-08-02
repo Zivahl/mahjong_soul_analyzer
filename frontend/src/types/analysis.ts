@@ -15,17 +15,65 @@ export interface ModalAnchor {
     y: number;
 }
 
-export interface PlayerActionRequest {
+export interface ActionRequestBase {
+
     seat: Seat;
 
     action: ActionType;
 
-    from?: Seat;
-
-    tile?: TileId;
-
     anchor: ModalAnchor;
 }
+
+export interface PonActionRequest
+    extends ActionRequestBase {
+
+    action: "pon";
+
+    patterns: MeldChoicePattern[];
+}
+
+export interface ChiActionRequest
+    extends ActionRequestBase {
+
+    action: "chi";
+
+    patterns: MeldChoicePattern[];
+}
+
+export interface KanActionRequest
+    extends ActionRequestBase {
+
+    action: "kan";
+
+    patterns: MeldChoicePattern[];
+}
+
+export interface TsumoActionRequest
+    extends ActionRequestBase {
+
+    action: "tsumo";
+}
+
+export interface DiscardActionRequest
+    extends ActionRequestBase {
+
+    action: "discard";
+}
+
+export interface RonActionRequest
+    extends ActionRequestBase {
+
+    action: "ron";
+}
+
+export type PlayerActionRequest =
+    | PonActionRequest
+    | ChiActionRequest
+    | KanActionRequest
+    | TsumoActionRequest
+    | DiscardActionRequest
+    | RonActionRequest;
+    
 
 export type DiscardType =
     | "tedashi"

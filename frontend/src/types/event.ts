@@ -28,6 +28,8 @@ export interface InitializeRoundEvent {
 
     dealerSeat: Seat;
 
+    currentTurn: Seat;
+
     remainingTiles: number;
 
     honba: number;

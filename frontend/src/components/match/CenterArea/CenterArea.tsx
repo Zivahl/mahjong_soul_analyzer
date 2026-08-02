@@ -8,6 +8,10 @@ export const CenterArea = () => {
         state,
     } = useMatchStore();
 
+    const undo =
+        useMatchStore(
+            (state) => state.undo,
+        );
 
     return (
         <div className="center-area">
@@ -25,6 +29,12 @@ export const CenterArea = () => {
             <div className="center-remaining">
                 余 {String(state.remainingTiles).padStart(2, "0")}
             </div>
+
+            <button
+                onClick={undo}
+            >
+                Undo
+            </button>
 
         </div>
     );

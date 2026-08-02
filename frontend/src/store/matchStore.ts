@@ -1,56 +1,20 @@
 import { create } from "zustand";
 
-import { initialMatchState } from "@/store/initialMatchState";
-import type { MatchState, Wind } from "@/types/match";
-import type { DiscardType, PlayerActionRequest } from "@/types/analysis";
+import type { MatchState } from "@/types/match";
+import type { DiscardType, ActionRequestBase } from "@/types/analysis";
 import type { Seat, Meld } from "@/types/player";
 import type { TileId } from "@/types/tile";
 import type { TsumoEvent, InitializeRoundEvent, DiscardEvent, MeldEvent, MatchEvent } from "@/types/event";
+import { initialMatchState } from "@/store/initialMatchState";
 import { applyEvent } from "@/utils/applyEvent";
+import { createPlayerActionRequest } from "@/utils/createPlayerActionRequest";
+import { rebuildState } from "@/utils/rebuildState";
+import { findUndoPoint } from "@/utils/findUndoPoint";
 
 interface MatchStore {
     state: MatchState;
 
     events: MatchEvent[];
-
-    setRoundWind: (wind: Wind) => void;
-
-    setRoundNumber: (round: 1 | 2 | 3 | 4) => void;
-
-    setDealerSeat: (seat: Seat) => void;
-
-    setPlayerName: (
-        playerId: number,
-        name: string,
-    ) => void;
-
-    setPlayerScore: (
-        playerId: number,
-        score: number,
-    ) => void;
-
-    setDoraIndicators: (
-        tiles: TileId[],
-    ) => void;
-
-    setRiichiSticks: (
-        value: number,
-    ) => void;
-
-    setHonba: (
-        value: number,
-    ) => void;
-
-    setHand: (
-        playerId: number,
-        hand: TileId[],
-    ) => void;
-
-    openAction: (
-        request: PlayerActionRequest,
-    ) => void;
-
-    closeAction: () => void;
 
     initializeRound: (
         event: InitializeRoundEvent,
@@ -71,123 +35,20 @@ interface MatchStore {
         caller: Seat,
         meld: Meld,
     ) => void;
+
+    undo: () => void;
+
+    openAction: (
+        request: ActionRequestBase,
+    ) => void;
+
+    closeAction: () => void;
 }
 
 export const useMatchStore = create<MatchStore>((set) => ({
     state: initialMatchState,
 
     events:[],
-
-    setRoundWind: (wind) =>
-        set((store) => ({
-            state: {
-                ...store.state,
-                roundWind: wind,
-            },
-        })),
-
-    setRoundNumber: (round) =>
-        set((store) => ({
-            state: {
-                ...store.state,
-                roundNumber: round,
-            },
-        })),
-
-    setDealerSeat: (seat) =>
-        set((store) => ({
-            state: {
-                ...store.state,
-                dealerSeat: seat,
-            },
-        })),
-
-    setPlayerName: (playerId, name) =>
-        set((store) => ({
-            state: {
-                ...store.state,
-                players: store.state.players.map((player) =>
-                    player.id === playerId
-                        ? {
-                              ...player,
-                              name,
-                          }
-                        : player,
-                ),
-            },
-        })),
-
-    setPlayerScore: (playerId, score) =>
-        set((store) => ({
-            state: {
-                ...store.state,
-                players: store.state.players.map((player) =>
-                    player.id === playerId
-                        ? {
-                              ...player,
-                              score,
-                          }
-                        : player,
-                ),
-            },
-        })),
-
-    setDoraIndicators: (tiles) =>
-        set((store) => ({
-            state: {
-                ...store.state,
-                doraIndicators: tiles,
-            },
-        })),
-
-    setRiichiSticks: (value) =>
-        set((store) => ({
-            state: {
-                ...store.state,
-                riichiSticks: value,
-            },
-        })),
-
-    setHonba: (value) =>
-        set((store) => ({
-            state: {
-                ...store.state,
-                honba: value,
-            },
-        })),
-
-    setHand: (playerId, hand) =>
-        set((store) => ({
-            state: {
-                ...store.state,
-                players: store.state.players.map((player) =>
-                    player.id === playerId
-                        ? {
-                              ...player,
-                              hand,
-                          }
-                        : player,
-                ),
-            },
-        })),
-
-    openAction: (request) =>
-        set((store) => ({
-            state: {
-                ...store.state,
-    
-                pendingAction: request,
-        },
-    })),
-
-    closeAction: () =>
-        set((store) => ({
-            state: {
-                ...store.state,
-    
-                pendingAction: undefined,
-            },
-    })),
 
     initializeRound: (
         event,
@@ -295,4 +156,71 @@ export const useMatchStore = create<MatchStore>((set) => ({
                 ],
             };
         }),
+
+    undo: () =>
+        set((store) => {
+    
+            const undoPoint =
+                findUndoPoint(
+                    store.events,
+                );
+    
+            const nextEvents =
+                store.events.slice(
+                    0,
+                    undoPoint,
+                );
+    
+            const nextState =
+                rebuildState(
+                    initialMatchState,
+                    nextEvents,
+                );
+       
+            return {
+    
+                state:
+                    nextState,
+    
+                events:
+                    nextEvents,
+    
+            };
+        }),
+
+    openAction: (request) =>
+        set((store) => {
+    
+            const actionRequest =
+                createPlayerActionRequest(
+                    store.state,
+                    store.events,
+                    request,
+                );
+    
+            if (!actionRequest) {
+                return store;
+            }
+    
+            return {
+    
+                state: {
+    
+                    ...store.state,
+    
+                    actionRequest,
+    
+                },
+    
+            };
+        }),
+
+    closeAction: () =>
+        set((store) => ({
+            state: {
+                ...store.state,
+    
+                actionRequest: undefined,
+            },
+        })),
 }));

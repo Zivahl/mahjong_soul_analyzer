@@ -16,9 +16,11 @@ export const initialMatchState: MatchState = {
 
     dealerSeat: "self",
 
+    currentTurn: "self",
+
     currentTsumo: undefined,
     
-    pendingAction: undefined,
+    actionRequest: undefined,
 
     remainingTiles: 70,
 

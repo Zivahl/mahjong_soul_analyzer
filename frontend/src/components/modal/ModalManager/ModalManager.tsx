@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import type { TileId } from "@/types/tile";
-import type { Meld } from "@/types/player";
 
 import { ActionModal } from "@/components/modal/ActionModal/ActionModal";
 import { TsumoModal } from "@/components/modal/TsumoModal/TsumoModal";
@@ -9,9 +8,9 @@ import { PonModal } from "@/components/modal/PonModal/PonModal";
 import { ChiModal } from "@/components/modal/ChiModal/ChiModal";
 import { DiscardModal } from "@/components/modal/DiscardModal/DiscardModal";
 
-import { useMatchStore } from "@/store/matchStore";
+import { createMeldFromPattern } from "@/utils/createMeldFromPattern";
 
-import { getPonPatterns, getChiPatterns } from "@/utils/mahjong";
+import { useMatchStore } from "@/store/matchStore";
 
 
 export const ModalManager = () => {
@@ -26,12 +25,14 @@ export const ModalManager = () => {
     } = useMatchStore();
 
 
-    const request =
-        state.pendingAction;
+    const actionRequest =
+        state.actionRequest;
 
 
-    const [selectedPatternId, setSelectedPatternId] =
-        useState("normal");
+    const [
+        selectedPatternId,
+        setSelectedPatternId,
+    ] = useState("normal");
 
 
     const [
@@ -47,243 +48,311 @@ export const ModalManager = () => {
 
 
     useEffect(() => {
-        if (!request) {
-            setSelectedPatternId("normal");
-            setSelectedTsumoTile(null);
-            setSelectedDiscardTile(null);
-        }
-    }, [request]);
 
-    if (!request) {
+        if (!actionRequest) {
+
+            setSelectedPatternId(
+                "normal",
+            );
+
+            setSelectedTsumoTile(
+                null,
+            );
+
+            setSelectedDiscardTile(
+                null,
+            );
+        }
+
+    }, [actionRequest]);
+
+
+    if (!actionRequest) {
         return null;
     }
 
 
     const player =
-    state.players.find(
-        (player) =>
-            player.seat ===
-            request.seat,
-    );
+        state.players.find(
+            (player) =>
+                player.seat ===
+                actionRequest.seat,
+        );
+
 
     if (!player) {
         return null;
     }
 
-    const meldPatterns =
-        request.action === "pon"
-            ? getPonPatterns(
-                  player.hand,
-                  player.seat,
-                  request.from!,
-                  request.tile!,
-              )
-            : request.action === "chi"
-            ? getChiPatterns(
-                  player.hand,
-                  request.from!,
-                  request.tile!,
-              )
-            : [];
 
-    switch (request.action) {
+    switch (
+        actionRequest.action
+    ) {
 
         case "pon":
+
             return (
                 <PonModal
+
                     patterns={
-                        meldPatterns
+                        actionRequest.patterns
                     }
+
                     selectedPatternId={
                         selectedPatternId
                     }
+
                     anchor={
-                        request.anchor
+                        actionRequest.anchor
                     }
+
                     onSelect={
                         setSelectedPatternId
                     }
+
                     onConfirm={() => {
+
                         const pattern =
-                            meldPatterns.find(
+                            actionRequest.patterns.find(
                                 (pattern) =>
                                     pattern.id ===
                                     selectedPatternId,
                             );
-                    
+
+
                         if (!pattern) {
                             return;
                         }
-                    
-                        const meld: Meld = {
-                            type: "pon",
-                    
-                            tiles:
-                                pattern.tiles.map(
-                                    (tile) =>
-                                        tile.tile,
-                                ),
-                    
-                            from:
-                                pattern.from,
-                        };
-                                  
+
+
+                        const meld =
+                            createMeldFromPattern(
+                                "pon",
+                                pattern,
+                            );
+
+
                         callMeld(
-                            request.seat,
+                            actionRequest.seat,
                             meld,
                         );
-                                     
+
+
                         closeAction();
+
                     }}
-                    onCancel={closeAction}
+
+                    onCancel={
+                        closeAction
+                    }
+
                 />
             );
+
 
         case "chi":
+
             return (
                 <ChiModal
+
                     patterns={
-                        meldPatterns
+                        actionRequest.patterns
                     }
+
                     selectedPatternId={
                         selectedPatternId
                     }
+
                     anchor={
-                        request.anchor
+                        actionRequest.anchor
                     }
+
                     onSelect={
                         setSelectedPatternId
                     }
+
                     onConfirm={() => {
+
                         const pattern =
-                            meldPatterns.find(
+                            actionRequest.patterns.find(
                                 (pattern) =>
                                     pattern.id ===
                                     selectedPatternId,
                             );
-                    
+
+
                         if (!pattern) {
                             return;
                         }
-                    
-                        const meld: Meld = {
-                            type: "chi",
-                    
-                            tiles:
-                                pattern.tiles.map(
-                                    (tile) =>
-                                        tile.tile,
-                                ),
-                    
-                            from:
-                                pattern.from,
-                        };
-                                  
+
+
+                        const meld =
+                            createMeldFromPattern(
+                                "chi",
+                                pattern,
+                            );
+
+
                         callMeld(
-                            request.seat,
+                            actionRequest.seat,
                             meld,
                         );
-                                     
+
+
                         closeAction();
+
                     }}
-                    onCancel={closeAction}
+
+                    onCancel={
+                        closeAction
+                    }
+
                 />
             );
 
+
         case "tsumo":
+
             return (
                 <TsumoModal
+
                     anchor={
-                        request.anchor
-                    }       
+                        actionRequest.anchor
+                    }
+
                     selectedTile={
                         selectedTsumoTile
-                    }       
+                    }
+
                     onSelect={
                         setSelectedTsumoTile
                     }
+
                     onConfirm={() => {
+
                         if (
                             selectedTsumoTile
                         ) {
+
                             tsumoTile(
-                                request.seat,
+                                actionRequest.seat,
                                 selectedTsumoTile,
                             );
                         }
-        
+
+
                         openAction({
-                            seat: request.seat,
-                            action: "discard",
+
+                            seat:
+                                actionRequest.seat,
+
+                            action:
+                                "discard",
+
                             anchor:
-                                request.anchor,
+                                actionRequest.anchor,
+
                         });
-                    }}       
-                    onCancel={closeAction}
+
+                    }}
+
+                    onCancel={
+                        closeAction
+                    }
+
                 />
             );
 
+
         case "discard":
+
             return (
                 <DiscardModal
+
                     title="打牌設定"
-      
+
+
                     anchor={
-                        request.anchor
+                        actionRequest.anchor
                     }
 
+
                     seat={
-                        request.seat
+                        actionRequest.seat
                     }
-        
+
+
                     hand={
                         player.hand
                     }
-        
+
+
                     tsumoTile={
                         state.currentTsumo
                     }
-        
+
+
                     selectedTile={
                         selectedDiscardTile
                     }
-        
+
+
                     onSelect={
                         setSelectedDiscardTile
                     }
 
+
                     onConfirm={(
                         discardType,
                     ) => {
+
                         if (
                             !selectedDiscardTile
                         ) {
                             return;
                         }
-                    
+
+
                         discardTile(
-                            request.seat,
+                            actionRequest.seat,
                             selectedDiscardTile,
                             discardType,
                         );
-                    
+
+
                         closeAction();
+
                     }}
-        
-                    onCancel={closeAction}
+
+
+                    onCancel={
+                        closeAction
+                    }
+
                 />
             );
+
 
         case "kan":
         case "ron":
+
             return (
                 <ActionModal
-                    action={request.action}
-                    onClose={closeAction}
+
+                    action={
+                        actionRequest.action
+                    }
+
+                    onClose={
+                        closeAction
+                    }
+
                 />
             );
 
+
         default:
+
             return null;
     }
 };

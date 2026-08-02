@@ -2,6 +2,8 @@ import type { InitializeRoundEvent } from "@/types/event";
 
 import type { InitialSettingState } from "@/store/initialSettingStore";
 
+import { getInitialTurnSeat } from "@/utils/getInitialTurnSeat";
+
 
 export const createInitializeRoundEvent = (
     state: InitialSettingState,
@@ -20,6 +22,12 @@ export const createInitializeRoundEvent = (
 
         dealerSeat:
             state.dealerSeat,
+
+        currentTurn:
+            getInitialTurnSeat(
+                state.dealerSeat,
+                state.roundNumber,
+            ),
 
         remainingTiles:
             state.remainingTiles,

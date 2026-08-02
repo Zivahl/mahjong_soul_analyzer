@@ -15,9 +15,11 @@ export interface MatchState {
 
     dealerSeat: Seat;
 
+    currentTurn: Seat;
+
     currentTsumo?: TileId;
     
-    pendingAction?: PlayerActionRequest;
+    actionRequest?: PlayerActionRequest;
 
     remainingTiles: number;
 
