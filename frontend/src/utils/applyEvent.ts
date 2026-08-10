@@ -2,42 +2,78 @@ import type { MatchState } from "@/types/match";
 
 import type { MatchEvent, InitializeRoundEvent, TsumoEvent, DiscardEvent, MeldEvent } from "@/types/event";
 
+import { calculatePlayerActions } from "@/utils/calculatePlayerActions";
+
 
 export const applyEvent = (
     state: MatchState,
     event: MatchEvent,
 ): MatchState => {
 
+    let nextState: MatchState;
+
     switch (event.type) {
 
         case "initializeRound":
-        
-            return applyInitializeRound(
-                state,
-                event,
-            );
+
+            nextState =
+                applyInitializeRound(
+                    state,
+                    event,
+                );
+
+            break;
+
 
         case "tsumo":
-            return applyTsumo(
-                state,
-                event,
-            );
+
+            nextState =
+                applyTsumo(
+                    state,
+                    event,
+                );
+
+            break;
+
 
         case "discard":
-            return applyDiscard(
-                state,
-                event,
-            );
+
+            nextState =
+                applyDiscard(
+                    state,
+                    event,
+                );
+
+            break;
+
 
         case "meld":
-            return applyMeld(
-                state,
-                event,
-            );
+
+            nextState =
+                applyMeld(
+                    state,
+                    event,
+                );
+
+            break;
+
 
         default:
+
             return state;
     }
+
+
+    return {
+
+        ...nextState,
+
+        playerActions:
+            calculatePlayerActions(
+                nextState,
+            ),
+
+    };
 };
 
 const applyInitializeRound = (
