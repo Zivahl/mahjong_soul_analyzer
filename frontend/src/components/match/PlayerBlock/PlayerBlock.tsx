@@ -13,9 +13,11 @@ import type { Seat } from "@/types/player";
 
 import "./PlayerBlock.css";
 
+
 interface Props {
     seat: Seat;
 }
+
 
 export const PlayerBlock = ({
     seat,
@@ -32,8 +34,10 @@ export const PlayerBlock = ({
 
     const openAction =
         useMatchStore(
-            (store) => store.openAction,
+            (store) =>
+                store.openAction,
         );
+
 
     const player =
         state.players.find(
@@ -41,9 +45,11 @@ export const PlayerBlock = ({
                 player.seat === seat,
         );
 
+
     if (!player) {
         return null;
     }
+
 
     const wind =
         getPlayerWind(
@@ -51,12 +57,20 @@ export const PlayerBlock = ({
             player.seat,
         );
 
+
     const isDealer =
-        player.seat === state.dealerSeat;
+        player.seat ===
+        state.dealerSeat;
+
+
+    const actions =
+        state.playerActions[seat];
+
 
     const handleRequestAction = (
         action: ActionType,
     ) => {
+
         const rect =
             blockRef.current
                 ?.getBoundingClientRect();
@@ -66,12 +80,15 @@ export const PlayerBlock = ({
             return;
         }
 
+
         openAction({
+
             seat,
 
             action,
 
             anchor: {
+
                 x:
                     rect.left +
                     rect.width / 2,
@@ -79,19 +96,29 @@ export const PlayerBlock = ({
                 y:
                     rect.top +
                     rect.height / 2,
+
             },
+
         });
     };
+
 
     return (
         <fieldset
             ref={blockRef}
             className="player-block"
         >
-            <legend className="player-block-title">
-                <span className="player-seat">
+
+            <legend
+                className="player-block-title"
+            >
+
+                <span
+                    className="player-seat"
+                >
                     {SEAT_LABEL[seat]}
                 </span>
+
 
                 <span
                     className={
@@ -103,25 +130,39 @@ export const PlayerBlock = ({
                     {wind}
                 </span>
 
-                <span className="player-name">
-                    {player.name || "プレイヤー名"}
+
+                <span
+                    className="player-name"
+                >
+                    {
+                        player.name ||
+                        "プレイヤー名"
+                    }
                 </span>
 
-                <span className="player-score">
+
+                <span
+                    className="player-score"
+                >
                     {player.score}
                 </span>
+
             </legend>
 
-            <div className="player-block-body">
+
+            <div
+                className="player-block-body"
+            >
+
                 <ActionPanel
-                    actions={
-                        state.playerActions[seat]
-                    }
+                    actions={actions}
                     onRequestAction={
                         handleRequestAction
                     }
                 />
+
             </div>
+
         </fieldset>
     );
 };

@@ -1,8 +1,20 @@
 import type { MatchState } from "@/types/match";
 import type { MatchEvent } from "@/types/event";
-import type { PlayerActionRequest, MeldChoicePattern } from "@/types/analysis";
-import { getLatestDiscard } from "@/utils/getLatestDiscard";
-import { getPonPatterns, getChiPatterns } from "@/utils/mahjong";
+
+import type {
+    PlayerActionRequest,
+    MeldChoicePattern,
+} from "@/types/analysis";
+
+import {
+    getLatestDiscardEvent,
+} from "@/utils/getLatestDiscardEvent";
+
+import {
+    getPonPatterns,
+    getChiPatterns,
+    getKanPatterns,
+} from "@/utils/mahjong";
 
 
 export const createPlayerActionRequest = (
@@ -14,127 +26,226 @@ export const createPlayerActionRequest = (
     >,
 ): PlayerActionRequest | undefined => {
 
-    let patterns:
-        MeldChoicePattern[] | undefined;
+    const player =
+        state.players.find(
+            (player) =>
+                player.seat ===
+                request.seat,
+        );
 
-    if (
-        request.action === "pon" ||
-        request.action === "chi"
-    ) {
 
-        const latestDiscard =
-            getLatestDiscard(
-                events,
-            );
-
-        if (!latestDiscard) {
-            return;
-        }
-
-        const player =
-            state.players.find(
-                (player) =>
-                    player.seat ===
-                    request.seat,
-            );
-
-        if (!player) {
-            return;
-        }
-
-        switch (
-            request.action
-        ) {
-
-            case "pon":
-
-                patterns =
-                    getPonPatterns(
-                        player.hand,
-                        player.seat,
-                        latestDiscard.seat,
-                        latestDiscard.tile,
-                    );
-
-                break;
-
-            case "chi":
-
-                patterns =
-                    getChiPatterns(
-                        player.hand,
-                        latestDiscard.seat,
-                        latestDiscard.tile,
-                    );
-
-                break;
-        }
+    if (!player) {
+        return;
     }
+
 
     switch (
         request.action
     ) {
+
+        case "pon": {
+
+            const latestDiscardEvent =
+                getLatestDiscardEvent(
+                    events,
+                );
+
+            if (
+                !latestDiscardEvent
+            ) {
+                return;
+            }
+
+
+            const patterns:
+                MeldChoicePattern[] =
+                    getPonPatterns(
+                        player.hand,
+                        {
+                            seat:
+                                latestDiscardEvent.seat,
     
-        case "pon":
-    
+                            tile:
+                                latestDiscardEvent.tile,
+                        },
+                    );
+
+
             return {
                 ...request,
-    
+
                 action: "pon",
-    
-                patterns:
-                    patterns ?? [],
+
+                patterns,
             };
+        }
+
+
+        case "chi": {
+
+            const latestDiscardEvent =
+                getLatestDiscardEvent(
+                    events,
+                );
+
+            if (
+                !latestDiscardEvent
+            ) {
+                return;
+            }
+
+
+            const patterns:
+                MeldChoicePattern[] =
+                    getChiPatterns(
+                        player.hand,
+                        {
+                            seat:
+                                latestDiscardEvent.seat,
     
-    
-        case "chi":
-    
+                            tile:
+                                latestDiscardEvent.tile,
+                        },
+                    );
+
+
             return {
                 ...request,
-    
+
                 action: "chi",
-    
-                patterns:
-                    patterns ?? [],
+
+                patterns,
             };
-    
-    
-        case "kan":
-    
+        }
+
+
+        case "kan": {
+
+            const latestEvent =
+                events.at(-1);
+
+            if (!latestEvent) {
+                return;
+            }
+
+
+            let patterns:
+                MeldChoicePattern[];
+
+
+            switch (
+                latestEvent.type
+            ) {
+
+                /*
+                 * 大明槓
+                 *
+                 * 他家の打牌直後。
+                 */
+                case "discard": {
+
+                    if (
+                        latestEvent.seat ===
+                        request.seat
+                    ) {
+                        return;
+                    }
+
+
+                    patterns =
+                        getKanPatterns(
+                            player.hand,
+                            player.melds,
+                            player.seat,
+                            latestEvent,
+                        );
+
+                    break;
+                }
+
+
+                /*
+                 * 加槓 / 暗槓
+                 *
+                 * 自家のツモ直後。
+                 */
+                case "tsumo": {
+
+                    if (
+                        latestEvent.seat !==
+                        request.seat
+                    ) {
+                        return;
+                    }
+
+
+                    patterns =
+                        getKanPatterns(
+                            player.hand,
+                            player.melds,
+                            player.seat,
+                        );
+
+                    break;
+                }
+
+
+                /*
+                 * 鳴き直後・局初期など。
+                 */
+                case "meld":
+                case "initializeRound":
+
+                    return;
+            }
+
+
+            if (
+                patterns.length === 0
+            ) {
+                return;
+            }
+
+
             return {
                 ...request,
-    
+
                 action: "kan",
-    
-                patterns:
-                    patterns ?? [],
+
+                patterns,
             };
-    
-    
+        }
+
+
         case "tsumo":
-    
+
             return {
                 ...request,
-    
+
                 action: "tsumo",
             };
-    
-    
+
+
         case "discard":
-    
+
             return {
                 ...request,
-    
+
                 action: "discard",
             };
-    
-    
+
+
         case "ron":
-    
+
             return {
                 ...request,
-    
+
                 action: "ron",
             };
+
+
+        default:
+
+            return;
     }
-}
+};

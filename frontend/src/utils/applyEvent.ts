@@ -4,10 +4,12 @@ import type { MatchEvent, InitializeRoundEvent, TsumoEvent, DiscardEvent, MeldEv
 
 import { calculatePlayerActions } from "@/utils/calculatePlayerActions";
 
+import { getNormalizeTile } from "@/utils/mahjong"
 
 export const applyEvent = (
     state: MatchState,
     event: MatchEvent,
+    events: readonly MatchEvent[],
 ): MatchState => {
 
     let nextState: MatchState;
@@ -64,6 +66,11 @@ export const applyEvent = (
     }
 
 
+    const nextEvents = [
+        ...events,
+        event,
+    ];
+
     return {
 
         ...nextState,
@@ -71,6 +78,7 @@ export const applyEvent = (
         playerActions:
             calculatePlayerActions(
                 nextState,
+                nextEvents,
             ),
 
     };
@@ -93,6 +101,9 @@ const applyInitializeRound = (
 
         dealerSeat:
             event.dealerSeat,
+
+        currentTurn:
+            event.currentTurn,
 
         remainingTiles:
             event.remainingTiles,
@@ -315,11 +326,14 @@ const applyMeld = (
     const meld =
         event.meld;
 
+    const fromSeat =
+        meld.calledDiscard?.seat;
+
     const fromPlayer =
         state.players.find(
             (player) =>
                 player.seat ===
-                meld.from,
+                fromSeat,
         );
 
     const callerPlayer =
@@ -330,16 +344,15 @@ const applyMeld = (
         );
 
     if (
-        !fromPlayer ||
         !callerPlayer
     ) {
         return state;
     }
 
-    const calledTile =
-        fromPlayer.discards.at(-1)?.tile;
-
-    if (!calledTile) {
+    if (
+        meld.kanType !== "ankan" &&
+        !fromPlayer
+    ) {
         return state;
     }
 
@@ -348,11 +361,6 @@ const applyMeld = (
     ];
 
     meld.tiles
-        .filter(
-            (tile) =>
-                tile !==
-                calledTile,
-        )
         .forEach(
             (tile) => {
 
@@ -385,8 +393,10 @@ const applyMeld = (
                 (player) => {
 
                     if (
+                        fromPlayer &&
                         player.seat ===
-                        meld.from
+                        fromPlayer.seat &&
+                        meld.calledDiscard
                     ) {
                         return {
                             ...player,
@@ -403,6 +413,64 @@ const applyMeld = (
                         player.seat ===
                         caller
                     ) {
+
+                        if (
+                            meld.kanType ===
+                            "kakan"
+                        ) {
+                            const meldIndex =
+                                player.melds.findIndex(
+                                    (existingMeld) =>
+                                        existingMeld.type ===
+                                            "pon" &&
+                                        existingMeld.tiles.length ===
+                                            2 &&
+                                        existingMeld.calledDiscard?.seat ===
+                                            meld.calledDiscard?.seat &&
+                                        existingMeld.calledDiscard?.tile ===
+                                            meld.calledDiscard?.tile &&
+                                        existingMeld.tiles.every(
+                                            (tile) =>
+                                                meld.tiles.some(
+                                                    (meldTile) =>
+                                                        getNormalizeTile(
+                                                            meldTile,
+                                                        ) ===
+                                                        getNormalizeTile(
+                                                            tile,
+                                                        ),
+                                                ),
+                                        ),
+                                );
+
+                            if (
+                                meldIndex < 0
+                            ) {
+                                return {
+                                    ...player,
+                                    hand: newHand,
+                                };
+                            }
+
+                            const newMelds = [
+                                ...player.melds,
+                            ];
+
+                            newMelds[
+                                meldIndex
+                            ] = meld;
+
+                            return {
+                                ...player,
+
+                                hand:
+                                    newHand,
+
+                                melds:
+                                    newMelds,
+                            };
+                        }
+
                         return {
                             ...player,
 

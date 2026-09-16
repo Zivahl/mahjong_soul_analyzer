@@ -10,15 +10,23 @@ export const rebuildState = (
     events: readonly MatchEvent[],
 ): MatchState => {
 
-    return events.reduce(
-        (
-            state,
-            event,
-        ) =>
+    let state = initialState;
+
+    const appliedEvents: MatchEvent[] = [];
+
+    for (const event of events) {
+
+        state =
             applyEvent(
                 state,
                 event,
-            ),
-        initialState,
-    );
+                appliedEvents,
+            );
+
+        appliedEvents.push(
+            event,
+        );
+    }
+
+    return state;
 };

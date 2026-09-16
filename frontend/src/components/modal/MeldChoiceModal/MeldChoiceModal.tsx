@@ -1,4 +1,6 @@
-import { TileRow } from "@/components/common/TileRow/TileRow";
+import { MeldTiles } from "@/components/common/MeldTiles/MeldTiles";
+
+import type { Seat } from "@/types/player"
 
 import type { MeldChoicePattern, ModalAnchor, } from "@/types/analysis";
 
@@ -6,6 +8,8 @@ import "./MeldChoiceModal.css";
 
 interface Props {
     title: string;
+
+    caller: Seat,
 
     patterns: MeldChoicePattern[];
 
@@ -24,6 +28,7 @@ interface Props {
 
 export const MeldChoiceModal = ({
     title,
+    caller,
     patterns,
     selectedPatternId,
     anchor,
@@ -79,9 +84,12 @@ export const MeldChoiceModal = ({
 
                                 </div>
 
-                                <TileRow
-                                    tiles={
-                                        pattern.tiles
+                                <MeldTiles
+                                    caller={
+                                        caller
+                                    }
+                                    meld={
+                                        pattern.meld
                                     }
                                 />
 

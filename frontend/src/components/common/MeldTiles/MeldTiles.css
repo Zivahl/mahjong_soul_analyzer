@@ -1,0 +1,39 @@
+.meld-tiles {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.meld-tile {
+    display: flex;
+    align-items: flex-end;
+
+    flex: 0 0 auto;
+}
+
+/*
+ * 加槓
+ *
+ * 加槓牌と元の鳴き牌を
+ * 縦方向に並べる。
+ */
+.meld-tile-kakan {
+    display: flex;
+    align-items: flex-end;
+}
+
+.meld-tile-kakan-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*
+ * 暗槓
+ *
+ * Tile 側で "?" を back.png に変換するため、
+ * ここでは特別な画像処理を行わない。
+ */
+.meld-tiles-ankan {
+    gap: 2px;
+}

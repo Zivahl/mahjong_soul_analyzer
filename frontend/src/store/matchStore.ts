@@ -59,6 +59,7 @@ export const useMatchStore = create<MatchStore>((set) => ({
                 applyEvent(
                     store.state,
                     event,
+                    store.events,
                 ),
     
             events: [
@@ -87,6 +88,7 @@ export const useMatchStore = create<MatchStore>((set) => ({
                     applyEvent(
                         store.state,
                         event,
+                        store.events,
                     ),
     
                 events: [
@@ -119,6 +121,7 @@ export const useMatchStore = create<MatchStore>((set) => ({
                     applyEvent(
                         store.state,
                         event,
+                        store.events,
                     ),
     
                 events: [
@@ -148,6 +151,7 @@ export const useMatchStore = create<MatchStore>((set) => ({
                     applyEvent(
                         store.state,
                         event,
+                        store.events,
                     ),
     
                 events: [

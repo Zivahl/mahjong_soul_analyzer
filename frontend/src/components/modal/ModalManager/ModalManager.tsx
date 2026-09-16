@@ -6,9 +6,8 @@ import { ActionModal } from "@/components/modal/ActionModal/ActionModal";
 import { TsumoModal } from "@/components/modal/TsumoModal/TsumoModal";
 import { PonModal } from "@/components/modal/PonModal/PonModal";
 import { ChiModal } from "@/components/modal/ChiModal/ChiModal";
+import { KanModal } from "@/components/modal/KanModal/KanModal";
 import { DiscardModal } from "@/components/modal/DiscardModal/DiscardModal";
-
-import { createMeldFromPattern } from "@/utils/createMeldFromPattern";
 
 import { useMatchStore } from "@/store/matchStore";
 
@@ -94,6 +93,10 @@ export const ModalManager = () => {
             return (
                 <PonModal
 
+                    caller={
+                        actionRequest.seat
+                    }
+
                     patterns={
                         actionRequest.patterns
                     }
@@ -119,27 +122,16 @@ export const ModalManager = () => {
                                     selectedPatternId,
                             );
 
-
                         if (!pattern) {
                             return;
                         }
 
-
-                        const meld =
-                            createMeldFromPattern(
-                                "pon",
-                                pattern,
-                            );
-
-
                         callMeld(
                             actionRequest.seat,
-                            meld,
+                            pattern.meld,
                         );
 
-
                         closeAction();
-
                     }}
 
                     onCancel={
@@ -155,6 +147,10 @@ export const ModalManager = () => {
             return (
                 <ChiModal
 
+                    caller={
+                        actionRequest.seat
+                    }
+
                     patterns={
                         actionRequest.patterns
                     }
@@ -180,33 +176,75 @@ export const ModalManager = () => {
                                     selectedPatternId,
                             );
 
-
                         if (!pattern) {
                             return;
                         }
 
-
-                        const meld =
-                            createMeldFromPattern(
-                                "chi",
-                                pattern,
-                            );
-
-
                         callMeld(
                             actionRequest.seat,
-                            meld,
+                            pattern.meld,
                         );
 
-
                         closeAction();
-
                     }}
 
                     onCancel={
                         closeAction
                     }
 
+                />
+            );
+
+        case "kan":
+        
+            return (
+                <KanModal
+
+                    caller={
+                        actionRequest.seat
+                    }
+        
+                    patterns={
+                        actionRequest.patterns
+                    }
+        
+                    selectedPatternId={
+                        selectedPatternId
+                    }
+        
+                    anchor={
+                        actionRequest.anchor
+                    }
+        
+                    onSelect={
+                        setSelectedPatternId
+                    }
+        
+                    onConfirm={() => {
+        
+                        const pattern =
+                            actionRequest.patterns.find(
+                                (pattern) =>
+                                    pattern.id ===
+                                    selectedPatternId,
+                            );
+        
+                        if (!pattern) {
+                            return;
+                        }
+        
+                        callMeld(
+                            actionRequest.seat,
+                            pattern.meld,
+                        );
+        
+                        closeAction();
+                    }}
+        
+                    onCancel={
+                        closeAction
+                    }
+        
                 />
             );
 
@@ -332,8 +370,6 @@ export const ModalManager = () => {
                 />
             );
 
-
-        case "kan":
         case "ron":
 
             return (

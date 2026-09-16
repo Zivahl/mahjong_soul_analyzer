@@ -18,12 +18,22 @@ export type MeldType =
     | "chi"
     | "kan";
 
+export type KanType =
+    | "daiminkan"
+    | "kakan"
+    | "ankan";
+
 export interface Meld {
     type: MeldType;
 
+    kanType?: KanType;
+
     tiles: TileId[];
 
-    from: Seat;
+    calledDiscard?: {
+        seat: Seat,
+        tile: TileId,
+    }
 }
 
 export interface PlayerState {

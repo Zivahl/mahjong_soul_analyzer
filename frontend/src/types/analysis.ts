@@ -1,5 +1,4 @@
-import type { Seat } from "@/types/player";
-import type { TileId } from "@/types/tile";
+import type { Seat, Meld } from "@/types/player";
 
 export type ActionType =
     | "pon"
@@ -97,16 +96,8 @@ export interface PlayerActionEvent {
     action: ActionType;
 }
 
-export interface MeldTile {
-    tile: TileId;
-
-    sideways?: boolean;
-}
-
 export interface MeldChoicePattern {
     id: string;
 
-    tiles: MeldTile[];
-
-    from: Seat;
+    meld: Meld;
 }

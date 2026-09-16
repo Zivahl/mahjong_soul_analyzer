@@ -1,8 +1,12 @@
 import { MeldChoiceModal } from "@/components/modal/MeldChoiceModal/MeldChoiceModal";
 
+import type { Seat } from "@/types/player"
+
 import type { MeldChoicePattern, ModalAnchor } from "@/types/analysis";
 
 interface Props {
+    caller: Seat,
+
     patterns: MeldChoicePattern[];
 
     selectedPatternId: string;
@@ -19,6 +23,7 @@ interface Props {
 }
 
 export const ChiModal = ({
+    caller,
     patterns,
     selectedPatternId,
     anchor,
@@ -29,6 +34,7 @@ export const ChiModal = ({
     return (
         <MeldChoiceModal
             title="チー牌設定"
+            caller={caller}
             patterns={patterns}
             selectedPatternId={selectedPatternId}
             anchor={anchor}

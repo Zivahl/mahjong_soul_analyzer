@@ -1,8 +1,8 @@
 import { SUITS } from "@/constants/tiles"
 import { SEAT_ORDER } from "@/constants/seats"
-import type { Seat } from "@/types/player";
+import type { Seat, Meld } from "@/types/player";
 import type { TileId } from "@/types/tile";
-import type { MeldTile, MeldChoicePattern } from "@/types/analysis";
+import type { MeldChoicePattern } from "@/types/analysis";
 
 export type Wind =
     | "東"
@@ -32,7 +32,7 @@ export const getPlayerWind = (
     ];
 };
 
-const normalizeTile =
+export const getNormalizeTile =
     (
         tile: TileId,
     ): TileId => {
@@ -51,39 +51,6 @@ const normalizeTile =
         default:
             return tile;
     }
-};
-
-const getSeatDistance = (
-    caller: Seat,
-    from: Seat,
-) => {
-
-    const callerIndex =
-        SEAT_ORDER.indexOf(caller);
-
-    const fromIndex =
-        SEAT_ORDER.indexOf(from);
-
-    return (
-        fromIndex -
-        callerIndex +
-        4
-    ) % 4;
-};
-
-export const getSidewaysIndex = (
-    caller: Seat,
-    from: Seat,
-): number => {
-
-    const distance =
-        getSeatDistance(
-            caller,
-            from,
-        );
-
-
-    return 3 - distance;
 };
 
 export const ponCombinations = (
@@ -138,20 +105,21 @@ export const ponCombinations = (
 
 export const getPonPatterns = (
     hand: readonly TileId[],
-    caller: Seat,
-    from: Seat,
-    tile: TileId,
+    latestDiscard: {
+        seat: Seat;
+        tile: TileId;
+    },
 ): MeldChoicePattern[] => {
 
     const normalizedTile =
-        normalizeTile(
-            tile,
+        getNormalizeTile(
+            latestDiscard.tile,
         );
 
     const candidates =
         hand.filter(
             (candidate) =>
-                normalizeTile(
+                getNormalizeTile(
                     candidate,
                 ) === normalizedTile,
         );
@@ -165,55 +133,34 @@ export const getPonPatterns = (
     const results:
         MeldChoicePattern[] = [];
 
-    const pairs =
+    const combinations =
         ponCombinations(
             candidates,
         );
 
     for (
-        const pair of pairs
+        const combination of combinations
     ) {
 
-        const tiles: MeldTile[] = [
-            {
-                tile:
-                    pair[0],
-            },
-            {
-                tile:
-                    pair[1],
-            },
-            {
-                tile,
-            },
+        const tiles: TileId[] = [
+            combination[0],
+            combination[1],
         ];
-
-        const sidewaysIndex =
-            getSidewaysIndex(
-                caller,
-                from,
-            );
-
-        if (
-            sidewaysIndex >= 0 &&
-            sidewaysIndex < tiles.length
-        ) {
-            tiles[sidewaysIndex].sideways =
-                true;
-        }
 
         results.push({
             id:
-                tiles
-                    .map(
-                        (tile) =>
-                            tile.tile,
-                    )
-                    .join("_"),
+                tiles.join("_"),
 
-            tiles,
+            meld: {
+                type:
+                    "pon",    
 
-            from,
+                tiles: 
+                    tiles,
+
+                calledDiscard:
+                    latestDiscard,
+            }
         });
     }
 
@@ -282,13 +229,15 @@ export const chiCombinations = (
 
 export const getChiPatterns = (
     hand: readonly TileId[],
-    from: Seat,
-    tile: TileId,
+    latestDiscard: {
+        seat: Seat;
+        tile: TileId;
+    },
 ): MeldChoicePattern[] => {
 
     const normalizedTile =
-        normalizeTile(
-            tile,
+        getNormalizeTile(
+            latestDiscard.tile,
         );
 
     if (
@@ -353,10 +302,10 @@ export const getChiPatterns = (
                 (neededTile) =>
                     hand.filter(
                         (handTile) =>
-                            normalizeTile(
+                            getNormalizeTile(
                                 handTile,
                             ) ===
-                            normalizeTile(
+                            getNormalizeTile(
                                 neededTile,
                             ),
                     ),
@@ -379,38 +328,231 @@ export const getChiPatterns = (
         for (
             const combination of combinations
         ) {
+            
+            const tiles: TileId[] = [
+                combination[0],
+                combination[1],
+            ];
+
+            results.push({
+
+                id:
+                    tiles.join("_"),
+
+                meld: {
+                    type:
+                        "chi",    
+    
+                    tiles: 
+                        tiles,
+    
+                    calledDiscard:
+                        latestDiscard,
+                }
+            });
+        }
+    }
+
+    return results;
+};
+
+export const getKanPatterns = (
+    hand: readonly TileId[],
+    melds: readonly Meld[],
+    caller: Seat,
+    latestDiscard?: {
+        seat: Seat;
+        tile: TileId;
+    },
+): MeldChoicePattern[] => {
+
+    const results:
+        MeldChoicePattern[] = [];
+
+
+    /*
+     * 大明槓
+     */
+    if (latestDiscard) {
+
+        const normalizedTile =
+            getNormalizeTile(
+                latestDiscard.tile,
+            );
+
+        const candidates =
+            hand.filter(
+                (candidate) =>
+                    getNormalizeTile(
+                        candidate,
+                    ) ===
+                    normalizedTile,
+            );
+
+        if (
+            candidates.length >= 3 &&
+            latestDiscard.seat !== caller
+        ) {
+
+            const tiles:
+                TileId[] = [
+                    candidates[0],
+                    candidates[1],
+                    candidates[2],
+                ];
 
             results.push({
 
                 id:
                     [
-                        tile,
-                        ...combination,
-                    ]
-                        .map(
-                            (tile) =>
-                                tile,
-                        )
-                        .join("_"),
+                        "daiminkan",
+                        ...tiles,
+                    ].join("_"),
 
-                tiles:[
-                    {
-                        tile,
-                        sideways:true,
-                    },
-                    {
-                        tile:
-                            combination[0],
-                    },
-                    {
-                        tile:
-                            combination[1],
-                    },
-                ],
+                meld: {
+                    type:
+                        "kan",
 
-                from,
+                    kanType:
+                        "daiminkan",
+
+                    tiles: 
+                        tiles,
+    
+                    calledDiscard:
+                        latestDiscard,
+                },
             });
         }
+    }
+
+
+    /*
+     * 加槓
+     */
+    for (
+        const meld of melds
+    ) {
+
+        if (
+            meld.type !== "pon"
+        ) {
+            continue;
+        }
+
+        if (
+            meld.tiles.length !== 2
+        ) {
+            continue;
+        }
+
+        const normalizedTile =
+            getNormalizeTile(
+                meld.tiles[0],
+            );
+
+        const candidate =
+            hand.find(
+                (tile) =>
+                    getNormalizeTile(
+                        tile,
+                    ) ===
+                    normalizedTile,
+            );
+
+        if (!candidate) {
+            continue;
+        }
+
+        results.push({
+
+            id:
+                [
+                    "kakan",
+                    ...meld.tiles,
+                ].join("_"),
+
+            meld: {
+                type:
+                    "kan",
+
+                kanType:
+                    "kakan",
+
+                tiles: [
+                    meld.tiles[0],
+                    meld.tiles[1],
+                    candidate,
+                ],
+
+                calledDiscard: 
+                    meld.calledDiscard,
+            },
+        });
+    }
+
+
+    /*
+     * 暗槓
+     */
+    const tileGroups =
+        new Map<
+            TileId,
+            TileId[]
+        >();
+
+    for (
+        const tile of hand
+    ) {
+
+        const normalizedTile =
+            getNormalizeTile(
+                tile,
+            );
+
+        const group =
+            tileGroups.get(
+                normalizedTile,
+            ) ?? [];
+
+        group.push(tile);
+
+        tileGroups.set(
+            normalizedTile,
+            group,
+        );
+    }
+
+
+    for (
+        const candidates of tileGroups.values()
+    ) {
+
+        if (
+            candidates.length < 4
+        ) {
+            continue;
+        }
+
+        results.push({
+
+            id:
+                [
+                    "ankan",
+                    ...candidates,
+                ].join("_"),
+
+            meld: {
+                type:
+                    "kan",
+
+                kanType:
+                    "ankan",
+                
+                tiles:
+                    candidates,
+            },
+        });
     }
 
     return results;

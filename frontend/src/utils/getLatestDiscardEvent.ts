@@ -1,16 +1,6 @@
 import type { MatchEvent, DiscardEvent } from "@/types/event";
 
-import type { Seat } from "@/types/player";
-
-
-export interface LatestDiscard {
-
-    from: Seat;
-
-    tile: string;
-}
-
-export const getLatestDiscard = (
+export const getLatestDiscardEvent = (
     events: readonly MatchEvent[],
 ): DiscardEvent | undefined => {
 
