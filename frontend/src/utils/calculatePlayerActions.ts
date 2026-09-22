@@ -6,10 +6,6 @@ import type {
 } from "@/types/analysis";
 
 import {
-    getPreviousSeat,
-} from "@/utils/getPreviousSeat";
-
-import {
     getNextSeat,
 } from "@/utils/getNextSeat";
 
@@ -45,12 +41,29 @@ const createDefaultActions =
 
 const canTsumo = (
     state: MatchState,
+    events: readonly MatchEvent[],
     seat: Seat,
 ): boolean => {
 
+    const latestDiscardEvent =
+        getLatestDiscardEvent(
+            events,
+        );
+
+    if (!latestDiscardEvent) {
+        return (
+            state.currentTurn ===
+            seat
+        );
+    }
+
+    const tsumoSeat =
+        getNextSeat(
+            latestDiscardEvent.seat,
+    );
+ 
     return (
-        state.currentTurn ===
-        getPreviousSeat(seat)
+        tsumoSeat === seat
     );
 };
 
@@ -379,6 +392,7 @@ export const calculatePlayerActions = (
                 tsumo:
                     canTsumo(
                         state,
+                        events,
                         player.seat,
                     ),
 
