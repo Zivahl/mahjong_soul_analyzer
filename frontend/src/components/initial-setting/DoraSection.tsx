@@ -1,5 +1,5 @@
 import { SettingCard } from "@/components/common/SettingCard/SettingCard";
-import { TileListEditor } from "@/components/common/TileListEditor/TileListEditor";
+import { TilePicker } from "@/components/common/TilePicker/TilePicker";
 import { useInitialSettingStore } from "@/store/initialSettingStore";
 
 export const DoraSection = () => {
@@ -10,10 +10,20 @@ export const DoraSection = () => {
 
     return (
         <SettingCard title="ドラ表示牌">
-            <TileListEditor
-                tiles={state.doraIndicators}
-                maxTiles={5}
-                onChange={setDoraIndicators}
+            <TilePicker
+                source="all"
+                selectionMode="single"
+                selectedTile={state.doraIndicators[0]}
+                onTileClick={() => {
+
+                    if (!state.doraIndicators[0]) {
+                        return;
+                    }
+
+                    setDoraIndicators(
+                        state.doraIndicators,
+                    )
+                }}
             />
         </SettingCard>
     );

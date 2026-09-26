@@ -6,7 +6,8 @@ export type ActionType =
     | "kan"
     | "tsumo"
     | "discard"
-    | "ron";
+    | "ron"
+    | "dora";
 
 export interface ModalAnchor {
     x: number;
@@ -16,53 +17,61 @@ export interface ModalAnchor {
 
 export interface ActionRequestBase {
 
-    seat: Seat;
-
     action: ActionType;
+}
 
-    anchor: ModalAnchor;
+export interface PlayerActionRequestBase
+    extends ActionRequestBase {
+    
+    seat: Seat;
 }
 
 export interface PonActionRequest
-    extends ActionRequestBase {
+    extends PlayerActionRequestBase {
 
     action: "pon";
 
-    patterns: MeldChoicePattern[];
+//    patterns: MeldChoicePattern[];
 }
 
 export interface ChiActionRequest
-    extends ActionRequestBase {
+    extends PlayerActionRequestBase {
 
     action: "chi";
 
-    patterns: MeldChoicePattern[];
+//    patterns: MeldChoicePattern[];
 }
 
 export interface KanActionRequest
-    extends ActionRequestBase {
+    extends PlayerActionRequestBase {
 
     action: "kan";
 
-    patterns: MeldChoicePattern[];
+//    patterns: MeldChoicePattern[];
 }
 
 export interface TsumoActionRequest
-    extends ActionRequestBase {
+    extends PlayerActionRequestBase {
 
     action: "tsumo";
 }
 
 export interface DiscardActionRequest
-    extends ActionRequestBase {
+    extends PlayerActionRequestBase {
 
     action: "discard";
 }
 
 export interface RonActionRequest
-    extends ActionRequestBase {
+    extends PlayerActionRequestBase {
 
     action: "ron";
+}
+
+export interface DoraActionRequest
+    extends ActionRequestBase {
+
+    action: "dora";
 }
 
 export type PlayerActionRequest =
@@ -72,7 +81,10 @@ export type PlayerActionRequest =
     | TsumoActionRequest
     | DiscardActionRequest
     | RonActionRequest;
-    
+
+export type ActionRequest =
+    | PlayerActionRequest
+    | DoraActionRequest;  
 
 export type DiscardType =
     | "tedashi"

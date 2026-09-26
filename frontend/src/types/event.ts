@@ -3,10 +3,6 @@ import type { Wind } from "@/types/match";
 import type { TileId } from "@/types/tile";
 import type { DiscardType } from "@/types/analysis";
 
-export interface BaseEvent {
-    seat: Seat;
-}
-
 export interface InitializePlayerState {
 
     seat: Seat;
@@ -41,8 +37,12 @@ export interface InitializeRoundEvent {
     players: InitializePlayerState[];
 }
 
+export interface PlayerEvent {
+    seat: Seat;
+}
+
 export interface TsumoEvent
-    extends BaseEvent {
+    extends PlayerEvent {
 
     type: "tsumo";
 
@@ -50,7 +50,7 @@ export interface TsumoEvent
 }
 
 export interface DiscardEvent
-    extends BaseEvent {
+    extends PlayerEvent {
 
     type: "discard";
 
@@ -60,15 +60,23 @@ export interface DiscardEvent
 }
 
 export interface MeldEvent
-    extends BaseEvent {
+    extends PlayerEvent {
 
     type: "meld";
 
     meld: Meld;
 }
 
+export interface DoraEvent {
+
+    type: "dora";
+
+    tile: TileId;
+}
+
 export type MatchEvent =
     | InitializeRoundEvent
     | TsumoEvent
     | DiscardEvent
-    | MeldEvent;
+    | MeldEvent
+    | DoraEvent;

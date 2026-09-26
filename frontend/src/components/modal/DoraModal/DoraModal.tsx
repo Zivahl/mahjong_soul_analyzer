@@ -8,7 +8,7 @@ import type {
     TileId,
 } from "@/types/tile";
 
-import "./TsumoModal.css";
+import "./DoraModal.css";
 
 
 interface Props {
@@ -28,7 +28,7 @@ interface Props {
 }
 
 
-export const TsumoModal = ({
+export const DoraModal = ({
     title,
     anchor,
     selectedTile,
@@ -37,30 +37,30 @@ export const TsumoModal = ({
     onCancel,
 }: Props) => {
     return (
-        <div className="tsumo-modal-overlay">
+        <div className="dora-modal-overlay">
 
             <div
-                className="tsumo-modal"
+                className="dora-modal"
                 style={{
                     left: anchor.x,
                     top: anchor.y,
                 }}
             >
 
-                <h2 className="tsumo-modal-title">
+                <h2 className="dora-modal-title">
                     {title}
                 </h2>
 
-                <div className="tsumo-modal-body">
+                <div className="dora-modal-body">
 
-                    <div className="selected-tsumo">
+                    <div className="selected-dora">
 
                         {selectedTile ? (
                             <Tile
                                 tile={selectedTile}
                             />
                         ) : (
-                            <div className="tsumo-placeholder">
+                            <div className="dora-placeholder">
                                 未選択
                             </div>
                         )}
@@ -79,7 +79,7 @@ export const TsumoModal = ({
 
                 </div>
 
-                <div className="tsumo-modal-footer">
+                <div className="dora-modal-footer">
 
                     <button
                         onClick={onCancel}

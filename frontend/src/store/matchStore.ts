@@ -1,230 +1,331 @@
 import { create } from "zustand";
 
+
 import type { MatchState } from "@/types/match";
-import type { DiscardType, ActionRequestBase } from "@/types/analysis";
-import type { Seat, Meld } from "@/types/player";
+
+import type {
+    DiscardType,
+    PlayerActionRequest,
+} from "@/types/analysis";
+
+import type {
+    Seat,
+    Meld,
+} from "@/types/player";
+
 import type { TileId } from "@/types/tile";
-import type { TsumoEvent, InitializeRoundEvent, DiscardEvent, MeldEvent, MatchEvent } from "@/types/event";
+
+import type {
+    TsumoEvent,
+    InitializeRoundEvent,
+    DiscardEvent,
+    MeldEvent,
+    DoraEvent,
+    MatchEvent,
+} from "@/types/event";
+
+
 import { initialMatchState } from "@/store/initialMatchState";
+
 import { applyEvent } from "@/utils/applyEvent";
-import { createPlayerActionRequest } from "@/utils/createPlayerActionRequest";
+
 import { rebuildState } from "@/utils/rebuildState";
+
 import { findUndoPoint } from "@/utils/findUndoPoint";
 
+
 interface MatchStore {
+
     state: MatchState;
 
     events: MatchEvent[];
+
 
     initializeRound: (
         event: InitializeRoundEvent,
     ) => void;
 
-    tsumoTile: (
+
+    callTsumo: (
         seat: Seat,
         tile: TileId,
     ) => void;
 
-    discardTile: (
+
+    callDiscard: (
         seat: Seat,
         tile: TileId,
         discardType: DiscardType,
     ) => void;
+
 
     callMeld: (
         caller: Seat,
         meld: Meld,
     ) => void;
 
-    undo: () => void;
 
-    openAction: (
-        request: ActionRequestBase,
+    callDora: (
+        tile: TileId,
     ) => void;
 
-    closeAction: () => void;
+
+    requestAction: (
+        request: PlayerActionRequest,
+    ) => void;
+
+
+    clearActionRequest: () => void;
+
+
+    undo: () => void;
 }
 
-export const useMatchStore = create<MatchStore>((set) => ({
-    state: initialMatchState,
 
-    events:[],
+export const useMatchStore =
+    create<MatchStore>(
+        (set) => ({
 
-    initializeRound: (
-        event,
-    ) =>
-        set((store) => ({
-  
             state:
-                applyEvent(
-                    store.state,
-                    event,
-                    store.events,
-                ),
-    
-            events: [
-                ...store.events,
+                initialMatchState,
+
+
+            events: [],
+
+
+            initializeRound: (
                 event,
-            ],
-        })),
+            ) =>
+                set(
+                    (store) => ({
 
-    tsumoTile: (
-        seat,
-        tile,
-    ) =>
-        set((store) => {
-    
-            const event: TsumoEvent = {
-                type: "tsumo",
-    
+                        state:
+                            applyEvent(
+                                store.state,
+                                event,
+                                store.events,
+                            ),
+
+                        events: [
+                            ...store.events,
+                            event,
+                        ],
+
+                    }),
+                ),
+
+
+            callTsumo: (
                 seat,
-    
                 tile,
-            };
-  
-            return {
+            ) =>
+                set(
+                    (store) => {
 
-                state:
-                    applyEvent(
-                        store.state,
-                        event,
-                        store.events,
-                    ),
-    
-                events: [
-                    ...store.events,
-                    event,
-                ],
-            };
-        }),
+                        const event:
+                            TsumoEvent = {
 
-    discardTile: (
-        seat,
-        tile,
-        discardType,
-    ) =>
-        set((store) => {
-    
-            const event: DiscardEvent = {
-                type: "discard",
-    
+                            type: "tsumo",
+
+                            seat,
+
+                            tile,
+                        };
+
+
+                        return {
+
+                            state:
+                                applyEvent(
+                                    store.state,
+                                    event,
+                                    store.events,
+                                ),
+
+                            events: [
+                                ...store.events,
+                                event,
+                            ],
+
+                        };
+                    },
+                ),
+
+
+            callDiscard: (
                 seat,
-    
                 tile,
-    
                 discardType,
-            };
+            ) =>
+                set(
+                    (store) => {
 
-            return {
-    
-                state:
-                    applyEvent(
-                        store.state,
-                        event,
-                        store.events,
-                    ),
-    
-                events: [
-                    ...store.events,
-                    event,
-                ],
-            };
-        }),
+                        const event:
+                            DiscardEvent = {
 
-    callMeld: (
-        caller,
-        meld,
-    ) =>
-        set((store) => {
-    
-            const event: MeldEvent = {
-                type: "meld",
-    
-                seat: caller,
-    
+                            type: "discard",
+
+                            seat,
+
+                            tile,
+
+                            discardType,
+                        };
+
+
+                        return {
+
+                            state:
+                                applyEvent(
+                                    store.state,
+                                    event,
+                                    store.events,
+                                ),
+
+                            events: [
+                                ...store.events,
+                                event,
+                            ],
+
+                        };
+                    },
+                ),
+
+
+            callMeld: (
+                caller,
                 meld,
-            };
+            ) =>
+                set(
+                    (store) => {
 
-            return {
-    
-                state:
-                    applyEvent(
-                        store.state,
-                        event,
-                        store.events,
-                    ),
-    
-                events: [
-                    ...store.events,
-                    event,
-                ],
-            };
+                        const event:
+                            MeldEvent = {
+
+                            type: "meld",
+
+                            seat:
+                                caller,
+
+                            meld,
+                        };
+
+
+                        return {
+
+                            state:
+                                applyEvent(
+                                    store.state,
+                                    event,
+                                    store.events,
+                                ),
+
+                            events: [
+                                ...store.events,
+                                event,
+                            ],
+
+                        };
+                    },
+                ),
+
+
+            callDora: (
+                tile,
+            ) =>
+                set(
+                    (store) => {
+
+                        const event:
+                            DoraEvent = {
+
+                            type: "dora",
+
+                            tile,
+                        };
+
+
+                        return {
+
+                            state:
+                                applyEvent(
+                                    store.state,
+                                    event,
+                                    store.events,
+                                ),
+
+                            events: [
+                                ...store.events,
+                                event,
+                            ],
+
+                        };
+                    },
+                ),
+
+
+            requestAction: (
+                request,
+            ) =>
+                set(
+                    (store) => ({
+
+                        state: {
+                            ...store.state,
+
+                            actionRequest:
+                                request,
+                        },
+                        
+
+                    }),
+                ),
+
+
+            clearActionRequest: () =>
+                set((store) => ({
+                    state: {
+                        ...store.state,
+                        actionRequest: undefined,
+                    },
+                })),
+
+
+            undo: () =>
+                set(
+                    (store) => {
+
+                        const undoPoint =
+                            findUndoPoint(
+                                store.events,
+                            );
+
+
+                        const nextEvents =
+                            store.events.slice(
+                                0,
+                                undoPoint,
+                            );
+
+
+                        const nextState =
+                            rebuildState(
+                                initialMatchState,
+                                nextEvents,
+                            );
+
+
+                        return {
+
+                            state:
+                                nextState,
+
+                            events:
+                                nextEvents,
+
+                        };
+                    },
+                ),
+
         }),
-
-    undo: () =>
-        set((store) => {
-    
-            const undoPoint =
-                findUndoPoint(
-                    store.events,
-                );
-    
-            const nextEvents =
-                store.events.slice(
-                    0,
-                    undoPoint,
-                );
-    
-            const nextState =
-                rebuildState(
-                    initialMatchState,
-                    nextEvents,
-                );
-       
-            return {
-    
-                state:
-                    nextState,
-    
-                events:
-                    nextEvents,
-    
-            };
-        }),
-
-    openAction: (request) =>
-        set((store) => {
-    
-            const actionRequest =
-                createPlayerActionRequest(
-                    store.state,
-                    store.events,
-                    request,
-                );
-    
-            if (!actionRequest) {
-                return store;
-            }
-    
-            return {
-    
-                state: {
-    
-                    ...store.state,
-    
-                    actionRequest,
-    
-                },
-    
-            };
-        }),
-
-    closeAction: () =>
-        set((store) => ({
-            state: {
-                ...store.state,
-    
-                actionRequest: undefined,
-            },
-        })),
-}));
+    );

@@ -1,8 +1,10 @@
 import type { MatchState } from "@/types/match";
 
-import type { MatchEvent, InitializeRoundEvent, TsumoEvent, DiscardEvent, MeldEvent } from "@/types/event";
+import type { MatchEvent, InitializeRoundEvent, TsumoEvent, DiscardEvent, MeldEvent, DoraEvent } from "@/types/event";
 
 import { calculatePlayerActions } from "@/utils/calculatePlayerActions";
+
+import { createDefaultNextActionRequest } from "@/utils/createDefaultNextActionRequest";
 
 import { getNormalizeTile } from "@/utils/mahjong"
 
@@ -58,6 +60,17 @@ export const applyEvent = (
                 );
 
             break;
+            
+
+        case "dora":
+        
+            nextState =
+                applyDora(
+                    state,
+                    event,
+                );
+        
+            break;
 
 
         default:
@@ -71,16 +84,23 @@ export const applyEvent = (
         event,
     ];
 
+    const actionRequest =
+        createDefaultNextActionRequest(
+            nextState,
+            nextEvents,
+    );
+
     return {
 
         ...nextState,
+
+        actionRequest,
 
         playerActions:
             calculatePlayerActions(
                 nextState,
                 nextEvents,
             ),
-
     };
 };
 
@@ -487,5 +507,20 @@ const applyMeld = (
                     return player;
                 },
             ),
+    };
+};
+
+const applyDora = (
+    state: MatchState,
+    event: DoraEvent,
+): MatchState => {
+
+    return {
+        ...state,
+
+        doraIndicators: [
+            ...state.doraIndicators,
+            event.tile,
+        ],
     };
 };

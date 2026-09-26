@@ -1,4 +1,4 @@
-.discard-modal-overlay {
+.dora-modal-overlay {
     position: fixed;
     inset: 0;
 
@@ -9,7 +9,7 @@
     pointer-events: none;
 }
 
-.discard-modal {
+.dora-modal {
     position: absolute;
 
     width: fit-content;
@@ -34,7 +34,7 @@
     pointer-events: auto;
 }
 
-.discard-modal-title {
+.dora-modal-title {
     margin: 0;
 
     font-size: var(--font-size-md);
@@ -42,14 +42,14 @@
     text-align: center;
 }
 
-.discard-modal-body {
+.dora-modal-body {
     display: flex;
     flex-direction: column;
 
     gap: var(--space-lg);
 }
 
-.discard-selected {
+.selected-dora {
     display: flex;
 
     justify-content: center;
@@ -57,7 +57,7 @@
     min-height: 48px;
 }
 
-.discard-placeholder {
+.dora-placeholder {
     display: flex;
 
     justify-content: center;
@@ -68,18 +68,7 @@
     color: #888;
 }
 
-.discard-picker {
-    display: flex;
-
-    justify-content: center;
-    align-items: center;
-}
-
-.discard-tsumo {
-    margin-left: 14px;
-}
-
-.discard-modal-footer {
+.dora-modal-footer {
     display: flex;
 
     justify-content: flex-end;

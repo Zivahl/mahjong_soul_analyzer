@@ -1,5 +1,3 @@
-import { useRef } from "react";
-
 import { ActionPanel } from "@/components/match/ActionPanel/ActionPanel";
 
 import { useMatchStore } from "@/store/matchStore";
@@ -8,36 +6,26 @@ import { getPlayerWind } from "@/utils/mahjong";
 
 import { SEAT_LABEL } from "@/constants/seats";
 
-import type { ActionType } from "@/types/analysis";
+import type {
+    ActionType,
+    PlayerActionRequest,
+} from "@/types/analysis";
 import type { Seat } from "@/types/player";
 
 import "./PlayerBlock.css";
-
 
 interface Props {
     seat: Seat;
 }
 
-
 export const PlayerBlock = ({
     seat,
 }: Props) => {
 
-    const blockRef =
-        useRef<HTMLFieldSetElement>(null);
-
-
     const {
         state,
+        requestAction,
     } = useMatchStore();
-
-
-    const openAction =
-        useMatchStore(
-            (store) =>
-                store.openAction,
-        );
-
 
     const player =
         state.players.find(
@@ -45,11 +33,9 @@ export const PlayerBlock = ({
                 player.seat === seat,
         );
 
-
     if (!player) {
         return null;
     }
-
 
     const wind =
         getPlayerWind(
@@ -57,68 +43,84 @@ export const PlayerBlock = ({
             player.seat,
         );
 
-
     const isDealer =
         player.seat ===
         state.dealerSeat;
 
-
     const actions =
         state.playerActions[seat];
-
 
     const handleRequestAction = (
         action: ActionType,
     ) => {
 
-        const rect =
-            blockRef.current
-                ?.getBoundingClientRect();
+        let request:
+            PlayerActionRequest;
 
+        switch (action) {
 
-        if (!rect) {
-            return;
+            case "pon":
+                request = {
+                    action: "pon",
+                    seat,
+                };
+                break;
+
+            case "chi":
+                request = {
+                    action: "chi",
+                    seat,
+                };
+                break;
+
+            case "kan":
+                request = {
+                    action: "kan",
+                    seat,
+                };
+                break;
+
+            case "tsumo":
+                request = {
+                    action: "tsumo",
+                    seat,
+                };
+                break;
+
+            case "discard":
+                request = {
+                    action: "discard",
+                    seat,
+                };
+                break;
+
+            case "ron":
+                request = {
+                    action: "ron",
+                    seat,
+                };
+                break;
+
+            case "dora":
+                return;
         }
 
-
-        openAction({
-
-            seat,
-
-            action,
-
-            anchor: {
-
-                x:
-                    rect.left +
-                    rect.width / 2,
-
-                y:
-                    rect.top +
-                    rect.height / 2,
-
-            },
-
-        });
+        requestAction(request);
     };
-
 
     return (
         <fieldset
-            ref={blockRef}
             className="player-block"
+            data-seat={seat}
         >
-
             <legend
                 className="player-block-title"
             >
-
                 <span
                     className="player-seat"
                 >
                     {SEAT_LABEL[seat]}
                 </span>
-
 
                 <span
                     className={
@@ -130,7 +132,6 @@ export const PlayerBlock = ({
                     {wind}
                 </span>
 
-
                 <span
                     className="player-name"
                 >
@@ -140,29 +141,23 @@ export const PlayerBlock = ({
                     }
                 </span>
 
-
                 <span
                     className="player-score"
                 >
                     {player.score}
                 </span>
-
             </legend>
-
 
             <div
                 className="player-block-body"
             >
-
                 <ActionPanel
                     actions={actions}
                     onRequestAction={
                         handleRequestAction
                     }
                 />
-
             </div>
-
         </fieldset>
     );
 };

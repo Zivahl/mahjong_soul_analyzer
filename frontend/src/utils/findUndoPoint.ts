@@ -5,11 +5,17 @@ const hasSeat = (
     event: MatchEvent,
 ): event is Exclude<
     MatchEvent,
-    { type: "initializeRound" }
+    {
+        type:
+            | "initializeRound"
+            | "dora";
+    }
 > => {
     return (
         event.type !==
-        "initializeRound"
+            "initializeRound" &&
+        event.type !==
+            "dora"
     );
 };
 
@@ -57,6 +63,15 @@ export const findUndoPoint = (
 
         const event =
             events[index - 1];
+
+
+        if (
+            event.type ===
+            "dora"
+        ) {
+            index--;
+            continue;
+        }
 
 
         if (
