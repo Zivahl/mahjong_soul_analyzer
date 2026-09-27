@@ -1,7 +1,7 @@
 import type { Discard } from "@/types/discard";
 import type { Meld } from "@/types/meld";
 import type { Seat, Wind } from "@/types/seat";
-import type { TileId } from "@/types/tile";
+import type { Tile } from "@/types/tile";
 
 export type EventType =
     | "initializeRound"
@@ -23,7 +23,7 @@ export interface InitializePlayerState {
 
     score: number;
 
-    hand: TileId[];
+    hand: Tile[];
 }
 
 export interface InitializeRoundEvent
@@ -45,7 +45,7 @@ export interface InitializeRoundEvent
 
     riichiSticks: number;
 
-    doraIndicators: TileId[];
+    doraIndicators: Tile[];
 
     players: InitializePlayerState[];
 }
@@ -61,7 +61,7 @@ export interface TsumoEvent
 
     type: "tsumo";
 
-    tile: TileId;
+    tile: Tile;
 }
 
 export interface DiscardEvent
@@ -84,7 +84,7 @@ export interface DoraEvent {
 
     type: "dora";
 
-    tile: TileId;
+    tile: Tile;
 }
 
 export type MatchEvent =

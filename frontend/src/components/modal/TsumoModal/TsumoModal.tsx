@@ -1,10 +1,8 @@
-import { useState } from "react";
-
-import { Tile } from "@/components/common/Tile/Tile";
+import { TileImage } from "@/components/common/TileImage/TileImage";
 import { TilePicker } from "@/components/common/TilePicker/TilePicker";
 
 import type { ModalAnchor } from "@/types/modal";
-import type { TileId } from "@/types/tile";
+import type { Tile } from "@/types/tile";
 
 import "./TsumoModal.css";
 
@@ -14,10 +12,10 @@ interface Props {
 
     anchor: ModalAnchor;
 
-    selectedTile: TileId | null;
+    selectedTile: Tile | null;
 
     onSelect: (
-        tile: TileId,
+        tile: Tile,
     ) => void;
 
     onConfirm: () => void;
@@ -34,14 +32,9 @@ export const TsumoModal = ({
     onConfirm,
     onCancel,
 }: Props) => {
-    const [selectedIndex, setSelectedIndex] =
-        useState<number | null>(null);
-
     const handleTileClick = (
-        tile: TileId,
-        index: number,
+        tile: Tile,
     ) => {
-        setSelectedIndex(index);
         onSelect(tile);
     };
 
@@ -65,7 +58,7 @@ export const TsumoModal = ({
                     <div className="selected-tsumo">
 
                         {selectedTile ? (
-                            <Tile
+                            <TileImage
                                 tile={selectedTile}
                             />
                         ) : (
@@ -78,7 +71,6 @@ export const TsumoModal = ({
 
                     <TilePicker
                         selectionMode="single"
-                        selectedIndex={selectedIndex}
                         onTileClick={
                             handleTileClick
                         }

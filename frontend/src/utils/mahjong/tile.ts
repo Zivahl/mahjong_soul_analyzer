@@ -1,11 +1,11 @@
-import type { TileId } from "@/types/tile";
+import type { TileType } from "@/types/tile";
 
-export const getNormalizeTile =
+export const normalizeTileType =
     (
-        tile: TileId,
-    ): TileId => {
+        type: TileType,
+    ): TileType => {
 
-    switch (tile) {
+    switch (type) {
 
         case "5mr":
             return "5m";
@@ -17,6 +17,6 @@ export const getNormalizeTile =
             return "5s";
 
         default:
-            return tile;
+            return type;
     }
 };

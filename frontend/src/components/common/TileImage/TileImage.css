@@ -21,8 +21,22 @@ button.tile:hover {
     border-color: #b5b5b5;
 }
 
+button.tile:disabled {
+    cursor: default;
+
+    opacity: 0.35;
+}
+
+button.tile:disabled:hover {
+    border-color: transparent;
+}
+
 .tile.selected {
     border-color: #0078d4;
+}
+
+.tile.disabled {
+    opacity: 0.35;
 }
 
 .tile-image {

@@ -1,4 +1,4 @@
-import { Tile } from "../Tile/Tile";
+import { TileImage } from "../TileImage/TileImage";
 
 import type { Meld } from "@/types/meld";
 import type { Seat } from "@/types/seat";
@@ -13,7 +13,7 @@ interface MeldTilesProps {
 }
 
 interface RenderTile {
-    tile: Parameters<typeof Tile>[0]["tile"];
+    tile: Parameters<typeof TileImage>[0]["tile"];
     sideways?: boolean;
     overlay?: boolean;
 }
@@ -92,7 +92,7 @@ export const MeldTiles = ({
                         key={`${item.tile}-${index}`}
                         className="meld-tile"
                     >
-                        <Tile
+                        <TileImage
                             tile={item.tile}
                             sideways={item.sideways}
                             clickable={false}
@@ -174,7 +174,7 @@ export const MeldTiles = ({
                         key={`${item.tile}-${index}`}
                         className="meld-tile"
                     >
-                        <Tile
+                        <TileImage
                             tile={item.tile}
                             sideways={item.sideways}
                             clickable={false}
@@ -274,13 +274,13 @@ export const MeldTiles = ({
                                 className="meld-tile meld-tile-kakan"
                             >
                                 <div className="meld-tile-kakan-stack">
-                                    <Tile
+                                    <TileImage
                                         tile={addedTile}
                                         sideways={true}
                                         clickable={false}
                                     />
 
-                                    <Tile
+                                    <TileImage
                                         tile={item.tile}
                                         sideways={true}
                                         clickable={false}
@@ -295,7 +295,7 @@ export const MeldTiles = ({
                             key={`${item.tile}-${index}`}
                             className="meld-tile"
                         >
-                            <Tile
+                            <TileImage
                                 tile={item.tile}
                                 sideways={item.sideways}
                                 clickable={false}
@@ -324,7 +324,10 @@ export const MeldTiles = ({
 
         const tiles: RenderTile[] = [
             {
-                tile: "?",
+                tile: {
+                    id: null,
+                    type: "?",
+                }
             },
             {
                 tile: meld.tiles[1],
@@ -333,14 +336,17 @@ export const MeldTiles = ({
                 tile: meld.tiles[2],
             },
             {
-                tile: "?",
+                tile: {
+                    id: null,
+                    type: "?",
+                }
             },
         ];
 
         return (
             <div className="meld-tiles">
                 {tiles.map((item, index) => (
-                    <Tile
+                    <TileImage
                         key={`${item.tile}-${index}`}
                         tile={item.tile}
                         clickable={false}

@@ -1,14 +1,18 @@
-import { Tile } from "@/components/common/Tile/Tile";
+import { TileImage } from "@/components/common/TileImage/TileImage";
 
-import type { TileId } from "@/types/tile";
+import type { Tile } from "@/types/tile";
 
 import "./SelectedTileList.css";
 
-interface SelectedTileListProps {
-    tiles: TileId[];
 
-    onTileClick?: (tile: TileId, index: number) => void;
+interface SelectedTileListProps {
+    tiles: Tile[];
+
+    onTileClick?: (
+        tile: Tile,
+    ) => void;
 }
+
 
 export const SelectedTileList = ({
     tiles,
@@ -16,12 +20,12 @@ export const SelectedTileList = ({
 }: SelectedTileListProps) => {
     return (
         <div className="selected-tile-list">
-            {tiles.map((tile, index) => (
-                <Tile
-                    key={`${tile}-${index}`}
+            {tiles.map((tile) => (
+                <TileImage
+                    key={tile.id}
                     tile={tile}
                     onClick={() =>
-                        onTileClick?.(tile, index)
+                        onTileClick?.(tile)
                     }
                 />
             ))}

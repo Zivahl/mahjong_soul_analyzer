@@ -1,5 +1,5 @@
 import type { Seat } from "@/types/seat";
-import type { TileId } from "@/types/tile";
+import type { Tile } from "@/types/tile";
 
 export type MeldType =
     | "pon"
@@ -16,10 +16,10 @@ export interface Meld {
 
     kanType?: KanType;
 
-    tiles: TileId[];
+    tiles: Tile[];
 
     calledDiscard?: {
         seat: Seat,
-        tile: TileId,
+        tile: Tile,
     }
 }

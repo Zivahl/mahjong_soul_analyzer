@@ -1,4 +1,7 @@
-export const TILE_IDS = [
+import type { TileType } from "@/types/tile";
+
+
+export const TILE_TYPES = [
     "1m",
     "2m",
     "3m",
@@ -41,10 +44,27 @@ export const TILE_IDS = [
     "C",
 
     "?",
-] as const;
+] as const satisfies readonly TileType[];
+
 
 export const SUITS = [
     "m",
     "p",
     "s",
 ] as const;
+
+
+export const RED_TILE_TYPES = {
+    "5m": "5mr",
+    "5p": "5pr",
+    "5s": "5sr",
+} as const satisfies Partial<
+    Record<TileType, TileType>
+>;
+
+
+export const SANMA_EXCLUDED_TILE_TYPES = [
+    "2m",
+    "3m",
+    "4m",
+] as const satisfies readonly TileType[];

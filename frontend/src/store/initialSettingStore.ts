@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 import type { Seat, Wind } from "@/types/seat";
-import type { TileId } from "@/types/tile";
+import type { Tile } from "@/types/tile";
 
 interface InitialSettingPlayerState {
     id: number;
@@ -12,7 +12,7 @@ interface InitialSettingPlayerState {
 
     score: number;
 
-    hand: TileId[];
+    hand: Tile[];
 }
 
 export interface InitialSettingState {
@@ -28,7 +28,7 @@ export interface InitialSettingState {
 
     riichiSticks: number;
 
-    doraIndicators: TileId[];
+    doraIndicators: Tile[];
 
     players: InitialSettingPlayerState[];
 }
@@ -56,21 +56,21 @@ const createInitialSettingState =
             seat: "shimocha",
             name: "",
             score: 25000,
-            hand: Array(13).fill("?") as TileId[],
+            hand: Array(13).fill("?") as Tile[],
         },
         {
             id: 1,
             seat: "toimen",
             name: "",
             score: 25000,
-            hand: Array(13).fill("?") as TileId[],
+            hand: Array(13).fill("?") as Tile[],
         },
         {
             id: 2,
             seat: "kamicha",
             name: "",
             score: 25000,
-            hand: Array(13).fill("?") as TileId[],
+            hand: Array(13).fill("?") as Tile[],
         },
         {
             id: 3,
@@ -111,7 +111,7 @@ interface InitialSettingStore {
     ) => void;
 
     setDoraIndicators: (
-        tiles: TileId[],
+        tiles: Tile[],
     ) => void;
 
     setPlayerName: (
@@ -126,7 +126,7 @@ interface InitialSettingStore {
 
     setHand: (
         playerId: number,
-        hand: TileId[],
+        hand: Tile[],
     ) => void;
 
     reset: () => void;

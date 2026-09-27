@@ -1,54 +1,47 @@
-import { SUITS } from "@/constants/tiles"
+import { SUITS } from "@/constants/tiles";
+
+import type { MeldChoicePattern } from "@/types/action";
 import type { Meld } from "@/types/meld";
 import type { Seat } from "@/types/seat";
-import type { TileId } from "@/types/tile";
-import type { MeldChoicePattern } from "@/types/action";
-import { getNormalizeTile } from "./tile";
+import type { Tile, TileType } from "@/types/tile";
+
+import { normalizeTileType } from "./tile";
 
 export const ponCombinations = (
-    tiles: TileId[],
-): TileId[][] => {
+    tiles: Tile[],
+): Tile[][] => {
+    const result: Tile[][] = [];
 
-    const result: TileId[][] = [];
-
-    const keys =
-        new Set<string>();
-
+    const keys = new Set<string>();
 
     for (
         let i = 0;
         i < tiles.length;
         i++
     ) {
-
         for (
             let j = i + 1;
             j < tiles.length;
             j++
         ) {
-
             const combination = [
                 tiles[i],
                 tiles[j],
             ];
 
-            const key =
-                combination
-                    .slice()
-                    .sort()
-                    .join("_");
+            const key = combination
+                .map((tile) => tile.id)
+                .filter((id): id is number => id !== null)
+                .sort((a, b) => a - b)
+                .join("_");
 
-            if (
-                keys.has(key)
-            ) {
+            if (keys.has(key)) {
                 continue;
             }
 
             keys.add(key);
 
-            result.push(
-                combination,
-            );
+            result.push(combination);
         }
     }
 
@@ -56,63 +49,53 @@ export const ponCombinations = (
 };
 
 export const getPonPatterns = (
-    hand: readonly TileId[],
+    hand: readonly Tile[],
     latestDiscard: {
         seat: Seat;
-        tile: TileId;
+        tile: Tile;
     },
 ): MeldChoicePattern[] => {
-
-    const normalizedTile =
-        getNormalizeTile(
-            latestDiscard.tile,
+    const normalizedTileType =
+        normalizeTileType(
+            latestDiscard.tile.type,
         );
 
-    const candidates =
-        hand.filter(
-            (candidate) =>
-                getNormalizeTile(
-                    candidate,
-                ) === normalizedTile,
-        );
+    const candidates = hand.filter(
+        (candidate) =>
+            normalizeTileType(
+                candidate.type,
+            ) === normalizedTileType,
+    );
 
-    if (
-        candidates.length < 2
-    ) {
+    if (candidates.length < 2) {
         return [];
     }
 
-    const results:
-        MeldChoicePattern[] = [];
+    const results: MeldChoicePattern[] = [];
 
     const combinations =
-        ponCombinations(
-            candidates,
-        );
+        ponCombinations(candidates);
 
     for (
         const combination of combinations
     ) {
-
-        const tiles: TileId[] = [
+        const tiles: Tile[] = [
             combination[0],
             combination[1],
         ];
 
         results.push({
-            id:
-                tiles.join("_"),
+            id: tiles
+                .map((tile) => tile.id)
+                .filter((id): id is number => id !== null)
+                .sort((a, b) => a - b)
+                .join("_"),
 
             meld: {
-                type:
-                    "pon",    
-
-                tiles: 
-                    tiles,
-
-                calledDiscard:
-                    latestDiscard,
-            }
+                type: "pon",
+                tiles,
+                calledDiscard: latestDiscard,
+            },
         });
     }
 
@@ -120,38 +103,26 @@ export const getPonPatterns = (
 };
 
 export const chiCombinations = (
-    tiles: TileId[][],
-): TileId[][] => {
+    tiles: Tile[][],
+): Tile[][] => {
+    const result: Tile[][] = [];
 
-    const result: TileId[][] = [];
-
-    const keys =
-        new Set<string>();
+    const keys = new Set<string>();
 
     const generate = (
         index: number,
-        current: TileId[],
+        current: Tile[],
     ) => {
+        if (index === tiles.length) {
+            const key = current
+                .map((tile) => tile.id)
+                .filter((id): id is number => id !== null)
+                .sort((a, b) => a - b)
+                .join("_");
 
-        if (
-            index === tiles.length
-        ) {
-
-            const key =
-                current
-                    .slice()
-                    .sort()
-                    .join("_");
-
-
-            if (
-                !keys.has(key)
-            ) {
+            if (!keys.has(key)) {
                 keys.add(key);
-
-                result.push(
-                    current,
-                );
+                result.push(current);
             }
 
             return;
@@ -160,7 +131,6 @@ export const chiCombinations = (
         for (
             const tile of tiles[index]
         ) {
-
             generate(
                 index + 1,
                 [
@@ -171,31 +141,27 @@ export const chiCombinations = (
         }
     };
 
-    generate(
-        0,
-        [],
-    );
+    generate(0, []);
 
     return result;
 };
 
 export const getChiPatterns = (
-    hand: readonly TileId[],
+    hand: readonly Tile[],
     latestDiscard: {
         seat: Seat;
-        tile: TileId;
+        tile: Tile;
     },
 ): MeldChoicePattern[] => {
-
-    const normalizedTile =
-        getNormalizeTile(
-            latestDiscard.tile,
+    const normalizedTileType =
+        normalizeTileType(
+            latestDiscard.tile.type,
         );
 
     if (
         !SUITS.some(
             (suit) =>
-                normalizedTile.endsWith(
+                normalizedTileType.endsWith(
                     suit,
                 ),
         )
@@ -204,15 +170,14 @@ export const getChiPatterns = (
     }
 
     const suit =
-        normalizedTile.slice(-1);
+        normalizedTileType.slice(-1);
 
     const number =
         Number(
-            normalizedTile.slice(0, 1),
+            normalizedTileType.slice(0, 1),
         );
 
-    const results:
-        MeldChoicePattern[] = [];
+    const results: MeldChoicePattern[] = [];
 
     const patterns = [
         [
@@ -232,7 +197,6 @@ export const getChiPatterns = (
     for (
         const pattern of patterns
     ) {
-
         if (
             pattern.some(
                 (n) =>
@@ -243,22 +207,22 @@ export const getChiPatterns = (
             continue;
         }
 
-        const needed =
+        const neededTypes =
             pattern.map(
                 (n) =>
-                    `${n}${suit}` as TileId,
+                    `${n}${suit}` as TileType,
             );
 
         const candidates =
-            needed.map(
-                (neededTile) =>
+            neededTypes.map(
+                (neededType) =>
                     hand.filter(
                         (handTile) =>
-                            getNormalizeTile(
-                                handTile,
+                            normalizeTileType(
+                                handTile.type,
                             ) ===
-                            getNormalizeTile(
-                                neededTile,
+                            normalizeTileType(
+                                neededType,
                             ),
                     ),
             );
@@ -280,27 +244,23 @@ export const getChiPatterns = (
         for (
             const combination of combinations
         ) {
-            
-            const tiles: TileId[] = [
+            const tiles: Tile[] = [
                 combination[0],
                 combination[1],
             ];
 
             results.push({
-
-                id:
-                    tiles.join("_"),
+                id: tiles
+                    .map((tile) => tile.id)
+                    .filter((id): id is number => id !== null)
+                    .sort((a, b) => a - b)
+                    .join("_"),
 
                 meld: {
-                    type:
-                        "chi",    
-    
-                    tiles: 
-                        tiles,
-    
-                    calledDiscard:
-                        latestDiscard,
-                }
+                    type: "chi",
+                    tiles,
+                    calledDiscard: latestDiscard,
+                },
             });
         }
     }
@@ -309,75 +269,62 @@ export const getChiPatterns = (
 };
 
 export const getKanPatterns = (
-    hand: readonly TileId[],
+    hand: readonly Tile[],
     melds: readonly Meld[],
     caller: Seat,
     latestDiscard?: {
         seat: Seat;
-        tile: TileId;
+        tile: Tile;
     },
 ): MeldChoicePattern[] => {
-
-    const results:
-        MeldChoicePattern[] = [];
-
+    const results: MeldChoicePattern[] = [];
 
     /*
      * 大明槓
      */
     if (latestDiscard) {
-
-        const normalizedTile =
-            getNormalizeTile(
-                latestDiscard.tile,
+        const normalizedTileType =
+            normalizeTileType(
+                latestDiscard.tile.type,
             );
 
-        const candidates =
-            hand.filter(
-                (candidate) =>
-                    getNormalizeTile(
-                        candidate,
-                    ) ===
-                    normalizedTile,
-            );
+        const candidates = hand.filter(
+            (candidate) =>
+                normalizeTileType(
+                    candidate.type,
+                ) === normalizedTileType,
+        );
 
         if (
             candidates.length >= 3 &&
             latestDiscard.seat !== caller
         ) {
-
-            const tiles:
-                TileId[] = [
-                    candidates[0],
-                    candidates[1],
-                    candidates[2],
-                ];
+            const tiles: Tile[] = [
+                candidates[0],
+                candidates[1],
+                candidates[2],
+            ];
 
             results.push({
-
-                id:
-                    [
-                        "daiminkan",
-                        ...tiles,
-                    ].join("_"),
+                id: [
+                    "daiminkan",
+                    ...tiles
+                        .map((tile) => tile.id)
+                        .filter((id): id is number => id !== null)
+                        .sort(
+                            (a, b) => a - b,
+                        ),
+                ].join("_"),
 
                 meld: {
-                    type:
-                        "kan",
-
-                    kanType:
-                        "daiminkan",
-
-                    tiles: 
-                        tiles,
-    
-                    calledDiscard:
-                        latestDiscard,
+                    type: "kan",
+                    kanType: "daiminkan",
+                    tiles,
+                    calledDiscard: latestDiscard,
                 },
             });
         }
     }
-
 
     /*
      * 加槓
@@ -385,31 +332,25 @@ export const getKanPatterns = (
     for (
         const meld of melds
     ) {
-
-        if (
-            meld.type !== "pon"
-        ) {
+        if (meld.type !== "pon") {
             continue;
         }
 
-        if (
-            meld.tiles.length !== 2
-        ) {
+        if (meld.tiles.length !== 2) {
             continue;
         }
 
-        const normalizedTile =
-            getNormalizeTile(
-                meld.tiles[0],
+        const normalizedTileType =
+            normalizeTileType(
+                meld.tiles[0].type,
             );
 
         const candidate =
             hand.find(
                 (tile) =>
-                    getNormalizeTile(
-                        tile,
-                    ) ===
-                    normalizedTile,
+                    normalizeTileType(
+                        tile.type,
+                    ) === normalizedTileType,
             );
 
         if (!candidate) {
@@ -417,92 +358,79 @@ export const getKanPatterns = (
         }
 
         results.push({
-
-            id:
-                [
-                    "kakan",
-                    ...meld.tiles,
-                ].join("_"),
+            id: [
+                "kakan",
+                ...meld.tiles
+                    .map((tile) => tile.id)
+                    .filter((id): id is number => id !== null)
+                    .sort(
+                        (a, b) => a - b,
+                    ),
+            ].join("_"),
 
             meld: {
-                type:
-                    "kan",
-
-                kanType:
-                    "kakan",
-
+                type: "kan",
+                kanType: "kakan",
                 tiles: [
                     meld.tiles[0],
                     meld.tiles[1],
                     candidate,
                 ],
-
-                calledDiscard: 
+                calledDiscard:
                     meld.calledDiscard,
             },
         });
     }
 
-
     /*
      * 暗槓
      */
     const tileGroups =
-        new Map<
-            TileId,
-            TileId[]
-        >();
+        new Map<TileType, Tile[]>();
 
     for (
         const tile of hand
     ) {
-
-        const normalizedTile =
-            getNormalizeTile(
-                tile,
+        const normalizedTileType =
+            normalizeTileType(
+                tile.type,
             );
 
         const group =
             tileGroups.get(
-                normalizedTile,
+                normalizedTileType,
             ) ?? [];
 
         group.push(tile);
 
         tileGroups.set(
-            normalizedTile,
+            normalizedTileType,
             group,
         );
     }
 
-
     for (
         const candidates of tileGroups.values()
     ) {
-
-        if (
-            candidates.length < 4
-        ) {
+        if (candidates.length < 4) {
             continue;
         }
 
         results.push({
-
-            id:
-                [
-                    "ankan",
-                    ...candidates,
-                ].join("_"),
+            id: [
+                "ankan",
+                ...candidates
+                    .map((tile) => tile.id)
+                    .filter((id): id is number => id !== null)
+                    .sort(
+                        (a, b) => a - b,
+                    ),
+            ].join("_"),
 
             meld: {
-                type:
-                    "kan",
-
-                kanType:
-                    "ankan",
-                
-                tiles:
-                    candidates,
+                type: "kan",
+                kanType: "ankan",
+                tiles: candidates,
             },
         });
     }

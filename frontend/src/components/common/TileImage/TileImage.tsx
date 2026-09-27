@@ -1,9 +1,9 @@
-import type { TileId } from "@/types/tile";
+import type { Tile } from "@/types/tile";
 
-import "./Tile.css";
+import "./TileImage.css";
 
-interface TileProps {
-    tile: TileId;
+interface TileImageProps {
+    tile: Tile;
 
     selected?: boolean;
 
@@ -11,20 +11,24 @@ interface TileProps {
 
     clickable?: boolean;
 
-    onClick?: (tile: TileId) => void;
+    disabled?: boolean;
+
+    onClick?: (tile: Tile) => void;
 }
 
-export const Tile = ({
+export const TileImage = ({
     tile,
     selected = false,
     sideways = false,
     clickable = true,
+    disabled = false,
     onClick,
-}: TileProps) => {
+}: TileImageProps) => {
     const className = [
         "tile",
         selected && "selected",
         sideways && "sideways",
+        disabled && "disabled",
     ]
         .filter(Boolean)
         .join(" ");
@@ -34,15 +38,15 @@ export const Tile = ({
         : "normal";
 
     const imageFileName =
-        tile === "?"
+        tile.type === "?"
             ? "back"
-            : tile;
+            : tile.type;
 
     const image = (
         <img
             className="tile-image"
             src={`/tiles/${imageDir}/${imageFileName}.png`}
-            alt={tile}
+            alt={tile.type}
         />
     );
 
@@ -58,6 +62,7 @@ export const Tile = ({
         <button
             type="button"
             className={className}
+            disabled={disabled}
             onClick={() => onClick?.(tile)}
         >
             {image}

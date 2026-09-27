@@ -13,7 +13,7 @@ import type { Meld } from "@/types/meld";
 
 import type { Seat } from "@/types/seat"
 
-import type { TileId } from "@/types/tile";
+import type { Tile } from "@/types/tile";
 
 import type {
     InitializeRoundEvent,
@@ -48,7 +48,7 @@ interface MatchStore {
 
     callTsumo: (
         seat: Seat,
-        tile: TileId,
+        tile: Tile,
     ) => void;
 
 
@@ -65,7 +65,7 @@ interface MatchStore {
 
 
     callDora: (
-        tile: TileId,
+        tile: Tile,
     ) => void;
 
 

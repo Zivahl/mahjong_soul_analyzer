@@ -1,83 +1,69 @@
 import type { MatchState } from "@/types/match";
 
-import type { MatchEvent, InitializeRoundEvent, TsumoEvent, DiscardEvent, MeldEvent, DoraEvent } from "@/types/event";
+import type {
+    MatchEvent,
+    InitializeRoundEvent,
+    TsumoEvent,
+    DiscardEvent,
+    MeldEvent,
+    DoraEvent,
+} from "@/types/event";
 
 import { calculatePlayerActions } from "@/utils/action/calculatePlayerActions";
-
 import { createDefaultNextActionRequest } from "@/utils/action/createDefaultNextActionRequest";
-
-import { getNormalizeTile } from "@/utils/mahjong/tile"
+import { normalizeTileType } from "@/utils/mahjong/tile";
 
 export const applyEvent = (
     state: MatchState,
     event: MatchEvent,
     events: readonly MatchEvent[],
 ): MatchState => {
-
     let nextState: MatchState;
 
     switch (event.type) {
-
         case "initializeRound":
-
             nextState =
                 applyInitializeRound(
                     state,
                     event,
                 );
-
             break;
 
-
         case "tsumo":
-
             nextState =
                 applyTsumo(
                     state,
                     event,
                 );
-
             break;
 
-
         case "discard":
-
             nextState =
                 applyDiscard(
                     state,
                     event,
                 );
-
             break;
 
-
         case "meld":
-
             nextState =
                 applyMeld(
                     state,
                     event,
                 );
-
             break;
-            
 
         case "dora":
-        
             nextState =
                 applyDora(
                     state,
                     event,
                 );
-        
             break;
 
-
         default:
-
             return state;
     }
-
 
     const nextEvents = [
         ...events,
@@ -88,10 +74,9 @@ export const applyEvent = (
         createDefaultNextActionRequest(
             nextState,
             nextEvents,
-    );
+        );
 
     return {
-
         ...nextState,
 
         actionRequest,
@@ -108,9 +93,7 @@ const applyInitializeRound = (
     state: MatchState,
     event: InitializeRoundEvent,
 ): MatchState => {
-
     return {
-
         ...state,
 
         roundWind:
@@ -140,11 +123,11 @@ const applyInitializeRound = (
         players:
             state.players.map(
                 (player) => {
-
                     const initialized =
                         event.players.find(
                             (candidate) =>
-                                candidate.seat === player.seat,
+                                candidate.seat ===
+                                player.seat,
                         );
 
                     if (!initialized) {
@@ -152,7 +135,6 @@ const applyInitializeRound = (
                     }
 
                     return {
-
                         ...player,
 
                         name:
@@ -177,7 +159,6 @@ const applyTsumo = (
     state: MatchState,
     event: TsumoEvent,
 ): MatchState => {
-
     return {
         ...state,
 
@@ -186,14 +167,13 @@ const applyTsumo = (
 
         currentTsumo:
             event.tile,
-        
+
         remainingTiles:
             state.remainingTiles - 1,
 
         players:
             state.players.map(
                 (player) => {
-
                     if (
                         player.seat !==
                         event.seat
@@ -206,9 +186,13 @@ const applyTsumo = (
 
                         hand: [
                             ...player.hand,
+
                             event.seat === "self"
                                 ? event.tile
-                                : "?",
+                                : {
+                                      id: null,
+                                      type: "?",
+                                  },
                         ],
                     };
                 },
@@ -220,7 +204,6 @@ const applyDiscard = (
     state: MatchState,
     event: DiscardEvent,
 ): MatchState => {
-
     const discard =
         event.discard;
 
@@ -235,75 +218,24 @@ const applyDiscard = (
         return state;
     }
 
-    let hand = [...player.hand];
+    let hand = player.hand;
 
     if (event.seat === "self") {
-
-        switch (
-            discard.type
-        ) {
-
-            case "tedashi": {
-
-                const removeIndex =
-                    hand.findIndex(
-                        (candidate) =>
-                            candidate ===
-                            discard.tile,
-                    );
-
-                if (
-                    removeIndex >= 0
-                ) {
-                    hand.splice(
-                        removeIndex,
-                        1,
-                    );
-                }
-
+        switch (discard.type) {
+            case "tedashi":
+                hand = hand.filter(
+                    (tile) =>
+                        tile.id !==
+                        discard.tile.id,
+                );
                 break;
-            }
 
             case "tsumogiri":
-
-                hand.pop();
-
+                hand = hand.slice(0, -1);
                 break;
         }
-
     } else {
-
-        switch (
-            discard.type
-        ) {
-
-            case "tedashi": {
-
-                const unknownIndex =
-                    hand.findIndex(
-                        (candidate) =>
-                            candidate ===
-                            "?",
-                    );
-
-                if (
-                    unknownIndex >= 0
-                ) {
-                    hand.splice(
-                        unknownIndex,
-                        1,
-                    );
-                }
-
-                break;
-            }
-
-            case "tsumogiri":
-
-                hand.pop();
-
-                break;
-        }
+        hand = hand.slice(0, -1);
     }
 
     return {
@@ -324,6 +256,7 @@ const applyDiscard = (
 
                               discards: [
                                   ...candidate.discards,
+
                                   {
                                       tile:
                                           discard.tile,
@@ -345,7 +278,6 @@ const applyMeld = (
     state: MatchState,
     event: MeldEvent,
 ): MatchState => {
-
     const caller =
         event.seat;
 
@@ -369,9 +301,7 @@ const applyMeld = (
                 caller,
         );
 
-    if (
-        !callerPlayer
-    ) {
+    if (!callerPlayer) {
         return state;
     }
 
@@ -382,30 +312,19 @@ const applyMeld = (
         return state;
     }
 
-    const newHand = [
-        ...callerPlayer.hand,
-    ];
+    const meldTileIds =
+        new Set(
+            meld.tiles.map(
+                (tile) => tile.id,
+            ),
+        );
 
-    meld.tiles
-        .forEach(
-            (tile) => {
-
-                const index =
-                    newHand.findIndex(
-                        (candidate) =>
-                            candidate ===
-                            tile,
-                    );
-
-                if (
-                    index >= 0
-                ) {
-                    newHand.splice(
-                        index,
-                        1,
-                    );
-                }
-            },
+    const newHand =
+        callerPlayer.hand.filter(
+            (tile) =>
+                !meldTileIds.has(
+                    tile.id,
+                ),
         );
 
     return {
@@ -417,11 +336,10 @@ const applyMeld = (
         players:
             state.players.map(
                 (player) => {
-
                     if (
                         fromPlayer &&
                         player.seat ===
-                        fromPlayer.seat &&
+                            fromPlayer.seat &&
                         meld.calledDiscard
                     ) {
                         return {
@@ -436,66 +354,63 @@ const applyMeld = (
                     }
 
                     if (
-                        player.seat ===
+                        player.seat !==
                         caller
                     ) {
+                        return player;
+                    }
+
+                    if (
+                        meld.kanType ===
+                        "kakan"
+                    ) {
+                        const meldIndex =
+                            player.melds.findIndex(
+                                (existingMeld) =>
+                                    existingMeld.type ===
+                                        "pon" &&
+                                    existingMeld.tiles.length ===
+                                        2 &&
+                                    existingMeld.calledDiscard?.seat ===
+                                        meld.calledDiscard?.seat &&
+                                    existingMeld.calledDiscard?.tile.id ===
+                                        meld.calledDiscard?.tile.id &&
+                                    existingMeld.tiles.every(
+                                        (tile) =>
+                                            meld.tiles.some(
+                                                (meldTile) =>
+                                                    normalizeTileType(
+                                                        meldTile.type,
+                                                    ) ===
+                                                    normalizeTileType(
+                                                        tile.type,
+                                                    ),
+                                            ),
+                                    ),
+                            );
 
                         if (
-                            meld.kanType ===
-                            "kakan"
+                            meldIndex < 0
                         ) {
-                            const meldIndex =
-                                player.melds.findIndex(
-                                    (existingMeld) =>
-                                        existingMeld.type ===
-                                            "pon" &&
-                                        existingMeld.tiles.length ===
-                                            2 &&
-                                        existingMeld.calledDiscard?.seat ===
-                                            meld.calledDiscard?.seat &&
-                                        existingMeld.calledDiscard?.tile ===
-                                            meld.calledDiscard?.tile &&
-                                        existingMeld.tiles.every(
-                                            (tile) =>
-                                                meld.tiles.some(
-                                                    (meldTile) =>
-                                                        getNormalizeTile(
-                                                            meldTile,
-                                                        ) ===
-                                                        getNormalizeTile(
-                                                            tile,
-                                                        ),
-                                                ),
-                                        ),
-                                );
-
-                            if (
-                                meldIndex < 0
-                            ) {
-                                return {
-                                    ...player,
-                                    hand: newHand,
-                                };
-                            }
-
-                            const newMelds = [
-                                ...player.melds,
-                            ];
-
-                            newMelds[
-                                meldIndex
-                            ] = meld;
-
                             return {
                                 ...player,
 
                                 hand:
                                     newHand,
-
-                                melds:
-                                    newMelds,
                             };
                         }
+
+                        const newMelds =
+                            player.melds.map(
+                                (
+                                    existingMeld,
+                                    index,
+                                ) =>
+                                    index ===
+                                    meldIndex
+                                        ? meld
+                                        : existingMeld,
+                            );
 
                         return {
                             ...player,
@@ -503,14 +418,22 @@ const applyMeld = (
                             hand:
                                 newHand,
 
-                            melds: [
-                                ...player.melds,
-                                meld,
-                            ],
+                            melds:
+                                newMelds,
                         };
                     }
 
-                    return player;
+                    return {
+                        ...player,
+
+                        hand:
+                            newHand,
+
+                        melds: [
+                            ...player.melds,
+                            meld,
+                        ],
+                    };
                 },
             ),
     };
@@ -520,7 +443,6 @@ const applyDora = (
     state: MatchState,
     event: DoraEvent,
 ): MatchState => {
-
     return {
         ...state,
 

@@ -13,7 +13,7 @@ import type {
 } from "@/types/seat";
 
 import type {
-    TileId,
+    Tile,
 } from "@/types/tile";
 
 import type {
@@ -108,7 +108,7 @@ export const ModalManager = () => {
     const [
         selectedTsumoTile,
         setSelectedTsumoTile,
-    ] = useState<TileId | null>(
+    ] = useState<Tile | null>(
         null,
     );
 
@@ -116,7 +116,7 @@ export const ModalManager = () => {
     const [
         selectedDiscardTile,
         setSelectedDiscardTile,
-    ] = useState<TileId | null>(
+    ] = useState<Tile | null>(
         null,
     );
 
@@ -124,7 +124,7 @@ export const ModalManager = () => {
     const [
         selectedDoraTile,
         setSelectedDoraTile,
-    ] = useState<TileId | null>(
+    ] = useState<Tile | null>(
         null,
     );
 

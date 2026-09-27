@@ -1,7 +1,7 @@
 import type { ActionRequest, PlayerActionState } from "@/types/action";
 import type { PlayerState } from "@/types/player";
 import type { Seat, Wind } from "@/types/seat";
-import type { TileId } from "@/types/tile";
+import type { Tile } from "@/types/tile";
 
 export interface MatchState {
     roundWind: Wind;
@@ -12,7 +12,7 @@ export interface MatchState {
 
     currentTurn: Seat;
 
-    currentTsumo?: TileId;
+    currentTsumo?: Tile;
     
     actionRequest?: ActionRequest;
 
@@ -22,7 +22,7 @@ export interface MatchState {
 
     honba: number;
 
-    doraIndicators: TileId[];
+    doraIndicators: Tile[];
 
     players: PlayerState[];
 

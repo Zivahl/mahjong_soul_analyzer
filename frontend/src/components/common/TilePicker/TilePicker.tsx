@@ -1,11 +1,13 @@
-import { Tile } from "@/components/common/Tile/Tile";
+import { TileImage } from "@/components/common/TileImage/TileImage";
 
-import { TILE_IDS } from "@/constants/tiles";
+import {
+    TILE_TYPES,
+} from "@/constants/tiles";
 
 import type {
-    TileId,
-    TileSelectionMode,
+    Tile,
     TilePickerSource,
+    TileSelectionMode,
 } from "@/types/tile";
 
 import "./TilePicker.css";
@@ -15,15 +17,14 @@ interface TilePickerProps {
 
     source?: TilePickerSource;
 
-    tiles?: readonly TileId[];
+    tiles?: readonly Tile[];
 
-    selectedIndex?: number | null;
+    selectedTileId?: Tile["id"] | null;
 
-    selectedTiles?: readonly TileId[];
+    selectedTiles?: readonly Tile[];
 
     onTileClick?: (
-        tile: TileId,
-        index: number,
+        tile: Tile,
     ) => void;
 }
 
@@ -31,43 +32,103 @@ export const TilePicker = ({
     selectionMode = "multiple",
     source = "all",
     tiles = [],
-    selectedIndex = null,
+    selectedTileId = null,
     selectedTiles = [],
     onTileClick,
 }: TilePickerProps) => {
-    const getDisplayTiles = (): readonly TileId[] => {
-        if (source === "all") {
-            return TILE_IDS;
+
+    const getDisplayTiles = (): readonly Tile[] => {
+
+        if (source === "hand") {
+            return tiles;
         }
 
-        return tiles;
+        return TILE_TYPES
+            .filter(
+                (tileType) =>
+                    tileType !== "?",
+            )
+            .map(
+                (tileType) => {
+
+                    const availableTiles =
+                        tiles.filter(
+                            (tile) =>
+                                tile.type ===
+                                tileType,
+                        );
+
+                    if (
+                        availableTiles.length === 0
+                    ) {
+                        return {
+                            id: null,
+                            type: tileType,
+                        };
+                    }
+
+                    return [...availableTiles]
+                        .sort(
+                            (a, b) => {
+                                if (a.id === null) {
+                                    return 1;
+                                }
+
+                                if (b.id === null) {
+                                    return -1;
+                                }
+
+                                return a.id - b.id;
+                            },
+                        )[0];
+                },
+            );
+    };
+
+    const isAvailable = (
+        tile: Tile,
+    ): boolean => {
+
+        if (source === "hand") {
+            return true;
+        }
+
+        return tile.id !== null;
     };
 
     const isSelected = (
-        tile: TileId,
-        index: number,
+        tile: Tile,
     ): boolean => {
+
+        if (!isAvailable(tile)) {
+            return false;
+        }
+
         if (
             selectionMode === "single"
         ) {
             return (
-                selectedIndex === index
+                selectedTileId ===
+                tile.id
             );
         }
 
-        return selectedTiles.includes(
-            tile,
+        return selectedTiles.some(
+            (selectedTile) =>
+                selectedTile.id ===
+                tile.id,
         );
     };
 
     const handleTileClick = (
-        tile: TileId,
-        index: number,
+        tile: Tile,
     ) => {
-        onTileClick?.(
-            tile,
-            index,
-        );
+
+        if (!isAvailable(tile)) {
+            return;
+        }
+
+        onTileClick?.(tile);
     };
 
     return (
@@ -79,20 +140,13 @@ export const TilePicker = ({
             }
         >
             {getDisplayTiles().map(
-                (tile, index) => (
-                    <Tile
-                        key={`${tile}-${index}`}
+                (tile) => (
+                    <TileImage
+                        key={tile.type}
                         tile={tile}
-                        selected={isSelected(
-                            tile,
-                            index,
-                        )}
-                        onClick={() =>
-                            handleTileClick(
-                                tile,
-                                index,
-                            )
-                        }
+                        selected={isSelected(tile)}
+                        disabled={!isAvailable(tile)}
+                        onClick={handleTileClick}
                     />
                 ),
             )}

@@ -1,16 +1,16 @@
 import { SelectedTileList } from "@/components/common/SelectedTileList/SelectedTileList";
 import { TilePicker } from "@/components/common/TilePicker/TilePicker";
 
-import type { TileId } from "@/types/tile";
+import type { Tile } from "@/types/tile";
 
 import "./TileListEditor.css";
 
 interface TileListEditorProps {
-    tiles: TileId[];
+    tiles: Tile[];
 
     maxTiles: number;
 
-    onChange: (tiles: TileId[]) => void;
+    onChange: (tiles: Tile[]) => void;
 }
 
 export const TileListEditor = ({
@@ -18,7 +18,7 @@ export const TileListEditor = ({
     maxTiles,
     onChange,
 }: TileListEditorProps) => {
-    const addTile = (tile: TileId) => {
+    const addTile = (tile: Tile) => {
         if (tiles.length >= maxTiles) {
             return;
         }
@@ -26,9 +26,11 @@ export const TileListEditor = ({
         onChange([...tiles, tile]);
     };
 
-    const removeTile = (_tile: TileId, index: number) => {
+    const removeTile = (tile: Tile) => {
         onChange(
-            tiles.filter((_, i) => i !== index),
+            tiles.filter(
+                (currentTile) => currentTile.id !== tile.id,
+            ),
         );
     };
 
