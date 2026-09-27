@@ -1,10 +1,10 @@
 import { MeldTiles } from "@/components/common/MeldTiles/MeldTiles";
 
-import type { Seat } from "@/types/player"
-
 import type { ModalAnchor } from "@/types/modal";
 
-import type { MeldChoicePattern } from "@/types/analysis";
+import type { MeldChoicePattern } from "@/types/action";
+
+import type { Seat } from "@/types/seat"
 
 import "./MeldModal.css";
 

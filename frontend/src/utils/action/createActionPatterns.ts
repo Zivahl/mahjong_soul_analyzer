@@ -8,22 +8,25 @@ import type {
 
 import type {
     MeldChoicePattern,
-} from "@/types/analysis";
+} from "@/types/action";
+
+import type { 
+    Seat 
+} from "@/types/seat";
 
 import type {
-    Seat,
     MeldType
-} from "@/types/player";
+} from "@/types/meld";
 
 import {
     getLatestDiscardEvent,
-} from "@/utils/getLatestDiscardEvent";
+} from "@/utils/action/getLatestDiscardEvent";
 
 import {
     getPonPatterns,
     getChiPatterns,
     getKanPatterns,
-} from "@/utils/mahjong";
+} from "@/utils/mahjong/meld";
 
 
 export const createMeldPatterns = (

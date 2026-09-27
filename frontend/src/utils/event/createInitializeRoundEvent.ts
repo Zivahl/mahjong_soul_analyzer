@@ -2,7 +2,7 @@ import type { InitializeRoundEvent } from "@/types/event";
 
 import type { InitialSettingState } from "@/store/initialSettingStore";
 
-import { getInitialTurnSeat } from "@/utils/getInitialTurnSeat";
+import { getInitialTurnSeat } from "@/utils/mahjong/seat";
 
 
 export const createInitializeRoundEvent = (

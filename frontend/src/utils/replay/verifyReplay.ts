@@ -2,9 +2,9 @@ import type { MatchState } from "@/types/match";
 
 import type { MatchEvent } from "@/types/event";
 
-import { rebuildState } from "@/utils/rebuildState";
+import { rebuildState } from "@/utils/replay/rebuildState";
 
-import { getReplayState } from "@/utils/getReplayState";
+import { getReplayState } from "@/utils/replay/getReplayState";
 
 
 export const verifyReplay = (

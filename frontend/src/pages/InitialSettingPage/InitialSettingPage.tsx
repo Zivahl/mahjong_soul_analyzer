@@ -1,7 +1,7 @@
 import { useAppStore } from "@/store/appStore";
 import { useInitialSettingStore } from "@/store/initialSettingStore";
 import { useMatchStore } from "@/store/matchStore";
-import { createInitializeRoundEvent } from "@/utils/createInitializeRoundEvent";
+import { createInitializeRoundEvent } from "@/utils/event/createInitializeRoundEvent";
 import { DepositSection } from "@/components/initial-setting/DepositSection";
 import { DoraSection } from "@/components/initial-setting/DoraSection";
 import { HandSection } from "@/components/initial-setting/HandSection";

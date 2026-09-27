@@ -1,8 +1,9 @@
-import type { Seat, Meld } from "@/types/player";
-
-import { getSidewaysIndex } from "@/utils/getSidewaysIndex";
-
 import { Tile } from "../Tile/Tile";
+
+import type { Meld } from "@/types/meld";
+import type { Seat } from "@/types/seat";
+
+import { getSidewaysIndex } from "@/utils/mahjong/seat";
 
 import "./MeldTiles.css";
 

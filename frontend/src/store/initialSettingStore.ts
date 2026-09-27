@@ -1,7 +1,6 @@
 import { create } from "zustand";
 
-import type { Wind } from "@/types/match";
-import type { Seat } from "@/types/player";
+import type { Seat, Wind } from "@/types/seat";
 import type { TileId } from "@/types/tile";
 
 interface InitialSettingPlayerState {

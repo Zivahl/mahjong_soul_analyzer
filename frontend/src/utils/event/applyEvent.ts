@@ -2,11 +2,11 @@ import type { MatchState } from "@/types/match";
 
 import type { MatchEvent, InitializeRoundEvent, TsumoEvent, DiscardEvent, MeldEvent, DoraEvent } from "@/types/event";
 
-import { calculatePlayerActions } from "@/utils/calculatePlayerActions";
+import { calculatePlayerActions } from "@/utils/action/calculatePlayerActions";
 
-import { createDefaultNextActionRequest } from "@/utils/createDefaultNextActionRequest";
+import { createDefaultNextActionRequest } from "@/utils/action/createDefaultNextActionRequest";
 
-import { getNormalizeTile } from "@/utils/mahjong"
+import { getNormalizeTile } from "@/utils/mahjong/tile"
 
 export const applyEvent = (
     state: MatchState,

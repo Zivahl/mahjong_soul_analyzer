@@ -1,4 +1,4 @@
-import type { Seat } from "@/types/player";
+import type { Seat, Wind } from "@/types/seat";
 
 export const SEAT_ORDER = [
     "self",
@@ -35,3 +35,10 @@ export const SEAT_OPTIONS = [
     value: Seat;
     label: string;
 }[];
+
+export const WIND_ORDER = [
+    "東",
+    "南",
+    "西",
+    "北",
+] as const satisfies readonly Wind[];

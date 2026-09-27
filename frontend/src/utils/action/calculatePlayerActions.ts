@@ -1,23 +1,23 @@
 import type { MatchState } from "@/types/match";
-import type { Seat } from "@/types/player";
+import type { Seat } from "@/types/seat";
 import type { MatchEvent } from "@/types/event";
 import type {
     PlayerActionState,
-} from "@/types/analysis";
+} from "@/types/action";
 
 import {
     getNextSeat,
-} from "@/utils/getNextSeat";
+} from "@/utils/mahjong/seat";
 
 import {
     getLatestDiscardEvent,
-} from "@/utils/getLatestDiscardEvent";
+} from "@/utils/action/getLatestDiscardEvent";
 
 import {
     getPonPatterns,
     getChiPatterns,
     getKanPatterns,
-} from "@/utils/mahjong";
+} from "@/utils/mahjong/meld";
 
 
 const createDefaultActions =

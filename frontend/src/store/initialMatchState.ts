@@ -1,5 +1,5 @@
 import type { MatchState } from "@/types/match";
-import type { PlayerActionState } from "@/types/analysis";
+import type { PlayerActionState } from "@/types/action";
 
 const INITIAL_PLAYER_ACTION: PlayerActionState = {
     pon: true,

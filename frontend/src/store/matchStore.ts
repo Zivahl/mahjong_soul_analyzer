@@ -5,13 +5,13 @@ import type { MatchState } from "@/types/match";
 
 import type {
     PlayerActionRequest,
-} from "@/types/analysis";
+} from "@/types/action";
 
-import type {
-    Seat,
-    Discard,
-    Meld,
-} from "@/types/player";
+import type { Discard } from "@/types/discard";
+
+import type { Meld } from "@/types/meld";
+
+import type { Seat } from "@/types/seat"
 
 import type { TileId } from "@/types/tile";
 
@@ -27,11 +27,11 @@ import type {
 
 import { initialMatchState } from "@/store/initialMatchState";
 
-import { applyEvent } from "@/utils/applyEvent";
+import { applyEvent } from "@/utils/event/applyEvent";
 
-import { rebuildState } from "@/utils/rebuildState";
+import { rebuildState } from "@/utils/replay/rebuildState";
 
-import { findUndoPoint } from "@/utils/findUndoPoint";
+import { findUndoPoint } from "@/utils/replay/findUndoPoint";
 
 
 interface MatchStore {

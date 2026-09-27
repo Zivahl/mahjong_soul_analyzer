@@ -1,7 +1,7 @@
 import type {
     ActionType,
     PlayerActionState,
-} from "@/types/analysis";
+} from "@/types/action";
 
 import "./ActionPanel.css";
 

@@ -3,7 +3,7 @@ import { NumberField } from "@/components/common/NumberField/NumberField";
 import { SettingCard } from "@/components/common/SettingCard/SettingCard";
 import { TextField } from "@/components/common/TextField/TextField";
 import { useInitialSettingStore } from "@/store/initialSettingStore";
-import { getPlayerWind } from "@/utils/mahjong";
+import { getPlayerWind } from "@/utils/mahjong/seat";
 
 import "./PlayerSection.css";
 

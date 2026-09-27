@@ -1,8 +1,9 @@
 import type { MatchState } from "@/types/match";
 import type { MatchEvent } from "@/types/event";
-import type { ActionRequest } from "@/types/analysis";
-import type { KanType, Seat } from "@/types/player";
-import { getNextSeat } from "./getNextSeat";
+import type { ActionRequest } from "@/types/action";
+import type { Seat } from "@/types/seat";
+import type { KanType } from "@/types/meld";
+import { getNextSeat } from "../mahjong/seat";
 
 
 export const createDefaultNextActionRequest = (

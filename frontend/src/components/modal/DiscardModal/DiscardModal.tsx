@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Tile } from "@/components/common/Tile/Tile";
 import { TilePicker } from "@/components/common/TilePicker/TilePicker";
 
-import type { DiscardType } from "@/types/analysis";
-import type { Seat } from "@/types/player";
+import type { DiscardType } from "@/types/discard";
 import type { ModalAnchor } from "@/types/modal";
+import type { Seat } from "@/types/seat";
 import type { TileId } from "@/types/tile";
 
 import "./DiscardModal.css";

@@ -1,6 +1,19 @@
-import type { Seat, Meld, Discard } from "@/types/player";
-import type { Wind } from "@/types/match";
+import type { Discard } from "@/types/discard";
+import type { Meld } from "@/types/meld";
+import type { Seat, Wind } from "@/types/seat";
 import type { TileId } from "@/types/tile";
+
+export type EventType =
+    | "initializeRound"
+    | "tsumo"
+    | "discard"
+    | "meld"
+    | "dora"
+
+export interface EventBase {
+
+    type: EventType;
+}
 
 export interface InitializePlayerState {
 
@@ -13,7 +26,8 @@ export interface InitializePlayerState {
     hand: TileId[];
 }
 
-export interface InitializeRoundEvent {
+export interface InitializeRoundEvent
+    extends EventBase {
 
     type: "initializeRound";
 
@@ -36,7 +50,9 @@ export interface InitializeRoundEvent {
     players: InitializePlayerState[];
 }
 
-export interface PlayerEvent {
+export interface PlayerEvent
+    extends EventBase {
+
     seat: Seat;
 }
 

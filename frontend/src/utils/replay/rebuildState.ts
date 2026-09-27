@@ -2,7 +2,7 @@ import type { MatchState } from "@/types/match";
 
 import type { MatchEvent } from "@/types/event";
 
-import { applyEvent } from "@/utils/applyEvent";
+import { applyEvent } from "@/utils/event/applyEvent";
 
 
 export const rebuildState = (

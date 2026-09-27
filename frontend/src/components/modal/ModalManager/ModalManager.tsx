@@ -5,8 +5,12 @@ import {
 } from "react";
 
 import type {
-    Seat, Discard
-} from "@/types/player";
+    Discard
+} from "@/types/discard";
+
+import type {
+    Seat
+} from "@/types/seat";
 
 import type {
     TileId,
@@ -15,7 +19,7 @@ import type {
 import type {
     MeldChoicePattern,
     ActionRequest,
-} from "@/types/analysis";
+} from "@/types/action";
 
 import type {
     ModalAnchor,
@@ -43,7 +47,7 @@ import {
 
 import {
     createMeldPatterns,
-} from "@/utils/createActionPatterns";
+} from "@/utils/action/createActionPatterns";
 
 import {
     SEAT_LABEL,

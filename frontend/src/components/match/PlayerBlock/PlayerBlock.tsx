@@ -2,15 +2,16 @@ import { ActionPanel } from "@/components/match/ActionPanel/ActionPanel";
 
 import { useMatchStore } from "@/store/matchStore";
 
-import { getPlayerWind } from "@/utils/mahjong";
+import { getPlayerWind } from "@/utils/mahjong/seat";
 
 import { SEAT_LABEL } from "@/constants/seats";
 
 import type {
     ActionType,
     PlayerActionRequest,
-} from "@/types/analysis";
-import type { Seat } from "@/types/player";
+} from "@/types/action";
+
+import type { Seat } from "@/types/seat";
 
 import "./PlayerBlock.css";
 

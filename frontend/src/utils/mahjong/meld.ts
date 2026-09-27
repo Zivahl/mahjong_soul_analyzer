@@ -1,57 +1,9 @@
 import { SUITS } from "@/constants/tiles"
-import { SEAT_ORDER } from "@/constants/seats"
-import type { Seat, Meld } from "@/types/player";
+import type { Meld } from "@/types/meld";
+import type { Seat } from "@/types/seat";
 import type { TileId } from "@/types/tile";
-import type { MeldChoicePattern } from "@/types/analysis";
-
-export type Wind =
-    | "東"
-    | "南"
-    | "西"
-    | "北";
-
-export const WINDS: readonly Wind[] = [
-    "東",
-    "南",
-    "西",
-    "北",
-];
-
-export const getPlayerWind = (
-    dealerSeat: Seat,
-    playerSeat: Seat,
-): Wind => {
-    const dealerIndex =
-        SEAT_ORDER.indexOf(dealerSeat);
-
-    const playerIndex =
-        SEAT_ORDER.indexOf(playerSeat);
-
-    return WINDS[
-        (playerIndex - dealerIndex + 4) % 4
-    ];
-};
-
-export const getNormalizeTile =
-    (
-        tile: TileId,
-    ): TileId => {
-
-    switch (tile) {
-
-        case "5mr":
-            return "5m";
-
-        case "5pr":
-            return "5p";
-
-        case "5sr":
-            return "5s";
-
-        default:
-            return tile;
-    }
-};
+import type { MeldChoicePattern } from "@/types/action";
+import { getNormalizeTile } from "./tile";
 
 export const ponCombinations = (
     tiles: TileId[],

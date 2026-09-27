@@ -1,4 +1,5 @@
-import type { Seat, Meld } from "@/types/player";
+import type { Meld } from "@/types/meld";
+import type { Seat } from "@/types/seat";
 
 export type ActionType =
     | "tsumo"
@@ -82,10 +83,6 @@ export type ActionRequest =
     | PlayerActionRequest
     | DoraActionRequest;  
 
-export type DiscardType =
-    | "tedashi"
-    | "tsumogiri";
-
 export interface PlayerActionState {
     pon: boolean;
 
@@ -96,12 +93,6 @@ export interface PlayerActionState {
     tsumohora: boolean;
 
     ronhora: boolean;
-}
-
-export interface PlayerActionEvent {
-    seat: Seat;
-
-    action: ActionType;
 }
 
 export interface MeldChoicePattern {

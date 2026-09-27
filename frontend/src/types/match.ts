@@ -1,12 +1,7 @@
-import type { ActionRequest, PlayerActionState } from "@/types/analysis";
-import type { PlayerState, Seat } from "@/types/player";
+import type { ActionRequest, PlayerActionState } from "@/types/action";
+import type { PlayerState } from "@/types/player";
+import type { Seat, Wind } from "@/types/seat";
 import type { TileId } from "@/types/tile";
-
-export type Wind =
-    | "東"
-    | "南"
-    | "西"
-    | "北";
 
 export interface MatchState {
     roundWind: Wind;
