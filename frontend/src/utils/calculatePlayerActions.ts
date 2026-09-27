@@ -31,9 +31,9 @@ const createDefaultActions =
 
             kan: false,
 
-            ron: false,
+            tsumohora: false,
 
-            tsumo: false,
+            ronhora: false,
 
         };
     };
@@ -325,7 +325,35 @@ const canKan = (
     }
 };
 
-const canRon = (
+const canTsumoHora = (
+    state: MatchState,
+    events: readonly MatchEvent[],
+    seat: Seat,
+): boolean => {
+
+    const latestEvent =
+        events.at(-1);
+
+    if (!latestEvent) {
+        return false;
+    }
+
+
+    switch (latestEvent.type) {
+
+        case "tsumo":
+
+            return (
+                state.currentTurn ===
+                seat
+            );
+
+        default:
+            return false;
+    }
+};
+
+const canRonHora = (
     state: MatchState,
     events: readonly MatchEvent[],
     seat: Seat,
@@ -344,7 +372,7 @@ const canRon = (
         case "discard": {
 
             /*
-             * ロンできるのは、
+             * ロン和了できるのは、
              * 打牌者以外の席のプレイヤーだけ。
              */
             if (
@@ -377,109 +405,6 @@ const canRon = (
             else {
                 return false;
             }
-
-        }
-
-
-        default:
-            return false;
-    }
-};
-
-
-const canTsumo = (
-    state: MatchState,
-    events: readonly MatchEvent[],
-    seat: Seat,
-): boolean => {
-
-    const latestEvent =
-        events.at(-1);
-
-    if (!latestEvent) {
-        return false;
-    }
-
-
-    switch (latestEvent.type) {
-
-        case "initializeRound":
-
-            return (
-                state.currentTurn ===
-                seat
-            );
-
-        case "discard": {
-
-            /*
-             * ツモできるのは、
-             * 打牌者の次の席のプレイヤーだけ。
-             */
-            const tsumoSeat =
-                getNextSeat(
-                    latestEvent.seat,
-            );
-        
-            if (
-                tsumoSeat !== seat
-            ) {
-                return false;
-            }
-        
-        
-            return tsumoSeat !== state.currentTurn;
-        }
-
-
-        case "meld": {
-
-            const kanType = latestEvent.meld.kanType;
-
-            if (kanType === "daiminkan") {
-                return seat === state.currentTurn;           
-            }
-        
-            else if (kanType === "kakan") {
-                return seat === state.currentTurn;           
-            }
-
-            else {
-                return false;
-            }
-
-        }
-
-
-        case "dora": {
-
-            const previousEvent = events.at(-2);
-     
-            if (
-                previousEvent?.type === "meld" &&
-                previousEvent.meld.kanType
-            ) {
-                return seat === state.currentTurn;       
-            }
-
-
-            /*
-             * ツモできるのは、
-             * 打牌者の次の席のプレイヤーだけ。
-             */
-            const tsumoSeat =
-                getNextSeat(
-                    state.currentTurn,
-            );
-        
-            if (
-                tsumoSeat !== seat
-            ) {
-                return false;
-            }
-        
-        
-            return true;
 
         }
 
@@ -546,15 +471,15 @@ export const calculatePlayerActions = (
                         player.seat,
                     ),
 
-                ron:
-                    canRon(
+                tsumohora:
+                    canTsumoHora(
                         state,
                         events,
                         player.seat,
                     ),
 
-                tsumo:
-                    canTsumo(
+                ronhora:
+                    canRonHora(
                         state,
                         events,
                         player.seat,

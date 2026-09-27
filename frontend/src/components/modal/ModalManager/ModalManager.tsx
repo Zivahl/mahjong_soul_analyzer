@@ -1,5 +1,6 @@
 import {
     useEffect,
+    useLayoutEffect,
     useState,
 } from "react";
 
@@ -11,17 +12,18 @@ import type {
     TileId,
 } from "@/types/tile";
 
-import type { 
-    MeldChoicePattern 
+import type {
+    MeldChoicePattern,
+    ActionRequest,
 } from "@/types/analysis";
 
-import {
-    ActionModal,
-} from "@/components/modal/ActionModal/ActionModal";
+import type {
+    ModalAnchor,
+} from "@/types/modal";
 
 import {
-    MeldChoiceModal,
-} from "@/components/modal/MeldChoiceModal/MeldChoiceModal";
+    MeldModal,
+} from "@/components/modal/MeldModal/MeldModal";
 
 import {
     TsumoModal,
@@ -40,41 +42,38 @@ import {
 } from "@/store/matchStore";
 
 import {
-    createPonPatterns,
-    createChiPatterns,
-    createKanPatterns,
+    createMeldPatterns,
 } from "@/utils/createActionPatterns";
 
+import {
+    SEAT_LABEL,
+} from "@/constants/seats";
 
-const getModalAnchor = (
-    seat: string,
+
+const ACTION_LABEL = {
+    tsumo: "ツモ牌設定",
+    discard: "打牌設定",
+    pon: "ポン牌設定",
+    chi: "チー牌設定",
+    kan: "カン牌設定",
+    tsumohora: "ツモ和了確認",
+    ronhora: "ロン和了確認",
+    dora: "ドラ表示牌設定",
+} as const;
+
+
+const getModalTitle = (
+    action: ActionRequest["action"],
+    seat: Seat,
 ) => {
-    const element =
-        document.querySelector(
-            `.player-block[data-seat="${seat}"]`,
-        );
-
-    if (!element) {
-        return;
-    }
-
-    const rect =
-        element.getBoundingClientRect();
-
-    return {
-        x:
-            rect.left +
-            rect.width / 2,
-
-        y:
-            rect.top +
-            rect.height / 2,
-    };
+    return (
+        `${ACTION_LABEL[action]}` +
+        ` [${SEAT_LABEL[seat]}]`
+    );
 };
 
 
 export const ModalManager = () => {
-
     const {
         state,
         events,
@@ -88,6 +87,12 @@ export const ModalManager = () => {
 
     const actionRequest =
         state.actionRequest;
+
+
+    const [
+        anchor,
+        setAnchor,
+    ] = useState<ModalAnchor>();
 
 
     const [
@@ -120,8 +125,62 @@ export const ModalManager = () => {
     );
 
 
-    useEffect(() => {
+    /*
+     * ActionRequest が変更されたあと、
+     * PlayerBlock の DOM が commit されたタイミングで
+     * モーダル位置を取得する。
+     *
+     * render 中に document.querySelector() を実行しない。
+     */
+    useLayoutEffect(() => {
+        if (!actionRequest) {
+            setAnchor(undefined);
+            return;
+        }
 
+
+        const seat =
+            "seat" in actionRequest
+                ? actionRequest.seat
+                : state.currentTurn;
+
+
+        const element =
+            document.querySelector(
+                `.player-block[data-seat="${seat}"]`,
+            );
+
+
+        if (!element) {
+            setAnchor(undefined);
+            return;
+        }
+
+
+        const rect =
+            element.getBoundingClientRect();
+
+
+        setAnchor({
+            x:
+                rect.left +
+                rect.width / 2,
+
+            y:
+                rect.top +
+                rect.height / 2,
+        });
+    }, [
+        actionRequest,
+        state.currentTurn,
+    ]);
+
+
+    /*
+     * ActionRequest が切り替わったら、
+     * 各モーダルの選択状態をリセットする。
+     */
+    useEffect(() => {
         setSelectedPatternId(
             "normal",
         );
@@ -137,7 +196,6 @@ export const ModalManager = () => {
         setSelectedDoraTile(
             null,
         );
-
     }, [actionRequest]);
 
 
@@ -146,16 +204,12 @@ export const ModalManager = () => {
     }
 
 
-    const anchor =
-        "seat" in actionRequest
-            ? getModalAnchor(
-                actionRequest.seat,
-            )
-            : getModalAnchor(
-                state.currentTurn,
-            );
-
-
+    /*
+     * ActionRequest は存在しているが、
+     * 対象 PlayerBlock の DOM がまだ取得できていない場合。
+     *
+     * useLayoutEffect 後の再 render で表示される。
+     */
     if (!anchor) {
         return null;
     }
@@ -176,11 +230,13 @@ export const ModalManager = () => {
                     pattern.id ===
                     selectedPatternId,
             );
-    
+
+
         if (!pattern) {
             return;
         }
-    
+
+
         callMeld(
             seat,
             pattern.meld,
@@ -191,141 +247,19 @@ export const ModalManager = () => {
     switch (
         actionRequest.action
     ) {
+        case "tsumo": {
+            const seat =
+                actionRequest.seat;
 
-        case "pon": {
-
-            const patterns =
-                createPonPatterns(
-                    state,
-                    events,
-                    actionRequest.seat,
-                );
-
-            if (
-                patterns.length === 0
-            ) {
-                return null;
-            }
-
-            return (
-                <MeldChoiceModal
-                    title="ポン牌設定"
-                    caller={
-                        actionRequest.seat
-                    }
-                    patterns={patterns}
-                    selectedPatternId={
-                        selectedPatternId
-                    }
-                    anchor={anchor}
-                    onSelect={
-                        setSelectedPatternId
-                    }
-                    onConfirm={() =>
-                        handleMeldConfirm(
-                            actionRequest.seat,
-                            patterns,
-                        )
-                    }
-                    onCancel={
-                        handleCancel
-                    }
-                />
-            );
-        }
-
-
-        case "chi": {
-
-            const patterns =
-                createChiPatterns(
-                    state,
-                    events,
-                    actionRequest.seat,
-                );
-
-            if (
-                patterns.length === 0
-            ) {
-                return null;
-            }
-
-            return (
-                <MeldChoiceModal
-                    title="チー牌設定"
-                    caller={
-                        actionRequest.seat
-                    }
-                    patterns={patterns}
-                    selectedPatternId={
-                        selectedPatternId
-                    }
-                    anchor={anchor}
-                    onSelect={
-                        setSelectedPatternId
-                    }
-                    onConfirm={() =>
-                        handleMeldConfirm(
-                            actionRequest.seat,
-                            patterns,
-                        )
-                    }
-                    onCancel={
-                        handleCancel
-                    }
-                />
-            );
-        }
-
-
-        case "kan": {
-
-            const patterns =
-                createKanPatterns(
-                    state,
-                    events,
-                    actionRequest.seat,
-                );
-
-            if (
-                patterns.length === 0
-            ) {
-                return null;
-            }
-
-            return (
-                <MeldChoiceModal
-                    title="カン牌設定"
-                    caller={
-                        actionRequest.seat
-                    }
-                    patterns={patterns}
-                    selectedPatternId={
-                        selectedPatternId
-                    }
-                    anchor={anchor}
-                    onSelect={
-                        setSelectedPatternId
-                    }
-                    onConfirm={() =>
-                        handleMeldConfirm(
-                            actionRequest.seat,
-                            patterns,
-                        )
-                    }
-                    onCancel={
-                        handleCancel
-                    }
-                />
-            );
-        }
-
-
-        case "tsumo":
 
             return (
                 <TsumoModal
-                    title="ツモ牌設定"
+                    title={
+                        getModalTitle(
+                            "tsumo",
+                            seat,
+                        )
+                    }
                     anchor={anchor}
                     selectedTile={
                         selectedTsumoTile
@@ -334,15 +268,15 @@ export const ModalManager = () => {
                         setSelectedTsumoTile
                     }
                     onConfirm={() => {
-
                         if (
                             !selectedTsumoTile
                         ) {
                             return;
                         }
 
+
                         callTsumo(
-                            actionRequest.seat,
+                            seat,
                             selectedTsumoTile,
                         );
                     }}
@@ -351,28 +285,37 @@ export const ModalManager = () => {
                     }
                 />
             );
+        }
 
 
         case "discard": {
+            const seat =
+                actionRequest.seat;
+
 
             const player =
                 state.players.find(
                     (player) =>
                         player.seat ===
-                        actionRequest.seat,
+                        seat,
                 );
+
 
             if (!player) {
                 return null;
             }
 
+
             return (
                 <DiscardModal
-                    title="打牌設定"
-                    anchor={anchor}
-                    seat={
-                        actionRequest.seat
+                    title={
+                        getModalTitle(
+                            "discard",
+                            seat,
+                        )
                     }
+                    anchor={anchor}
+                    seat={seat}
                     hand={player.hand}
                     tsumoTile={
                         state.currentTsumo
@@ -386,15 +329,15 @@ export const ModalManager = () => {
                     onConfirm={(
                         discardType,
                     ) => {
-
                         if (
                             !selectedDiscardTile
                         ) {
                             return;
                         }
 
+
                         callDiscard(
-                            actionRequest.seat,
+                            seat,
                             selectedDiscardTile,
                             discardType,
                         );
@@ -407,23 +350,79 @@ export const ModalManager = () => {
         }
 
 
-        case "ron":
+        case "pon":
+        case "chi":
+        case "kan": {
+            const seat =
+                actionRequest.seat;
+
+
+            const patterns =
+                createMeldPatterns(
+                    state,
+                    events,
+                    seat,
+                    actionRequest.action,
+                );
+
+
+            if (
+                patterns.length === 0
+            ) {
+                return null;
+            }
+
 
             return (
-                <ActionModal
-                    action="ron"
-                    onClose={
+                <MeldModal
+                    title={
+                        getModalTitle(
+                            actionRequest.action,
+                            seat,
+                        )
+                    }
+                    caller={seat}
+                    patterns={patterns}
+                    selectedPatternId={
+                        selectedPatternId
+                    }
+                    anchor={anchor}
+                    onSelect={
+                        setSelectedPatternId
+                    }
+                    onConfirm={() =>
+                        handleMeldConfirm(
+                            seat,
+                            patterns,
+                        )
+                    }
+                    onCancel={
                         handleCancel
                     }
                 />
             );
+        }
 
 
-        case "dora":
+        case "tsumohora":
+        case "ronhora": {
+            return null;
+        }
+
+
+        case "dora": {
+            const seat =
+                state.currentTurn;
+
 
             return (
                 <DoraModal
-                    title="ドラ表示牌設定"
+                    title={
+                        getModalTitle(
+                            "dora",
+                            seat,
+                        )
+                    }
                     anchor={anchor}
                     selectedTile={
                         selectedDoraTile
@@ -432,12 +431,12 @@ export const ModalManager = () => {
                         setSelectedDoraTile
                     }
                     onConfirm={() => {
-
                         if (
                             !selectedDoraTile
                         ) {
                             return;
                         }
+
 
                         callDora(
                             selectedDoraTile,
@@ -448,6 +447,7 @@ export const ModalManager = () => {
                     }
                 />
             );
+        }
 
 
         default:

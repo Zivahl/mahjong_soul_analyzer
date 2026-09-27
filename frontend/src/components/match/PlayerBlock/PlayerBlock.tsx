@@ -80,27 +80,22 @@ export const PlayerBlock = ({
                 };
                 break;
 
+            case "tsumohora":
+                request = {
+                    action: "tsumohora",
+                    seat,
+                };
+                break;
+
+            case "ronhora":
+                request = {
+                    action: "ronhora",
+                    seat,
+                };
+                break;
+
             case "tsumo":
-                request = {
-                    action: "tsumo",
-                    seat,
-                };
-                break;
-
             case "discard":
-                request = {
-                    action: "discard",
-                    seat,
-                };
-                break;
-
-            case "ron":
-                request = {
-                    action: "ron",
-                    seat,
-                };
-                break;
-
             case "dora":
                 return;
         }

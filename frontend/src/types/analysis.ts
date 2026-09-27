@@ -1,19 +1,14 @@
 import type { Seat, Meld } from "@/types/player";
 
 export type ActionType =
+    | "tsumo"
+    | "discard"
     | "pon"
     | "chi"
     | "kan"
-    | "tsumo"
-    | "discard"
-    | "ron"
+    | "tsumohora"
+    | "ronhora"
     | "dora";
-
-export interface ModalAnchor {
-    x: number;
-
-    y: number;
-}
 
 export interface ActionRequestBase {
 
@@ -24,30 +19,6 @@ export interface PlayerActionRequestBase
     extends ActionRequestBase {
     
     seat: Seat;
-}
-
-export interface PonActionRequest
-    extends PlayerActionRequestBase {
-
-    action: "pon";
-
-//    patterns: MeldChoicePattern[];
-}
-
-export interface ChiActionRequest
-    extends PlayerActionRequestBase {
-
-    action: "chi";
-
-//    patterns: MeldChoicePattern[];
-}
-
-export interface KanActionRequest
-    extends PlayerActionRequestBase {
-
-    action: "kan";
-
-//    patterns: MeldChoicePattern[];
 }
 
 export interface TsumoActionRequest
@@ -62,10 +33,34 @@ export interface DiscardActionRequest
     action: "discard";
 }
 
-export interface RonActionRequest
+export interface PonActionRequest
     extends PlayerActionRequestBase {
 
-    action: "ron";
+    action: "pon";
+}
+
+export interface ChiActionRequest
+    extends PlayerActionRequestBase {
+
+    action: "chi";
+}
+
+export interface KanActionRequest
+    extends PlayerActionRequestBase {
+
+    action: "kan";
+}
+
+export interface TsumoHoraActionRequest
+    extends PlayerActionRequestBase {
+
+    action: "tsumohora";
+}
+
+export interface RonHoraActionRequest
+    extends PlayerActionRequestBase {
+
+    action: "ronhora";
 }
 
 export interface DoraActionRequest
@@ -75,12 +70,13 @@ export interface DoraActionRequest
 }
 
 export type PlayerActionRequest =
+    | TsumoActionRequest
+    | DiscardActionRequest
     | PonActionRequest
     | ChiActionRequest
     | KanActionRequest
-    | TsumoActionRequest
-    | DiscardActionRequest
-    | RonActionRequest;
+    | TsumoHoraActionRequest
+    | RonHoraActionRequest;
 
 export type ActionRequest =
     | PlayerActionRequest
@@ -97,9 +93,9 @@ export interface PlayerActionState {
 
     kan: boolean;
 
-    ron: boolean;
+    tsumohora: boolean;
 
-    tsumo: boolean;
+    ronhora: boolean;
 }
 
 export interface PlayerActionEvent {

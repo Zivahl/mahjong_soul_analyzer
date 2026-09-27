@@ -2,9 +2,11 @@ import { MeldTiles } from "@/components/common/MeldTiles/MeldTiles";
 
 import type { Seat } from "@/types/player"
 
-import type { MeldChoicePattern, ModalAnchor, } from "@/types/analysis";
+import type { ModalAnchor } from "@/types/modal";
 
-import "./MeldChoiceModal.css";
+import type { MeldChoicePattern } from "@/types/analysis";
+
+import "./MeldModal.css";
 
 interface Props {
     title: string;
@@ -26,7 +28,7 @@ interface Props {
     onCancel: () => void;
 }
 
-export const MeldChoiceModal = ({
+export const MeldModal = ({
     title,
     caller,
     patterns,

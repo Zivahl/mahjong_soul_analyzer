@@ -1,7 +1,19 @@
-import type { MatchState } from "@/types/match";
-import type { MatchEvent } from "@/types/event";
-import type { Seat } from "@/types/player";
-import type { MeldChoicePattern } from "@/types/analysis";
+import type {
+    MatchState,
+} from "@/types/match";
+
+import type {
+    MatchEvent,
+} from "@/types/event";
+
+import type {
+    MeldChoicePattern,
+} from "@/types/analysis";
+
+import type {
+    Seat,
+    MeldType
+} from "@/types/player";
 
 import {
     getLatestDiscardEvent,
@@ -14,135 +26,151 @@ import {
 } from "@/utils/mahjong";
 
 
-export const createPonPatterns = (
+export const createMeldPatterns = (
     state: MatchState,
     events: readonly MatchEvent[],
     seat: Seat,
+    action: MeldType,
 ): MeldChoicePattern[] => {
+
     const player =
         state.players.find(
             (player) =>
                 player.seat === seat,
         );
 
-    if (!player) {
-        return [];
-    }
-
-    const latestDiscardEvent =
-        getLatestDiscardEvent(events);
-
-    if (!latestDiscardEvent) {
-        return [];
-    }
-
-    return getPonPatterns(
-        player.hand,
-        {
-            seat:
-                latestDiscardEvent.seat,
-
-            tile:
-                latestDiscardEvent.tile,
-        },
-    );
-};
-
-
-export const createChiPatterns = (
-    state: MatchState,
-    events: readonly MatchEvent[],
-    seat: Seat,
-): MeldChoicePattern[] => {
-    const player =
-        state.players.find(
-            (player) =>
-                player.seat === seat,
-        );
 
     if (!player) {
         return [];
     }
 
-    const latestDiscardEvent =
-        getLatestDiscardEvent(events);
 
-    if (!latestDiscardEvent) {
-        return [];
-    }
+    switch (action) {
 
-    return getChiPatterns(
-        player.hand,
-        {
-            seat:
-                latestDiscardEvent.seat,
+        case "pon": {
 
-            tile:
-                latestDiscardEvent.tile,
-        },
-    );
-};
-
-
-export const createKanPatterns = (
-    state: MatchState,
-    events: readonly MatchEvent[],
-    seat: Seat,
-): MeldChoicePattern[] => {
-    const player =
-        state.players.find(
-            (player) =>
-                player.seat === seat,
-        );
-
-    if (!player) {
-        return [];
-    }
-
-    const latestEvent =
-        events.at(-1);
-
-    if (!latestEvent) {
-        return [];
-    }
-
-    switch (latestEvent.type) {
-
-        case "discard":
+            const latestDiscardEvent =
+                getLatestDiscardEvent(
+                    events,
+                );
 
             if (
-                latestEvent.seat === seat
+                !latestDiscardEvent
             ) {
                 return [];
             }
 
-            return getKanPatterns(
+
+            return getPonPatterns(
                 player.hand,
-                player.melds,
-                player.seat,
-                latestEvent,
+                {
+                    seat:
+                        latestDiscardEvent.seat,
+
+                    tile:
+                        latestDiscardEvent.tile,
+                },
             );
+        }
 
 
-        case "tsumo":
+        case "chi": {
+
+            const latestDiscardEvent =
+                getLatestDiscardEvent(
+                    events,
+                );
 
             if (
-                latestEvent.seat !== seat
+                !latestDiscardEvent
             ) {
                 return [];
             }
 
-            return getKanPatterns(
+
+            return getChiPatterns(
                 player.hand,
-                player.melds,
-                player.seat,
+                {
+                    seat:
+                        latestDiscardEvent.seat,
+
+                    tile:
+                        latestDiscardEvent.tile,
+                },
             );
+        }
 
 
-        case "meld":
-        case "initializeRound":
-        case "dora":
+        case "kan": {
 
-            return [];
+            const latestEvent =
+                events.at(-1);
+
+            if (!latestEvent) {
+                return [];
+            }
+
+
+            switch (
+                latestEvent.type
+            ) {
+
+                /*
+                 * 大明槓
+                 *
+                 * 他家の打牌直後。
+                 */
+                case "discard": {
+
+                    if (
+                        latestEvent.seat ===
+                        seat
+                    ) {
+                        return [];
+                    }
+
+
+                    return getKanPatterns(
+                        player.hand,
+                        player.melds,
+                        player.seat,
+                        latestEvent,
+                    );
+                }
+
+
+                /*
+                 * 加槓 / 暗槓
+                 *
+                 * 自家のツモ直後。
+                 */
+                case "tsumo": {
+
+                    if (
+                        latestEvent.seat !==
+                        seat
+                    ) {
+                        return [];
+                    }
+
+
+                    return getKanPatterns(
+                        player.hand,
+                        player.melds,
+                        player.seat,
+                    );
+                }
+
+
+                /*
+                 * 鳴き直後・局初期・ドラ表示牌など。
+                 */
+                case "meld":
+                case "initializeRound":
+                case "dora":
+
+                    return [];
+            }
+        }
     }
 };

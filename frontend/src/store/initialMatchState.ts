@@ -5,8 +5,8 @@ const INITIAL_PLAYER_ACTION: PlayerActionState = {
     pon: true,
     chi: true,
     kan: true,
-    ron: true,
-    tsumo: true,
+    tsumohora: true,
+    ronhora: true,
 };
 
 export const initialMatchState: MatchState = {

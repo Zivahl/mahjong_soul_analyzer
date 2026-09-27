@@ -1,12 +1,8 @@
 import { Tile } from "@/components/common/Tile/Tile";
 import { TilePicker } from "@/components/common/TilePicker/TilePicker";
 
-import type {
-    ModalAnchor,
-} from "@/types/analysis";
-import type {
-    TileId,
-} from "@/types/tile";
+import type { ModalAnchor } from "@/types/modal";
+import type { TileId } from "@/types/tile";
 
 import "./DoraModal.css";
 
