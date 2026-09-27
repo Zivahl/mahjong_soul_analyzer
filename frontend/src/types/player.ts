@@ -11,6 +11,8 @@ export interface Discard {
     tile: TileId;
 
     type: DiscardType;
+
+    riichi: boolean;
 }
 
 export type MeldType =

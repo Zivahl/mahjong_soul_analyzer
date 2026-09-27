@@ -81,8 +81,27 @@
 
 .discard-modal-footer {
     display: flex;
-
-    justify-content: flex-end;
-
+    align-items: center;
     gap: var(--space-sm);
+}
+
+.discard-riichi {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-right: auto;
+    cursor: pointer;
+}
+
+.discard-riichi input {
+    margin: 0;
+    accent-color: #000;
+}
+
+.discard-riichi input:disabled {
+    cursor: not-allowed;
+}
+
+.discard-riichi span {
+    line-height: 1;
 }

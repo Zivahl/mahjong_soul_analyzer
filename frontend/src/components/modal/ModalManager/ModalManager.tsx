@@ -5,7 +5,7 @@ import {
 } from "react";
 
 import type {
-    Seat,
+    Seat, Discard
 } from "@/types/player";
 
 import type {
@@ -289,23 +289,26 @@ export const ModalManager = () => {
 
 
         case "discard": {
+        
             const seat =
                 actionRequest.seat;
-
-
+        
             const player =
                 state.players.find(
                     (player) =>
                         player.seat ===
                         seat,
                 );
-
-
+        
             if (!player) {
                 return null;
             }
-
-
+        
+            const riichiDisabled =
+                player.discards.some(
+                    (discard) => discard.riichi,
+                );
+        
             return (
                 <DiscardModal
                     title={
@@ -323,23 +326,33 @@ export const ModalManager = () => {
                     selectedTile={
                         selectedDiscardTile
                     }
+                    riichiDisabled={
+                        riichiDisabled
+                    }
                     onSelect={
                         setSelectedDiscardTile
                     }
                     onConfirm={(
                         discardType,
+                        riichi,
                     ) => {
+        
                         if (
                             !selectedDiscardTile
                         ) {
                             return;
                         }
 
-
+                        const discard:
+                            Discard = {
+                            tile: selectedDiscardTile,
+                            type: discardType,
+                            riichi: riichi,
+                        };
+        
                         callDiscard(
                             seat,
-                            selectedDiscardTile,
-                            discardType,
+                            discard,
                         );
                     }}
                     onCancel={

@@ -68,7 +68,7 @@ export const createMeldPatterns = (
                         latestDiscardEvent.seat,
 
                     tile:
-                        latestDiscardEvent.tile,
+                        latestDiscardEvent.discard.tile,
                 },
             );
         }
@@ -95,7 +95,7 @@ export const createMeldPatterns = (
                         latestDiscardEvent.seat,
 
                     tile:
-                        latestDiscardEvent.tile,
+                        latestDiscardEvent.discard.tile,
                 },
             );
         }
@@ -122,19 +122,28 @@ export const createMeldPatterns = (
                  */
                 case "discard": {
 
+                    const latestDiscardEvent =
+                        getLatestDiscardEvent(
+                        events,
+                    );
+
                     if (
-                        latestEvent.seat ===
-                        seat
+                        !latestDiscardEvent
                     ) {
                         return [];
                     }
-
 
                     return getKanPatterns(
                         player.hand,
                         player.melds,
                         player.seat,
-                        latestEvent,
+                        {
+                            seat:
+                                latestDiscardEvent.seat,
+
+                            tile:
+                                latestDiscardEvent.discard.tile,                           
+                        }
                     );
                 }
 

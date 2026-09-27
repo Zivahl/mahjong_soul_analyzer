@@ -1,7 +1,6 @@
-import type { Seat, Meld } from "@/types/player";
+import type { Seat, Meld, Discard } from "@/types/player";
 import type { Wind } from "@/types/match";
 import type { TileId } from "@/types/tile";
-import type { DiscardType } from "@/types/analysis";
 
 export interface InitializePlayerState {
 
@@ -54,9 +53,7 @@ export interface DiscardEvent
 
     type: "discard";
 
-    tile: TileId;
-
-    discardType: DiscardType;
+    discard: Discard;
 }
 
 export interface MeldEvent

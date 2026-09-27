@@ -85,7 +85,7 @@ const canPon = (
                 seat:
                     latestDiscardEvent.seat,
                 tile:
-                    latestDiscardEvent.tile,
+                    latestDiscardEvent.discard.tile,
             }
         );
 
@@ -150,7 +150,7 @@ const canChi = (
                 seat:
                     latestDiscardEvent.seat,
                 tile:
-                    latestDiscardEvent.tile,
+                    latestDiscardEvent.discard.tile,
             }
         );
 
@@ -200,7 +200,7 @@ const canDaiminkan = (
                     latestDiscard.seat,
 
                 tile:
-                    latestDiscard.tile,
+                    latestDiscard.discard.tile,
             },
         );
 

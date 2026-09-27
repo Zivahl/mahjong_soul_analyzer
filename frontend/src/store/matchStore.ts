@@ -4,20 +4,20 @@ import { create } from "zustand";
 import type { MatchState } from "@/types/match";
 
 import type {
-    DiscardType,
     PlayerActionRequest,
 } from "@/types/analysis";
 
 import type {
     Seat,
+    Discard,
     Meld,
 } from "@/types/player";
 
 import type { TileId } from "@/types/tile";
 
 import type {
-    TsumoEvent,
     InitializeRoundEvent,
+    TsumoEvent,
     DiscardEvent,
     MeldEvent,
     DoraEvent,
@@ -54,8 +54,7 @@ interface MatchStore {
 
     callDiscard: (
         seat: Seat,
-        tile: TileId,
-        discardType: DiscardType,
+        discard: Discard,
     ) => void;
 
 
@@ -154,8 +153,7 @@ export const useMatchStore =
 
             callDiscard: (
                 seat,
-                tile,
-                discardType,
+                discard,
             ) =>
                 set(
                     (store) => {
@@ -167,9 +165,7 @@ export const useMatchStore =
 
                             seat,
 
-                            tile,
-
-                            discardType,
+                            discard,
                         };
 
 

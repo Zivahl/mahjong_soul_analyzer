@@ -221,6 +221,9 @@ const applyDiscard = (
     event: DiscardEvent,
 ): MatchState => {
 
+    const discard =
+        event.discard;
+
     const player =
         state.players.find(
             (player) =>
@@ -237,7 +240,7 @@ const applyDiscard = (
     if (event.seat === "self") {
 
         switch (
-            event.discardType
+            discard.type
         ) {
 
             case "tedashi": {
@@ -246,7 +249,7 @@ const applyDiscard = (
                     hand.findIndex(
                         (candidate) =>
                             candidate ===
-                            event.tile,
+                            discard.tile,
                     );
 
                 if (
@@ -271,7 +274,7 @@ const applyDiscard = (
     } else {
 
         switch (
-            event.discardType
+            discard.type
         ) {
 
             case "tedashi": {
@@ -323,10 +326,13 @@ const applyDiscard = (
                                   ...candidate.discards,
                                   {
                                       tile:
-                                          event.tile,
+                                          discard.tile,
 
                                       type:
-                                          event.discardType,
+                                          discard.type,
+
+                                      riichi:
+                                          discard.riichi,
                                   },
                               ],
                           }
