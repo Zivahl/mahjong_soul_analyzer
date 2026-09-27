@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Tile } from "@/components/common/Tile/Tile";
 import { TilePicker } from "@/components/common/TilePicker/TilePicker";
 
@@ -32,6 +34,17 @@ export const TsumoModal = ({
     onConfirm,
     onCancel,
 }: Props) => {
+    const [selectedIndex, setSelectedIndex] =
+        useState<number | null>(null);
+
+    const handleTileClick = (
+        tile: TileId,
+        index: number,
+    ) => {
+        setSelectedIndex(index);
+        onSelect(tile);
+    };
+
     return (
         <div className="tsumo-modal-overlay">
 
@@ -65,11 +78,9 @@ export const TsumoModal = ({
 
                     <TilePicker
                         selectionMode="single"
-                        selectedTile={
-                            selectedTile
-                        }
+                        selectedIndex={selectedIndex}
                         onTileClick={
-                            onSelect
+                            handleTileClick
                         }
                     />
 

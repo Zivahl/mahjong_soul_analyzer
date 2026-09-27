@@ -1,32 +1,21 @@
-import {
-    useState,
-} from "react";
+import { useState } from "react";
+import { Tile } from "@/components/common/Tile/Tile";
+import { TilePicker } from "@/components/common/TilePicker/TilePicker";
 
-import {
-    Tile,
-} from "@/components/common/Tile/Tile";
-
-import {
-    TilePicker,
-} from "@/components/common/TilePicker/TilePicker";
-
-import type {
-    DiscardType,
-} from "@/types/analysis";
-
-import type {
-    Seat,
-} from "@/types/player";
-
-import type {
-    ModalAnchor,
-} from "@/types/modal";
-
-import type {
-    TileId,
-} from "@/types/tile";
+import type { DiscardType } from "@/types/analysis";
+import type { Seat } from "@/types/player";
+import type { ModalAnchor } from "@/types/modal";
+import type { TileId } from "@/types/tile";
 
 import "./DiscardModal.css";
+
+
+type SelectedPicker =
+    | "hand"
+    | "tsumo"
+    | "all"
+    | null;
+
 
 interface Props {
     title: string;
@@ -55,6 +44,7 @@ interface Props {
     onCancel: () => void;
 }
 
+
 export const DiscardModal = ({
     title,
     seat,
@@ -69,23 +59,73 @@ export const DiscardModal = ({
 }: Props) => {
 
     const [
+        selectedPicker,
+        setSelectedPicker,
+    ] = useState<SelectedPicker>(null);
+
+    const [
+        selectedIndex,
+        setSelectedIndex,
+    ] = useState<number | null>(null);
+
+    const [
         riichi,
         setRiichi,
     ] = useState(false);
+
 
     const handWithoutTsumo =
         tsumoTile !== undefined
             ? hand.slice(0, -1)
             : hand;
 
+
+    const handleHandTileClick = (
+        tile: TileId,
+        index: number,
+    ) => {
+
+        setSelectedPicker("hand");
+        setSelectedIndex(index);
+
+        onSelect(tile);
+    };
+
+
+    const handleTsumoTileClick = (
+        tile: TileId,
+        index: number,
+    ) => {
+
+        setSelectedPicker("tsumo");
+        setSelectedIndex(index);
+
+        onSelect(tile);
+    };
+
+
+    const handleAllTileClick = (
+        tile: TileId,
+        index: number,
+    ) => {
+
+        setSelectedPicker("all");
+        setSelectedIndex(index);
+
+        onSelect(tile);
+    };
+
+
     const handleConfirm = (
         discardType: DiscardType,
     ) => {
+
         onConfirm(
             discardType,
             riichi,
         );
     };
+
 
     return (
         <div className="discard-modal-overlay">
@@ -101,6 +141,7 @@ export const DiscardModal = ({
                 <h2 className="discard-modal-title">
                     {title}
                 </h2>
+
 
                 <div className="discard-modal-body">
 
@@ -118,62 +159,74 @@ export const DiscardModal = ({
 
                     </div>
 
-                    <div className="discard-picker">
 
-                        {seat === "self" ? (
-                            <>
-                                <TilePicker
-                                    source="hand"
-                                    selectionMode="single"
-                                    tiles={
-                                        handWithoutTsumo
-                                    }
-                                    selectedTile={
-                                        selectedTile
-                                    }
-                                    onTileClick={
-                                        onSelect
-                                    }
-                                />
+                    {seat === "self" ? (
 
-                                {tsumoTile && (
-                                    <div className="discard-tsumo">
-                                        <TilePicker
-                                            source="hand"
-                                            selectionMode="single"
-                                            tiles={[
-                                                tsumoTile,
-                                            ]}
-                                            selectedTile={
-                                                selectedTile
-                                            }
-                                            onTileClick={
-                                                onSelect
-                                            }
-                                        />
-                                    </div>
-                                )}
-                            </>
-                        ) : (
+                        <div className="discard-picker">
+
                             <TilePicker
-                                source="all"
+                                source="hand"
                                 selectionMode="single"
-                                selectedTile={
-                                    selectedTile
+                                tiles={handWithoutTsumo}
+                                selectedIndex={
+                                    selectedPicker === "hand"
+                                        ? selectedIndex
+                                        : null
                                 }
                                 onTileClick={
-                                    onSelect
+                                    handleHandTileClick
                                 }
                             />
-                        )}
 
-                    </div>
+
+                            {tsumoTile && (
+
+                                <div className="discard-tsumo">
+
+                                    <TilePicker
+                                        source="hand"
+                                        selectionMode="single"
+                                        tiles={[tsumoTile]}
+                                        selectedIndex={
+                                            selectedPicker === "tsumo"
+                                                ? selectedIndex
+                                                : null
+                                        }
+                                        onTileClick={
+                                            handleTsumoTileClick
+                                        }
+                                    />
+
+                                </div>
+
+                            )}
+
+                        </div>
+
+                    ) : (
+
+                        <TilePicker
+                            source="all"
+                            selectionMode="single"
+                            selectedIndex={
+                                selectedPicker === "all"
+                                    ? selectedIndex
+                                    : null
+                            }
+                            onTileClick={
+                                handleAllTileClick
+                            }
+                        />
+
+                    )}
 
                 </div>
+
 
                 <div className="discard-modal-footer">
 
                     <label className="discard-riichi">
+
                         <input
                             type="checkbox"
                             checked={riichi}
@@ -184,7 +237,11 @@ export const DiscardModal = ({
                                 )
                             }
                         />
-                        <span>リーチ</span>
+
+                        <span>
+                            リーチ
+                        </span>
+
                     </label>
 
                     <button
@@ -194,22 +251,24 @@ export const DiscardModal = ({
                     </button>
 
                     <button
-                        disabled={!selectedTile}
+                        disabled={
+                            !selectedTile ||
+                            selectedPicker === "tsumo"
+                        }
                         onClick={() =>
-                            handleConfirm(
-                                "tedashi",
-                            )
+                            handleConfirm("tedashi")
                         }
                     >
                         手出し
                     </button>
-
+                    
                     <button
-                        disabled={!selectedTile}
+                        disabled={
+                            !selectedTile ||
+                            selectedPicker === "hand"
+                        }
                         onClick={() =>
-                            handleConfirm(
-                                "tsumogiri",
-                            )
+                            handleConfirm("tsumogiri")
                         }
                     >
                         ツモ切り

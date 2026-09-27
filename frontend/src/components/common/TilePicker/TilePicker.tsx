@@ -2,7 +2,11 @@ import { Tile } from "@/components/common/Tile/Tile";
 
 import { TILE_IDS } from "@/constants/tiles";
 
-import type { TileId, TileSelectionMode, TilePickerSource, } from "@/types/tile";
+import type {
+    TileId,
+    TileSelectionMode,
+    TilePickerSource,
+} from "@/types/tile";
 
 import "./TilePicker.css";
 
@@ -13,12 +17,13 @@ interface TilePickerProps {
 
     tiles?: readonly TileId[];
 
-    selectedTile?: TileId | null;
+    selectedIndex?: number | null;
 
     selectedTiles?: readonly TileId[];
 
     onTileClick?: (
         tile: TileId,
+        index: number,
     ) => void;
 }
 
@@ -26,32 +31,42 @@ export const TilePicker = ({
     selectionMode = "multiple",
     source = "all",
     tiles = [],
-    selectedTile = null,
+    selectedIndex = null,
     selectedTiles = [],
     onTileClick,
 }: TilePickerProps) => {
-
     const getDisplayTiles = (): readonly TileId[] => {
         if (source === "all") {
             return TILE_IDS;
         }
-    
+
         return tiles;
     };
-    
+
     const isSelected = (
         tile: TileId,
+        index: number,
     ): boolean => {
         if (
             selectionMode === "single"
         ) {
             return (
-                selectedTile === tile
+                selectedIndex === index
             );
         }
-    
+
         return selectedTiles.includes(
             tile,
+        );
+    };
+
+    const handleTileClick = (
+        tile: TileId,
+        index: number,
+    ) => {
+        onTileClick?.(
+            tile,
+            index,
         );
     };
 
@@ -63,14 +78,24 @@ export const TilePicker = ({
                     : "tile-picker tile-picker-hand"
             }
         >
-            {getDisplayTiles().map((tile, index) => (
-                <Tile
-                    key={`${tile}-${index}`}
-                    tile={tile}
-                    selected={isSelected(tile)}
-                    onClick={onTileClick}
-                />
-            ))}
+            {getDisplayTiles().map(
+                (tile, index) => (
+                    <Tile
+                        key={`${tile}-${index}`}
+                        tile={tile}
+                        selected={isSelected(
+                            tile,
+                            index,
+                        )}
+                        onClick={() =>
+                            handleTileClick(
+                                tile,
+                                index,
+                            )
+                        }
+                    />
+                ),
+            )}
         </div>
     );
 };
