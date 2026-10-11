@@ -6,7 +6,9 @@ import type { Tile } from "@/types/tile";
 import "./TileListEditor.css";
 
 interface TileListEditorProps {
-    tiles: Tile[];
+    unrevealedTiles: Tile[];
+
+    selectedTiles: Tile[];
 
     maxTiles: number;
 
@@ -14,21 +16,22 @@ interface TileListEditorProps {
 }
 
 export const TileListEditor = ({
-    tiles,
+    unrevealedTiles,
+    selectedTiles,
     maxTiles,
     onChange,
 }: TileListEditorProps) => {
     const addTile = (tile: Tile) => {
-        if (tiles.length >= maxTiles) {
+        if (selectedTiles.length >= maxTiles) {
             return;
         }
 
-        onChange([...tiles, tile]);
+        onChange([...selectedTiles, tile]);
     };
 
     const removeTile = (tile: Tile) => {
         onChange(
-            tiles.filter(
+            selectedTiles.filter(
                 (currentTile) => currentTile.id !== tile.id,
             ),
         );
@@ -37,12 +40,13 @@ export const TileListEditor = ({
     return (
         <div className="tile-list-editor">
             <SelectedTileList
-                tiles={tiles}
+                tiles={selectedTiles}
                 onTileClick={removeTile}
             />
 
             <TilePicker
                 selectionMode="multiple"
+                tiles={unrevealedTiles}
                 onTileClick={addTile}
             />
         </div>

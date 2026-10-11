@@ -1,6 +1,6 @@
 import { NumberField } from "@/components/common/NumberField/NumberField";
 import { SettingCard } from "@/components/common/SettingCard/SettingCard";
-import { useInitialSettingStore } from "@/store/initialSettingStore"
+import { useInitialRoundStore } from "@/store/initialRoundStore"
 
 import "./DepositSection.css";
 
@@ -9,7 +9,7 @@ export const DepositSection = () => {
         state,
         setRiichiSticks,
         setHonba,
-    } = useInitialSettingStore();
+    } = useInitialRoundStore();
 
     return (
         <SettingCard title="供託">

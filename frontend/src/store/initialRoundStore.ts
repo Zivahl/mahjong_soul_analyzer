@@ -1,46 +1,52 @@
 import { create } from "zustand";
 
+import type { MatchState } from "@/types/match";
 import type { Seat, Wind } from "@/types/seat";
 import type { Tile } from "@/types/tile";
 
-interface InitialSettingPlayerState {
-    id: number;
 
-    seat: Seat;
+const createInitialPlayerActions =
+(): MatchState["playerActions"] => ({
+    self: {
+        pon: false,
+        chi: false,
+        kan: false,
+        tsumohora: false,
+        ronhora: false,
+    },
+    shimocha: {
+        pon: false,
+        chi: false,
+        kan: false,
+        tsumohora: false,
+        ronhora: false,
+    },
+    toimen: {
+        pon: false,
+        chi: false,
+        kan: false,
+        tsumohora: false,
+        ronhora: false,
+    },
+    kamicha: {
+        pon: false,
+        chi: false,
+        kan: false,
+        tsumohora: false,
+        ronhora: false,
+    },
+});
 
-    name: string;
-
-    score: number;
-
-    hand: Tile[];
-}
-
-export interface InitialSettingState {
-    roundWind: Wind;
-
-    roundNumber: 1 | 2 | 3 | 4;
-
-    dealerSeat: Seat;
-
-    remainingTiles: number;
-
-    honba: number;
-
-    riichiSticks: number;
-
-    doraIndicators: Tile[];
-
-    players: InitialSettingPlayerState[];
-}
-
-const createInitialSettingState =
-(): InitialSettingState => ({
+const createInitialRoundState =
+(): MatchState => ({
 
     roundWind: "東",
 
     roundNumber: 1,
 
     dealerSeat: "self",
+
+    currentTurn: "self",
 
     remainingTiles: 70,
 
@@ -57,6 +63,8 @@ const createInitialSettingState =
             name: "",
             score: 25000,
             hand: Array(13).fill("?") as Tile[],
+            discards: [],
+            melds: [],
         },
         {
             id: 1,
@@ -64,6 +72,8 @@ const createInitialSettingState =
             name: "",
             score: 25000,
             hand: Array(13).fill("?") as Tile[],
+            discards: [],
+            melds: [],
         },
         {
             id: 2,
@@ -71,6 +81,8 @@ const createInitialSettingState =
             name: "",
             score: 25000,
             hand: Array(13).fill("?") as Tile[],
+            discards: [],
+            melds: [],
         },
         {
             id: 3,
@@ -78,13 +90,17 @@ const createInitialSettingState =
             name: "",
             score: 25000,
             hand: [],
+            discards: [],
+            melds: [],
         },
     ],
+
+    playerActions: createInitialPlayerActions(),
 });
 
-interface InitialSettingStore {
+interface InitialRoundStore {
 
-    state: InitialSettingState;
+    state: MatchState;
 
     setRoundWind: (
         wind: Wind,
@@ -132,10 +148,10 @@ interface InitialSettingStore {
     reset: () => void;
 }
 
-export const useInitialSettingStore =
-    create<InitialSettingStore>((set) => ({
+export const useInitialRoundStore =
+    create<InitialRoundStore>((set) => ({
 
-        state: createInitialSettingState(),
+        state: createInitialRoundState(),
 
         setRoundWind: (wind) =>
             set((store) => ({
@@ -242,6 +258,6 @@ export const useInitialSettingStore =
             })),
 
         reset: () => ({
-            state: createInitialSettingState(),
+            state: createInitialRoundState(),
         }),
     }));

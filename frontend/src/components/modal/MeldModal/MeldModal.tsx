@@ -39,6 +39,24 @@ export const MeldModal = ({
     onCancel,
 }: Props) => {
 
+    const seen = new Set<string>();
+    
+    const uniquePatterns = patterns.filter((pattern) => {
+        const key = JSON.stringify({
+            kanType: pattern.meld.kanType,
+            tileTypes: pattern.meld.tiles
+                .map((tile) => tile.type)
+                .sort(),
+        });
+    
+        if (seen.has(key)) {
+            return false;
+        }
+    
+        seen.add(key);
+        return true;
+    });
+
     return (
         <div className="meld-modal-overlay">
 
@@ -56,7 +74,7 @@ export const MeldModal = ({
 
                 <div className="meld-modal-body">
 
-                    {patterns.map(
+                    {uniquePatterns.map(
                         (pattern) => (
                             <button
                                 key={pattern.id}
@@ -74,7 +92,6 @@ export const MeldModal = ({
                                 }
                             >
                                 <div className="meld-radio">
-
                                     <input
                                         type="radio"
                                         checked={
@@ -83,16 +100,11 @@ export const MeldModal = ({
                                         }
                                         readOnly
                                     />
-
                                 </div>
 
                                 <MeldTiles
-                                    caller={
-                                        caller
-                                    }
-                                    meld={
-                                        pattern.meld
-                                    }
+                                    caller={caller}
+                                    meld={pattern.meld}
                                 />
 
                             </button>
@@ -103,15 +115,11 @@ export const MeldModal = ({
 
                 <div className="meld-modal-footer">
 
-                    <button
-                        onClick={onCancel}
-                    >
+                    <button onClick={onCancel}>
                         キャンセル
                     </button>
 
-                    <button
-                        onClick={onConfirm}
-                    >
+                    <button onClick={onConfirm}>
                         確定
                     </button>
 

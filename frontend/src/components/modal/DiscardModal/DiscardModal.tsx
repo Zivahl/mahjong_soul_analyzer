@@ -166,6 +166,7 @@ export const DiscardModal = ({
                         <TilePicker
                             source="all"
                             selectionMode="single"
+                            tiles={hand}
                             selectedTileId={
                                 selectedPicker === "all"
                                     ? selectedTile?.id ?? null

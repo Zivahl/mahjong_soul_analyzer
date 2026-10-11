@@ -9,6 +9,8 @@ import type {
     DoraEvent,
 } from "@/types/event";
 
+import type { Tile } from "@/types/tile";
+
 import { calculatePlayerActions } from "@/utils/action/calculatePlayerActions";
 import { createDefaultNextActionRequest } from "@/utils/action/createDefaultNextActionRequest";
 import { normalizeTileType } from "@/utils/mahjong/tile";
@@ -17,6 +19,7 @@ export const applyEvent = (
     state: MatchState,
     event: MatchEvent,
     events: readonly MatchEvent[],
+    allTiles: readonly Tile[],
 ): MatchState => {
     let nextState: MatchState;
 
@@ -85,6 +88,7 @@ export const applyEvent = (
             calculatePlayerActions(
                 nextState,
                 nextEvents,
+                allTiles,
             ),
     };
 };

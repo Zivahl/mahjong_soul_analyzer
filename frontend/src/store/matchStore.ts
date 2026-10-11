@@ -1,7 +1,11 @@
 import { create } from "zustand";
 
 
-import type { MatchState } from "@/types/match";
+import type { 
+    MatchSettings, 
+    MatchContext, 
+    MatchState 
+} from "@/types/match";
 
 import type {
     PlayerActionRequest,
@@ -25,9 +29,14 @@ import type {
 } from "@/types/event";
 
 
+import { initialMatchSettings } from "@/store/initialMatchSettings";
+
 import { initialMatchState } from "@/store/initialMatchState";
 
+
 import { applyEvent } from "@/utils/event/applyEvent";
+
+import { createAllTiles } from "@/utils/mahjong/tile";
 
 import { rebuildState } from "@/utils/replay/rebuildState";
 
@@ -36,46 +45,47 @@ import { findUndoPoint } from "@/utils/replay/findUndoPoint";
 
 interface MatchStore {
 
+    settings: MatchSettings;
+
+    context: MatchContext;
+
     state: MatchState;
 
     events: MatchEvent[];
 
+    
+    startMatch: (
+        settings: MatchSettings,
+    ) => void;
 
     initializeRound: (
         event: InitializeRoundEvent,
     ) => void;
-
 
     callTsumo: (
         seat: Seat,
         tile: Tile,
     ) => void;
 
-
     callDiscard: (
         seat: Seat,
         discard: Discard,
     ) => void;
-
 
     callMeld: (
         caller: Seat,
         meld: Meld,
     ) => void;
 
-
     callDora: (
         tile: Tile,
     ) => void;
-
 
     requestAction: (
         request: PlayerActionRequest,
     ) => void;
 
-
     clearActionRequest: () => void;
-
 
     undo: () => void;
 }
@@ -85,12 +95,40 @@ export const useMatchStore =
     create<MatchStore>(
         (set) => ({
 
+            settings:
+                initialMatchSettings,
+
+            context: {
+                allTiles:
+                    createAllTiles(
+                        initialMatchSettings,
+                    ),
+            },
+
             state:
                 initialMatchState,
 
-
             events: [],
 
+
+            startMatch: (
+                settings,
+            ) =>
+                set(() => ({
+                    settings,
+            
+                    context: {
+                        allTiles:
+                            createAllTiles(
+                                settings,
+                            ),
+                    },
+            
+                    state:
+                        initialMatchState,
+            
+                    events: [],
+                })),
 
             initializeRound: (
                 event,
@@ -103,6 +141,7 @@ export const useMatchStore =
                                 store.state,
                                 event,
                                 store.events,
+                                store.context.allTiles,
                             ),
 
                         events: [
@@ -112,7 +151,6 @@ export const useMatchStore =
 
                     }),
                 ),
-
 
             callTsumo: (
                 seat,
@@ -139,6 +177,7 @@ export const useMatchStore =
                                     store.state,
                                     event,
                                     store.events,
+                                    store.context.allTiles,
                                 ),
 
                             events: [
@@ -149,7 +188,6 @@ export const useMatchStore =
                         };
                     },
                 ),
-
 
             callDiscard: (
                 seat,
@@ -176,6 +214,7 @@ export const useMatchStore =
                                     store.state,
                                     event,
                                     store.events,
+                                    store.context.allTiles,
                                 ),
 
                             events: [
@@ -186,7 +225,6 @@ export const useMatchStore =
                         };
                     },
                 ),
-
 
             callMeld: (
                 caller,
@@ -214,6 +252,7 @@ export const useMatchStore =
                                     store.state,
                                     event,
                                     store.events,
+                                    store.context.allTiles,
                                 ),
 
                             events: [
@@ -224,7 +263,6 @@ export const useMatchStore =
                         };
                     },
                 ),
-
 
             callDora: (
                 tile,
@@ -248,6 +286,7 @@ export const useMatchStore =
                                     store.state,
                                     event,
                                     store.events,
+                                    store.context.allTiles,
                                 ),
 
                             events: [
@@ -258,7 +297,6 @@ export const useMatchStore =
                         };
                     },
                 ),
-
 
             requestAction: (
                 request,
@@ -277,7 +315,6 @@ export const useMatchStore =
                     }),
                 ),
 
-
             clearActionRequest: () =>
                 set((store) => ({
                     state: {
@@ -285,7 +322,6 @@ export const useMatchStore =
                         actionRequest: undefined,
                     },
                 })),
-
 
             undo: () =>
                 set(
@@ -308,6 +344,7 @@ export const useMatchStore =
                             rebuildState(
                                 initialMatchState,
                                 nextEvents,
+                                store.context.allTiles,
                             );
 
 

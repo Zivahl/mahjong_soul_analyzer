@@ -1,6 +1,6 @@
 import { SettingCard } from "@/components/common/SettingCard/SettingCard";
 import { SelectField } from "@/components/common/SelectField/SelectField";
-import { useInitialSettingStore } from "@/store/initialSettingStore";
+import { useInitialRoundStore } from "@/store/initialRoundStore";
 import { SEAT_OPTIONS } from "@/constants/seats";
 
 import "./RoundSection.css";
@@ -9,7 +9,7 @@ export const RoundSection = () => {
     const {
         state,
         setDealerSeat,
-    } = useInitialSettingStore();
+    } = useInitialRoundStore();
 
     return (
         <SettingCard title="局情報">

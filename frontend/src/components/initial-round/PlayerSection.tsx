@@ -2,7 +2,7 @@ import { SEAT_LABEL } from "@/constants/seats";
 import { NumberField } from "@/components/common/NumberField/NumberField";
 import { SettingCard } from "@/components/common/SettingCard/SettingCard";
 import { TextField } from "@/components/common/TextField/TextField";
-import { useInitialSettingStore } from "@/store/initialSettingStore";
+import { useInitialRoundStore } from "@/store/initialRoundStore";
 import { getPlayerWind } from "@/utils/mahjong/seat";
 
 import "./PlayerSection.css";
@@ -12,7 +12,7 @@ export const PlayerSection = () => {
         state,
         setPlayerName,
         setPlayerScore,
-    } = useInitialSettingStore();
+    } = useInitialRoundStore();
 
     return (
         <SettingCard title="プレイヤー設定">

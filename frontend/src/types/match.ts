@@ -3,6 +3,16 @@ import type { PlayerState } from "@/types/player";
 import type { Seat, Wind } from "@/types/seat";
 import type { Tile } from "@/types/tile";
 
+export interface MatchSettings {
+    redDora: boolean;
+
+    sanma: boolean;
+}
+
+export interface MatchContext {
+    allTiles: Tile[];
+}
+
 export interface MatchState {
     roundWind: Wind;
 

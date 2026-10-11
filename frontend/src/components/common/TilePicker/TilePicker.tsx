@@ -6,6 +6,7 @@ import {
 
 import type {
     Tile,
+    TileId,
     TilePickerSource,
     TileSelectionMode,
 } from "@/types/tile";
@@ -19,7 +20,7 @@ interface TilePickerProps {
 
     tiles?: readonly Tile[];
 
-    selectedTileId?: Tile["id"] | null;
+    selectedTileId?: TileId | null;
 
     selectedTiles?: readonly Tile[];
 

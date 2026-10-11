@@ -12,6 +12,8 @@ interface Props {
 
     anchor: ModalAnchor;
 
+    tiles: readonly Tile[];
+
     selectedTile: Tile | null;
 
     onSelect: (
@@ -27,6 +29,7 @@ interface Props {
 export const TsumoModal = ({
     title,
     anchor,
+    tiles,
     selectedTile,
     onSelect,
     onConfirm,
@@ -71,6 +74,7 @@ export const TsumoModal = ({
 
                     <TilePicker
                         selectionMode="single"
+                        tiles={tiles}
                         onTileClick={
                             handleTileClick
                         }

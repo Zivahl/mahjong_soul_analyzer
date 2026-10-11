@@ -1,6 +1,6 @@
 import { MainLayout } from "@/layouts/MainLayout/MainLayout";
 
-import { InitialSettingPage } from "@/pages/InitialSettingPage/InitialSettingPage";
+import { InitialRoundPage } from "@/pages/InitialRoundPage/InitialRoundPage";
 import { MatchPage } from "@/pages/MatchPage/MatchPage";
 import { StartPage } from "@/pages/StartPage/StartPage";
 
@@ -22,7 +22,7 @@ export const App = () => {
 
             {currentPage ===
                 "initialSetting" && (
-                <InitialSettingPage />
+                <InitialRoundPage />
             )}
 
             {currentPage === "match" && (

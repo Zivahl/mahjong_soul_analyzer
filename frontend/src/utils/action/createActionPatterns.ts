@@ -14,6 +14,10 @@ import type {
     Seat 
 } from "@/types/seat";
 
+import type { 
+    Tile 
+} from "@/types/tile";
+
 import type {
     MeldType
 } from "@/types/meld";
@@ -28,12 +32,17 @@ import {
     getKanPatterns,
 } from "@/utils/mahjong/meld";
 
+import {
+    createUnrevealedTiles,
+} from "@/utils/mahjong/tile";
+
 
 export const createMeldPatterns = (
     state: MatchState,
     events: readonly MatchEvent[],
     seat: Seat,
     action: MeldType,
+    allTiles: readonly Tile[],
 ): MeldChoicePattern[] => {
 
     const player =
@@ -46,6 +55,15 @@ export const createMeldPatterns = (
     if (!player) {
         return [];
     }
+
+
+    const hand =
+        seat === "self"
+            ? player.hand
+            : createUnrevealedTiles(
+                allTiles,
+                state,
+            );
 
 
     switch (action) {
@@ -65,7 +83,7 @@ export const createMeldPatterns = (
 
 
             return getPonPatterns(
-                player.hand,
+                hand,
                 {
                     seat:
                         latestDiscardEvent.seat,
@@ -92,7 +110,7 @@ export const createMeldPatterns = (
 
 
             return getChiPatterns(
-                player.hand,
+                hand,
                 {
                     seat:
                         latestDiscardEvent.seat,
@@ -127,8 +145,8 @@ export const createMeldPatterns = (
 
                     const latestDiscardEvent =
                         getLatestDiscardEvent(
-                        events,
-                    );
+                            events,
+                        );
 
                     if (
                         !latestDiscardEvent
@@ -136,8 +154,9 @@ export const createMeldPatterns = (
                         return [];
                     }
 
+
                     return getKanPatterns(
-                        player.hand,
+                        hand,
                         player.melds,
                         player.seat,
                         {
@@ -145,8 +164,8 @@ export const createMeldPatterns = (
                                 latestDiscardEvent.seat,
 
                             tile:
-                                latestDiscardEvent.discard.tile,                           
-                        }
+                                latestDiscardEvent.discard.tile,
+                        },
                     );
                 }
 
@@ -167,7 +186,7 @@ export const createMeldPatterns = (
 
 
                     return getKanPatterns(
-                        player.hand,
+                        hand,
                         player.melds,
                         player.seat,
                     );

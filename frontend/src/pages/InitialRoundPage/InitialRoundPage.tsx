@@ -1,24 +1,24 @@
 import { useAppStore } from "@/store/appStore";
-import { useInitialSettingStore } from "@/store/initialSettingStore";
+import { useInitialRoundStore } from "@/store/initialRoundStore";
 import { useMatchStore } from "@/store/matchStore";
 import { createInitializeRoundEvent } from "@/utils/event/createInitializeRoundEvent";
-import { DepositSection } from "@/components/initial-setting/DepositSection";
-import { DoraSection } from "@/components/initial-setting/DoraSection";
-import { HandSection } from "@/components/initial-setting/HandSection";
-import { PlayerSection } from "@/components/initial-setting/PlayerSection";
-import { RoundSection } from "@/components/initial-setting/RoundSection";
+import { DepositSection } from "@/components/initial-round/DepositSection";
+import { DoraSection } from "@/components/initial-round/DoraSection";
+import { HandSection } from "@/components/initial-round/HandSection";
+import { PlayerSection } from "@/components/initial-round/PlayerSection";
+import { RoundSection } from "@/components/initial-round/RoundSection";
 
-import "./InitialSettingPage.css";
+import "./InitialRoundPage.css";
 
-export const InitialSettingPage = () => {
+export const InitialRoundPage = () => {
     
     const setCurrentPage = 
         useAppStore(
             (state) => state.setCurrentPage,
         );
 
-    const initialSettingState =
-        useInitialSettingStore(
+    const initialRoundState =
+        useInitialRoundStore(
             (state) => state.state,
         );
 
@@ -28,7 +28,7 @@ export const InitialSettingPage = () => {
         );
 
     return (
-        <div className="initial-setting-page">
+        <div className="initial-round-page">
             <div className="initial-grid">
                 <div className="column">
                     <RoundSection />
@@ -57,7 +57,7 @@ export const InitialSettingPage = () => {
             
                     const event =
                         createInitializeRoundEvent(
-                            initialSettingState,
+                            initialRoundState,
                         );
            
                     initializeRound(

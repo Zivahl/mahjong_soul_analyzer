@@ -1,5 +1,6 @@
 import type { MatchState } from "@/types/match";
 import type { Seat } from "@/types/seat";
+import type { Tile } from "@/types/tile";
 import type { MatchEvent } from "@/types/event";
 import type {
     PlayerActionState,
@@ -18,6 +19,10 @@ import {
     getChiPatterns,
     getKanPatterns,
 } from "@/utils/mahjong/meld";
+
+import {
+    createUnrevealedTiles,
+} from "@/utils/mahjong/tile";
 
 
 const createDefaultActions =
@@ -43,6 +48,7 @@ const canPon = (
     state: MatchState,
     events: readonly MatchEvent[],
     seat: Seat,
+    unrevealedTiles: readonly Tile[],
 ): boolean => {
 
     const latestDiscardEvent =
@@ -78,9 +84,14 @@ const canPon = (
     }
 
 
+    const hand =
+        seat === "self"
+            ? player.hand
+            : unrevealedTiles;
+    
     const patterns =
         getPonPatterns(
-            player.hand,
+            hand,
             {
                 seat:
                     latestDiscardEvent.seat,
@@ -104,6 +115,7 @@ const canChi = (
     state: MatchState,
     events: readonly MatchEvent[],
     seat: Seat,
+    unrevealedTiles: readonly Tile[],
 ): boolean => {
 
     const latestDiscardEvent =
@@ -143,9 +155,14 @@ const canChi = (
     }
 
 
+    const hand =
+        seat === "self"
+            ? player.hand
+            : unrevealedTiles;
+    
     const patterns =
         getChiPatterns(
-            player.hand,
+            hand,
             {
                 seat:
                     latestDiscardEvent.seat,
@@ -169,6 +186,7 @@ const canDaiminkan = (
     state: MatchState,
     events: readonly MatchEvent[],
     seat: Seat,
+    unrevealedTiles: readonly Tile[],
 ): boolean => {
 
     const latestDiscard =
@@ -190,9 +208,14 @@ const canDaiminkan = (
         return false;
     }
 
+    const hand =
+        seat === "self"
+            ? player.hand
+            : unrevealedTiles;
+    
     const patterns =
         getKanPatterns(
-            player.hand,
+            hand,
             player.melds,
             seat,
             {
@@ -214,6 +237,7 @@ const canDaiminkan = (
 const canKakan = (
     state: MatchState,
     seat: Seat,
+    unrevealedTiles: readonly Tile[],
 ): boolean => {
 
     const player =
@@ -226,9 +250,14 @@ const canKakan = (
         return false;
     }
 
+    const hand =
+        seat === "self"
+            ? player.hand
+            : unrevealedTiles;
+    
     const patterns =
         getKanPatterns(
-            player.hand,
+            hand,
             player.melds,
             seat,
         );
@@ -243,6 +272,7 @@ const canKakan = (
 const canAnkan = (
     state: MatchState,
     seat: Seat,
+    unrevealedTiles: readonly Tile[],
 ): boolean => {
 
     const player =
@@ -255,9 +285,14 @@ const canAnkan = (
         return false;
     }
 
+    const hand =
+        seat === "self"
+            ? player.hand
+            : unrevealedTiles;
+    
     const patterns =
         getKanPatterns(
-            player.hand,
+            hand,
             player.melds,
             seat,
         );
@@ -273,6 +308,7 @@ const canKan = (
     state: MatchState,
     events: readonly MatchEvent[],
     seat: Seat,
+    unrevealedTiles: readonly Tile[],
 ): boolean => {
 
     const latestEvent =
@@ -297,6 +333,7 @@ const canKan = (
                 state,
                 events,
                 seat,
+                unrevealedTiles,
             );
 
 
@@ -312,10 +349,12 @@ const canKan = (
                 canKakan(
                     state,
                     seat,
+                    unrevealedTiles,
                 ) ||
                 canAnkan(
                     state,
                     seat,
+                    unrevealedTiles,
                 )
             );
 
@@ -418,10 +457,17 @@ const canRonHora = (
 export const calculatePlayerActions = (
     state: MatchState,
     events: readonly MatchEvent[],
+    allTiles: readonly Tile[],
 ): Record<
     Seat,
     PlayerActionState
 > => {
+
+    const unrevealedTiles =
+        createUnrevealedTiles(
+            allTiles,
+            state,
+        );
 
     const actions: Record<
         Seat,
@@ -455,6 +501,7 @@ export const calculatePlayerActions = (
                         state,
                         events,
                         player.seat,
+                        unrevealedTiles,
                     ),
 
                 chi:
@@ -462,6 +509,7 @@ export const calculatePlayerActions = (
                         state,
                         events,
                         player.seat,
+                        unrevealedTiles,
                     ),
 
                 kan:
@@ -469,6 +517,7 @@ export const calculatePlayerActions = (
                         state,
                         events,
                         player.seat,
+                        unrevealedTiles,
                     ),
 
                 tsumohora:

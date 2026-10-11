@@ -2,12 +2,15 @@ import type { MatchState } from "@/types/match";
 
 import type { MatchEvent } from "@/types/event";
 
+import type { Tile } from "@/types/tile";
+
 import { applyEvent } from "@/utils/event/applyEvent";
 
 
 export const rebuildState = (
     initialState: MatchState,
     events: readonly MatchEvent[],
+    allTiles: readonly Tile[],
 ): MatchState => {
 
     let state = initialState;
@@ -21,6 +24,7 @@ export const rebuildState = (
                 state,
                 event,
                 appliedEvents,
+                allTiles,
             );
 
         appliedEvents.push(

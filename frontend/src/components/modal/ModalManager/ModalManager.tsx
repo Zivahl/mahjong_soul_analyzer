@@ -50,6 +50,10 @@ import {
 } from "@/utils/action/createActionPatterns";
 
 import {
+    createUnrevealedTiles,
+} from "@/utils/mahjong/tile";
+
+import {
     SEAT_LABEL,
 } from "@/constants/seats";
 
@@ -79,6 +83,7 @@ const getModalTitle = (
 
 export const ModalManager = () => {
     const {
+        context,
         state,
         events,
         clearActionRequest,
@@ -87,6 +92,10 @@ export const ModalManager = () => {
         callMeld,
         callDora,
     } = useMatchStore();
+
+
+    const allTiles =
+        context.allTiles;
 
 
     const actionRequest =
@@ -255,6 +264,11 @@ export const ModalManager = () => {
             const seat =
                 actionRequest.seat;
 
+            const unrevealedTiles =
+                    createUnrevealedTiles(
+                        allTiles,
+                        state,
+                    );
 
             return (
                 <TsumoModal
@@ -265,6 +279,7 @@ export const ModalManager = () => {
                         )
                     }
                     anchor={anchor}
+                    tiles={unrevealedTiles}
                     selectedTile={
                         selectedTsumoTile
                     }
@@ -277,7 +292,6 @@ export const ModalManager = () => {
                         ) {
                             return;
                         }
-
 
                         callTsumo(
                             seat,
@@ -307,7 +321,15 @@ export const ModalManager = () => {
             if (!player) {
                 return null;
             }
-        
+
+            const hand =
+                seat === "self"
+                    ? player.hand
+                    : createUnrevealedTiles(
+                        allTiles,
+                        state,
+                    );
+            
             const riichiDisabled =
                 player.discards.some(
                     (discard) => discard.riichi,
@@ -323,7 +345,7 @@ export const ModalManager = () => {
                     }
                     anchor={anchor}
                     seat={seat}
-                    hand={player.hand}
+                    hand={hand}
                     tsumoTile={
                         state.currentTsumo
                     }
@@ -380,6 +402,7 @@ export const ModalManager = () => {
                     events,
                     seat,
                     actionRequest.action,
+                    allTiles,
                 );
 
 
@@ -453,7 +476,6 @@ export const ModalManager = () => {
                         ) {
                             return;
                         }
-
 
                         callDora(
                             selectedDoraTile,
