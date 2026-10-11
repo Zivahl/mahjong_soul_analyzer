@@ -219,6 +219,7 @@ export const DiscardModal = ({
 
                     <button
                         disabled={
+                            tsumoTile === undefined ||
                             !selectedTile ||
                             selectedPicker === "hand"
                         }

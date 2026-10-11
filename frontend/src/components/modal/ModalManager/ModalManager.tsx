@@ -103,8 +103,14 @@ export const ModalManager = () => {
 
 
     const [
-        anchor,
-        setAnchor,
+        centerAreaAnchor,
+        setCenterAreaAnchor,
+    ] = useState<ModalAnchor>();
+
+
+    const [
+        playerBlockAnchor,
+        setPlayerBlockAnchor,
     ] = useState<ModalAnchor>();
 
 
@@ -140,49 +146,50 @@ export const ModalManager = () => {
 
     /*
      * ActionRequest が変更されたあと、
-     * PlayerBlock の DOM が commit されたタイミングで
+     * CenterArea, PlayerBlock の DOM が commit されたタイミングで
      * モーダル位置を取得する。
      *
      * render 中に document.querySelector() を実行しない。
      */
     useLayoutEffect(() => {
+        const getElementAnchor = (
+            selector: string,
+        ): ModalAnchor | undefined => {
+            const element =
+                document.querySelector(selector);
+    
+            if (!element) {
+                return undefined;
+            }
+    
+            const rect =
+                element.getBoundingClientRect();
+    
+            return {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2,
+            };
+        };
+    
+        setCenterAreaAnchor(
+            getElementAnchor(".center-area"),
+        );
+    
         if (!actionRequest) {
-            setAnchor(undefined);
+            setPlayerBlockAnchor(undefined);
             return;
         }
-
-
+    
         const seat =
             "seat" in actionRequest
                 ? actionRequest.seat
                 : state.currentTurn;
-
-
-        const element =
-            document.querySelector(
+    
+        setPlayerBlockAnchor(
+            getElementAnchor(
                 `.player-block[data-seat="${seat}"]`,
-            );
-
-
-        if (!element) {
-            setAnchor(undefined);
-            return;
-        }
-
-
-        const rect =
-            element.getBoundingClientRect();
-
-
-        setAnchor({
-            x:
-                rect.left +
-                rect.width / 2,
-
-            y:
-                rect.top +
-                rect.height / 2,
-        });
+            ),
+        );
     }, [
         actionRequest,
         state.currentTurn,
@@ -223,6 +230,13 @@ export const ModalManager = () => {
      *
      * useLayoutEffect 後の再 render で表示される。
      */
+    const useCenterAreaAnchor =
+        actionRequest.action === "tsumo" || "discard" || "pon" || "chi" || "kan" || "dora";
+    
+    const anchor = useCenterAreaAnchor
+        ? centerAreaAnchor
+        : playerBlockAnchor;
+    
     if (!anchor) {
         return null;
     }
