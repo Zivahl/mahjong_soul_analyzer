@@ -40,7 +40,7 @@ export const TilePicker = ({
 
     const getDisplayTiles = (): readonly Tile[] => {
 
-        if (source === "hand") {
+        if (source === "custom") {
             return tiles;
         }
 
@@ -90,7 +90,7 @@ export const TilePicker = ({
         tile: Tile,
     ): boolean => {
 
-        if (source === "hand") {
+        if (source === "custom") {
             return true;
         }
 

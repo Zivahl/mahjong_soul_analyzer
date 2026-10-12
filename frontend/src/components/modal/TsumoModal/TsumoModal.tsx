@@ -2,6 +2,7 @@ import { TileImage } from "@/components/common/TileImage/TileImage";
 import { TilePicker } from "@/components/common/TilePicker/TilePicker";
 
 import type { ModalAnchor } from "@/types/modal";
+import type { Seat } from "@/types/seat";
 import type { Tile } from "@/types/tile";
 
 import "./TsumoModal.css";
@@ -9,6 +10,8 @@ import "./TsumoModal.css";
 
 interface Props {
     title: string;
+
+    seat: Seat;
 
     anchor: ModalAnchor;
 
@@ -28,6 +31,7 @@ interface Props {
 
 export const TsumoModal = ({
     title,
+    seat,
     anchor,
     tiles,
     selectedTile,
@@ -72,13 +76,15 @@ export const TsumoModal = ({
 
                     </div>
 
-                    <TilePicker
-                        selectionMode="single"
-                        tiles={tiles}
-                        onTileClick={
-                            handleTileClick
-                        }
-                    />
+                    {seat === "self" && (
+                        <TilePicker
+                            selectionMode="single"
+                            tiles={tiles}
+                            onTileClick={
+                                handleTileClick
+                            }
+                        />
+                    )}
 
                 </div>
 

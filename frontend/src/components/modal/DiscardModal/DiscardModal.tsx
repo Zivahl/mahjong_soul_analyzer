@@ -129,7 +129,7 @@ export const DiscardModal = ({
                     {seat === "self" ? (
                         <div className="discard-picker">
                             <TilePicker
-                                source="hand"
+                                source="custom"
                                 selectionMode="single"
                                 tiles={handWithoutTsumo}
                                 selectedTileId={
@@ -145,7 +145,7 @@ export const DiscardModal = ({
                             {tsumoTile && (
                                 <div className="discard-tsumo">
                                     <TilePicker
-                                        source="hand"
+                                        source="custom"
                                         selectionMode="single"
                                         tiles={[
                                             tsumoTile,

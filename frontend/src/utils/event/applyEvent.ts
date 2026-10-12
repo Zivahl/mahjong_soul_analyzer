@@ -191,12 +191,7 @@ const applyTsumo = (
                         hand: [
                             ...player.hand,
 
-                            event.seat === "self"
-                                ? event.tile
-                                : {
-                                      id: null,
-                                      type: "?",
-                                  },
+                            event.tile,
                         ],
                     };
                 },
@@ -222,12 +217,12 @@ const applyDiscard = (
         return state;
     }
 
-    let hand = player.hand;
+    let newHand = player.hand;
 
     if (event.seat === "self") {
         switch (discard.type) {
             case "tedashi":
-                hand = hand.filter(
+                newHand = newHand.filter(
                     (tile) =>
                         tile.id !==
                         discard.tile.id,
@@ -235,11 +230,11 @@ const applyDiscard = (
                 break;
 
             case "tsumogiri":
-                hand = hand.slice(0, -1);
+                newHand = newHand.slice(0, -1);
                 break;
         }
     } else {
-        hand = hand.slice(0, -1);
+        newHand = newHand.slice(0, -1);
     }
 
     return {
@@ -256,7 +251,7 @@ const applyDiscard = (
                         ? {
                               ...candidate,
 
-                              hand,
+                              newHand,
 
                               discards: [
                                   ...candidate.discards,

@@ -1,5 +1,6 @@
 import { TileImage } from "../TileImage/TileImage";
 
+import { UNKNOWN_TILE } from "@/constants/tiles";
 import type { Meld } from "@/types/meld";
 import type { Seat } from "@/types/seat";
 
@@ -324,10 +325,7 @@ export const MeldTiles = ({
 
         const tiles: RenderTile[] = [
             {
-                tile: {
-                    id: null,
-                    type: "?",
-                }
+                tile: UNKNOWN_TILE
             },
             {
                 tile: meld.tiles[1],
@@ -336,10 +334,7 @@ export const MeldTiles = ({
                 tile: meld.tiles[2],
             },
             {
-                tile: {
-                    id: null,
-                    type: "?",
-                }
+                tile: UNKNOWN_TILE
             },
         ];
 

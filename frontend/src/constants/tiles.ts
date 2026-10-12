@@ -1,4 +1,4 @@
-import type { TileType } from "@/types/tile";
+import type { TileType, Tile } from "@/types/tile";
 
 
 export const TILE_TYPES = [
@@ -68,3 +68,9 @@ export const SANMA_EXCLUDED_TILE_TYPES = [
     "3m",
     "4m",
 ] as const satisfies readonly TileType[];
+
+
+export const UNKNOWN_TILE = {
+    id: null,
+    type: "?",
+} as const satisfies Tile;

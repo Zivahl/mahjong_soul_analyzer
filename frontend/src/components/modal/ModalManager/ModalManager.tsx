@@ -4,6 +4,14 @@ import {
     useState,
 } from "react";
 
+import {
+    SEAT_LABEL,
+} from "@/constants/seats";
+
+import {
+    UNKNOWN_TILE
+} from "@/constants/tiles";
+
 import type {
     Discard
 } from "@/types/discard";
@@ -52,10 +60,6 @@ import {
 import {
     createUnrevealedTiles,
 } from "@/utils/mahjong/tile";
-
-import {
-    SEAT_LABEL,
-} from "@/constants/seats";
 
 
 const ACTION_LABEL = {
@@ -206,7 +210,10 @@ export const ModalManager = () => {
         );
 
         setSelectedTsumoTile(
-            null,
+            actionRequest?.action === "tsumo" &&
+            actionRequest.seat !== "self"
+                ? UNKNOWN_TILE
+                : null,
         );
 
         setSelectedDiscardTile(
@@ -292,6 +299,7 @@ export const ModalManager = () => {
                             seat,
                         )
                     }
+                    seat={seat}
                     anchor={anchor}
                     tiles={unrevealedTiles}
                     selectedTile={
@@ -357,8 +365,8 @@ export const ModalManager = () => {
                             seat,
                         )
                     }
-                    anchor={anchor}
                     seat={seat}
+                    anchor={anchor}
                     hand={hand}
                     tsumoTile={
                         state.currentTsumo

@@ -51,4 +51,4 @@ export type TileSelectionMode =
 
 export type TilePickerSource =
     | "all"
-    | "hand";
+    | "custom";
