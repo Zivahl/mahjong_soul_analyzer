@@ -1,6 +1,7 @@
 import { AnalysisSection } from "@/components/match/AnalysisSection/AnalysisSection";
 import { TableSection } from "@/components/match/TableSection/TableSection";
 import { ModalManager } from "@/components/modal/ModalManager/ModalManager";
+import { ModelessManager } from "@/components/modeless/ModelessManager/ModelessManager";
 
 import "./MatchPage.css";
 
@@ -14,6 +15,7 @@ export const MatchPage = () => {
             </div>
 
             <ModalManager />
+            <ModelessManager />
         </>
     );
 };

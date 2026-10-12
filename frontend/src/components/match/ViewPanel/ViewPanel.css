@@ -1,0 +1,77 @@
+
+.view-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: var(--space-xs);
+
+    flex-shrink: 0;
+}
+
+
+.view-panel-button {
+    box-sizing: border-box;
+    min-width: 48px;
+    min-height: 32px;
+
+    padding: var(--space-xs) var(--space-sm);
+
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+
+    background: var(--surface-color, #fff);
+    color: inherit;
+
+    font: inherit;
+    white-space: nowrap;
+
+    cursor: pointer;
+}
+
+
+.view-panel-button:hover {
+    background: var(--hover-color, #e8e8e8);
+}
+
+
+.view-panel-button:focus-visible {
+    outline: 2px solid var(--focus-color, #1976d2);
+    outline-offset: 2px;
+}
+
+/* 自家：上側が外、下側が中心 */
+.player-block-body.seat-self .view-panel-river {
+    order: 1;
+}
+
+.player-block-body.seat-self .view-panel-meld {
+    order: 2;
+}
+
+/* 下家：左が中心、右が外 */
+.player-block-body.seat-shimocha .view-panel-river {
+    order: 1;
+}
+
+.player-block-body.seat-shimocha .view-panel-meld {
+    order: 2;
+}
+
+/* 対面：上側が中心、下側が外 */
+.player-block-body.seat-toimen .view-panel-meld {
+    order: 1;
+}
+
+.player-block-body.seat-toimen .view-panel-river {
+    order: 2;
+}
+
+/* 上家：左が外、右が中心 */
+.player-block-body.seat-kamicha .view-panel-meld {
+    order: 1;
+}
+
+.player-block-body.seat-kamicha .view-panel-river {
+    order: 2;
+}

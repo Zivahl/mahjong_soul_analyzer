@@ -1,5 +1,7 @@
 import { ActionPanel } from "@/components/match/ActionPanel/ActionPanel";
 
+import { ViewPanel } from "@/components/match/ViewPanel/ViewPanel";
+
 import { useMatchStore } from "@/store/matchStore";
 
 import { getPlayerWind } from "@/utils/mahjong/seat";
@@ -145,8 +147,12 @@ export const PlayerBlock = ({
             </legend>
 
             <div
-                className="player-block-body"
+                className={`player-block-body seat-${seat}`}
             >
+                <ViewPanel
+                    seat={seat}
+                />
+
                 <ActionPanel
                     actions={actions}
                     onRequestAction={

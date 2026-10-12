@@ -9,6 +9,8 @@ interface TileImageProps {
 
     sideways?: boolean;
 
+    riichi?: boolean;
+
     clickable?: boolean;
 
     disabled?: boolean;
@@ -20,6 +22,7 @@ export const TileImage = ({
     tile,
     selected = false,
     sideways = false,
+    riichi = false,
     clickable = true,
     disabled = false,
     onClick,
@@ -28,14 +31,17 @@ export const TileImage = ({
         "tile",
         selected && "selected",
         sideways && "sideways",
+        riichi && "riichi",
         disabled && "disabled",
     ]
         .filter(Boolean)
         .join(" ");
 
-    const imageDir = sideways
-        ? "sideways"
-        : "normal";
+    const imageDir = riichi
+        ? "90deg"
+        : sideways
+            ? "270deg"
+            : "0deg";
 
     const imageFileName =
         tile.type === "?"

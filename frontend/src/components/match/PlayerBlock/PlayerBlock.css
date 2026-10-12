@@ -64,12 +64,79 @@
 }
 
 
+
 .player-block-body {
     display: flex;
-
+    align-items: center;
     justify-content: center;
+    gap: var(--space-sm);
 
     width: 100%;
+    min-width: 0;
 
     margin-top: var(--space-xs);
+}
+
+
+/* 自家：ViewPanelが上 */
+.player-block-body.seat-self {
+    flex-direction: column;
+}
+
+.player-block-body.seat-self .view-panel {
+    order: 1;
+}
+
+.player-block-body.seat-self > :not(.view-panel) {
+    order: 2;
+}
+
+
+/* 上家：ActionPanelが左、ViewPanelが右 */
+.player-block-body.seat-kamicha {
+    flex-direction: row;
+}
+
+.player-block-body.seat-kamicha .view-panel {
+    order: 2;
+}
+
+.player-block-body.seat-kamicha > :not(.view-panel) {
+    order: 1;
+}
+
+
+/* 対面：ActionPanelが上、ViewPanelが下 */
+.player-block-body.seat-toimen {
+    flex-direction: column;
+}
+
+.player-block-body.seat-toimen .view-panel {
+    order: 2;
+}
+
+.player-block-body.seat-toimen > :not(.view-panel) {
+    order: 1;
+}
+
+
+/* 下家：ViewPanelが左、ActionPanelが右 */
+.player-block-body.seat-shimocha {
+    flex-direction: row;
+}
+
+.player-block-body.seat-shimocha .view-panel {
+    order: 1;
+}
+
+.player-block-body.seat-shimocha > :not(.view-panel) {
+    order: 2;
+}
+
+
+/* 横向き配置ではボタンを横並びにする */
+.player-block-body.seat-kamicha .view-panel,
+.player-block-body.seat-shimocha .view-panel {
+    flex-direction: row;
+    flex-wrap: wrap;
 }

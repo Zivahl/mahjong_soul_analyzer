@@ -76,7 +76,7 @@ const getModalTitle = (
 ) => {
     return (
         `${ACTION_LABEL[action]}` +
-        ` [${SEAT_LABEL[seat]}]`
+        ` <${SEAT_LABEL[seat]}>`
     );
 };
 

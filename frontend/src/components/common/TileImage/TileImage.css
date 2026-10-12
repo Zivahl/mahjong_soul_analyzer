@@ -47,9 +47,17 @@ button.tile:disabled:hover {
 }
 
 .tile:not(.sideways) .tile-image {
-    width: 28px;
+    width: 24px;
 }
 
 .tile.sideways .tile-image {
-    width: 42px;
+    width: 36px;
+}
+
+.tile:not(.riichi) .tile-image {
+    width: 24px;
+}
+
+.tile.riichi .tile-image {
+    width: 36px;
 }
